@@ -42,4 +42,8 @@ public class Utilisateur {
 	void setActif(boolean new_actif) {
 		this.actif = new_actif;
 	}
+	
+	String getAdresse() {
+		return this.adresse;
+	}
 }
