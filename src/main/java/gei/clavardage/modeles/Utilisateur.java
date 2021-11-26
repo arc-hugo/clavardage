@@ -4,10 +4,10 @@ import java.util.UUID;
 
 public class Utilisateur {
 	
-	UUID uuid;
-	String adresse;
+	private UUID uuid;
+	private String adresse;
 	private String pseudo;
-	boolean actif;
+	private boolean actif;
 	
 	public Utilisateur(UUID uuid, String adresse, String pseudo, boolean actif) {
 		this.uuid = uuid;
