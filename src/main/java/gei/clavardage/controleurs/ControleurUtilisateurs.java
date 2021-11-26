@@ -43,13 +43,5 @@ public class ControleurUtilisateurs {
 	
 	protected void deconnexionDistante(UUID identifiant) {
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 }
