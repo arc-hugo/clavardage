@@ -23,27 +23,27 @@ public class Utilisateur {
 		this.actif = actif;
 	}
 	
-	String getPseudo() {
+	public String getPseudo() {
 		return pseudo;
 	}
 	
-	void setPseudo(String new_pseudo) {
+	public void setPseudo(String new_pseudo) {
 		this.pseudo = new_pseudo;		
 	}
 	
-	UUID getIdentifiant () {
+	public UUID getIdentifiant () {
 		return this.uuid;
 	}
 	
-	boolean isActif() {
+	public boolean isActif() {
 		return actif;
 	}
 	
-	void setActif(boolean new_actif) {
+	public void setActif(boolean new_actif) {
 		this.actif = new_actif;
 	}
 	
-	String getAdresse() {
+	public String getAdresse() {
 		return this.adresse;
 	}
 }

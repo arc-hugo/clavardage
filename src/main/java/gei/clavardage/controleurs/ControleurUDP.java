@@ -3,8 +3,10 @@ package gei.clavardage.controleurs;
 import java.net.UnknownHostException;
 import java.util.UUID;
 
+import gei.clavardage.modeles.Paquet;
 import gei.clavardage.modeles.PaquetBroadcast;
 import gei.clavardage.modeles.PaquetUnicast;
+import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.services.ServiceEnvoiUDP;
 
 public class ControleurUDP {
@@ -16,32 +18,50 @@ public class ControleurUDP {
 	}
 	
 	public void pseudoLocalInvalide() {
-		//TODO
+		//TODO Ajout notification -> ControleurUtilisateurs
+	}
+	
+	private void envoi(Paquet paquet) {
+		ServiceEnvoiUDP envoi = new ServiceEnvoiUDP(paquet);
+		envoi.start();
+		
 	}
 	
 	public void deconnexion() {
-		UUID id = controleurUtilisateurs.getUtilisateurLocal().getIdentifiant();
-		String msg = "DISCONNECTED" + id.toString();
+		String msg = "DECONNEXION " + controleurUtilisateurs.getUtilisateurLocal().getIdentifiant();
 		try {
-			ServiceEnvoiUDP envoi = new ServiceEnvoiUDP(new PaquetBroadcast(msg));
-			envoi.start();
+			envoi(new PaquetBroadcast(msg));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void receptionUtilisateur(UUID uuid, String adresse, String pseudo) {
+		// TODO Ajout utilisateur -> ControleurUtilisateurs
 		
-	}
-	
-	public void receptionPseudo(UUID uuid, String adresse, String pseudo) {
-		
+		Utilisateur local = controleurUtilisateurs.getUtilisateurLocal();
+		String msg = "UTILISATEUR " + local.getIdentifiant() + "" + local.getPseudo();
+		try {
+			envoi(new PaquetUnicast(local.getAdresse(), msg));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	protected void validation(UUID uuid, String pseudo) {
-		
+		String msg = "VALIDATION " + uuid.toString() + " " + pseudo;
+		try {
+			envoi(new PaquetBroadcast(msg));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	protected void pseudoInvalide(String adresse) {
+		try {
+			envoi(new PaquetUnicast("INVALIDE",adresse));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 }
