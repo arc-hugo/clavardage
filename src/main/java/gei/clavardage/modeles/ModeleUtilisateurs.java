@@ -7,7 +7,6 @@ public class ModeleUtilisateurs {
 	
 	private Utilisateur utilisateurLocal;
 	private List<Utilisateur> utilisateurs;
-	//private List<UUID> listeIdentifiants;
 	
 	Utilisateur getUtilisateurLocal() {
 		return utilisateurLocal;
@@ -17,16 +16,10 @@ public class ModeleUtilisateurs {
 		return utilisateurLocal.getPseudo();
 	}
 	
-	/*private List<UUID> listerIdentifiant(List<Utilisateur> utilis){
-		UUID identifiant;
-		List<UUID> liste_identifiant = new ArrayList<UUID> ();
-		for (int i = 0 ; i < utilis.size() ; i++) {
-			identifiant = utilis.get(i).getIdentifiant();
-			liste_identifiant.add(identifiant);
-		}	
-		return liste_identifiant;
-	}*/
-	
+	void setPseudoLocal(String pseudo) {
+		utilisateurLocal.setPseudo(pseudo);
+	}
+		
 	void connexion(Utilisateur utilisateur) {
 		UUID id = utilisateur.getIdentifiant();
 		String pseudo = utilisateur.getPseudo();
