@@ -38,6 +38,12 @@ public class ControleurUtilisateurs {
 	
 	public void deconnexion () {}
 	
+	protected void receptionPseudo(UUID identifiant, String adresse, String pseudo) {
+	}
+	
+	protected void deconnexionDistante(UUID identifiant) {
+	}
+	
 	
 	
 	
