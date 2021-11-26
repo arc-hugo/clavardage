@@ -1,19 +1,33 @@
 package gei.clavardage.services;
 
-import gei.clavardage.controleurs.ControleurUDP;
+import java.net.DatagramSocket;
+
+import gei.clavardage.modeles.Paquet;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ServiceEnvoiUDP extends Service<Void> {
+	
+	private Paquet paquet;
+	
+	public ServiceEnvoiUDP(Paquet paquet) {
+		this.paquet = paquet;
+	}
 
-	public final static int ENVOI_PORT = 24581;
-	
-	private ControleurUDP controleur;
-	
 	@Override
 	protected Task<Void> createTask() {
-		
-		return null;
+		return new Task<Void>() {
+			
+			@Override
+			protected Void call() throws Exception {
+				if (paquet != null) {
+					DatagramSocket sock = new DatagramSocket();
+					sock.send(paquet.getPaquet());
+					sock.close();
+				}
+				return null;
+			}
+		};
 	}
 
 }
