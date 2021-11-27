@@ -17,8 +17,22 @@ public class ControleurUtilisateurs {
 	ControleurUDP udp;
 	ControleurTCP tcp;
 	
-	@FXML
 	
+	public ControleurUtilisateurs() {
+		this.modele = new ModeleUtilisateurs();
+		this.udp = new ControleurUDP(this);
+		this.tcp = new ControleurTCP();
+	}
+	
+	public UUID getIdentifiantLocal() {
+		return modele.getUtilisateurLocal().getIdentifiant();
+	}
+	
+	public String getPseudoLocal() {
+		return modele.getUtilisateurLocal().getPseudo();
+	}
+	
+	@FXML
 	public void saisiePseudo() throws IOException {
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("saisiePseudo.fxml"));		
 		Stage stage = new Stage();
@@ -29,6 +43,7 @@ public class ControleurUtilisateurs {
 		
 		ControleurPseudo pseudo = loader.getController();
 		String login = pseudo.getTxt();
+		udp.validation(getIdentifiantLocal(), login);
 	}
 	
 	public void lancementSession(UUID identifiant) {

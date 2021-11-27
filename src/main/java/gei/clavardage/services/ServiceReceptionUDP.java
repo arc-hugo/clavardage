@@ -31,10 +31,10 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 					while (true) {
 						sock.receive(paquet);
 						String message = new String(paquet.getData(), 0, paquet.getLength());
-						System.out.println(message);
+						ServiceParseUDP parse = new ServiceParseUDP(controleur, message);
+						parse.start();
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return null;

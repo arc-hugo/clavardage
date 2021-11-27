@@ -28,7 +28,8 @@ public class ControleurUDP {
 	}
 	
 	public void deconnexion() {
-		String msg = "DECONNEXION " + controleurUtilisateurs.getUtilisateurLocal().getIdentifiant();
+		String msg = "DECONNEXION " 
+				+ controleurUtilisateurs.getIdentifiantLocal();
 		try {
 			envoi(new PaquetBroadcast(msg));
 		} catch (UnknownHostException e) {
@@ -39,10 +40,11 @@ public class ControleurUDP {
 	public void receptionUtilisateur(UUID uuid, String adresse, String pseudo) {
 		// TODO Ajout utilisateur -> ControleurUtilisateurs
 		
-		Utilisateur local = controleurUtilisateurs.getUtilisateurLocal();
-		String msg = "UTILISATEUR " + local.getIdentifiant() + "" + local.getPseudo();
+		String msg = "UTILISATEUR " 
+				+ controleurUtilisateurs.getIdentifiantLocal() + " " 
+				+ controleurUtilisateurs.getPseudoLocal();
 		try {
-			envoi(new PaquetUnicast(local.getAdresse(), msg));
+			envoi(new PaquetUnicast(adresse, msg));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
