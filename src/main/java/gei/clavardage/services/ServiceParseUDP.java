@@ -16,11 +16,16 @@ public class ServiceParseUDP extends Service<Void> {
 	private String adresse;
 
 	public ServiceParseUDP(ControleurUDP udp, String message, String adresse) {
-		String[] split = message.split(" ");
 		this.udp = udp;
+		
+		String[] split = message.split(" ");
 		this.type = split[0];
 		this.uuid = UUID.fromString(split[1]);
 		this.pseudo = split[2];
+		for (int i = 3; i < split.length; i++) {
+
+			this.pseudo = this.pseudo+" "+split[i];
+		}		
 		this.adresse = adresse;
 	}
 
