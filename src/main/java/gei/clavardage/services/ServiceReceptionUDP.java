@@ -11,10 +11,10 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 	
 	public final static int RECEPTION_PORT = 22540;
 	
-	private ControleurUDP controleur;
+	private ControleurUDP udp;
 	
-	public ServiceReceptionUDP(ControleurUDP controleur) {
-		this.controleur = controleur;
+	public ServiceReceptionUDP(ControleurUDP udp) {
+		this.udp = udp;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 					while (true) {
 						sock.receive(paquet);
 						String message = new String(paquet.getData(), 0, paquet.getLength());
-						ServiceParseUDP parse = new ServiceParseUDP(controleur, message);
+						ServiceParseUDP parse = new ServiceParseUDP(udp, message, paquet.getAddress().toString());
 						parse.start();
 					}
 				} catch (IOException e) {
