@@ -3,10 +3,13 @@ package gei.clavardage.modeles;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class ModeleUtilisateurs {
 	
 	private Utilisateur utilisateurLocal;
-	private List<Utilisateur> utilisateurs;
+	private ObservableList<Utilisateur> utilisateurs;
 	
 	public ModeleUtilisateurs() {
 		String range = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -18,7 +21,7 @@ public class ModeleUtilisateurs {
 		}
 		
 		this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), "localhost", builder.toString(), true);
-		this.utilisateurs = new ArrayList<Utilisateur>();
+		this.utilisateurs = FXCollections.observableArrayList();
 	}
 	
 	public Utilisateur getUtilisateurLocal() {
@@ -31,6 +34,10 @@ public class ModeleUtilisateurs {
 	
 	public void setPseudoLocal(String pseudo) {
 		utilisateurLocal.setPseudo(pseudo);
+	}
+	
+	public ObservableList<Utilisateur> getUtilisateurs() {
+		return this.utilisateurs;
 	}
 		
 	private int getIndexById(UUID id) {

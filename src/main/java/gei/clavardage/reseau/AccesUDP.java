@@ -1,18 +1,19 @@
-package gei.clavardage.controleurs;
+package gei.clavardage.reseau;
 
 import java.net.UnknownHostException;
 import java.util.UUID;
 
+import gei.clavardage.controleurs.ControleurUtilisateurs;
 import gei.clavardage.modeles.Paquet;
 import gei.clavardage.modeles.PaquetBroadcast;
 import gei.clavardage.modeles.PaquetUnicast;
-import gei.clavardage.services.ServiceEnvoiUDP;
+import gei.clavardage.reseau.services.ServiceEnvoiUDP;
 
-public class ControleurUDP {
+public class AccesUDP {
 	
 	ControleurUtilisateurs ctrlUtilisateurs;
 	
-	public ControleurUDP(ControleurUtilisateurs controleurUtilisateurs) {
+	public AccesUDP(ControleurUtilisateurs controleurUtilisateurs) {
 		this.ctrlUtilisateurs = controleurUtilisateurs;
 	}
 	
@@ -62,7 +63,7 @@ public class ControleurUDP {
 		ctrlUtilisateurs.receptionUtilisateur(uuid, adresse, pseudo);
 	}
 	
-	protected void broadcastDeconnexion() {
+	public void broadcastDeconnexion() {
 		String msg = "DECONNEXION " 
 				+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 				+ ctrlUtilisateurs.getPseudoLocal();
@@ -73,7 +74,7 @@ public class ControleurUDP {
 		}
 	}
 	
-	protected void broadcastValidation(UUID id, String pseudo) {
+	public void broadcastValidation(UUID id, String pseudo) {
 		String msg = "VALIDATION "
 				+ id.toString()+ " " 
 				+ pseudo;
