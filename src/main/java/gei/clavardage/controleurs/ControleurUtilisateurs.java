@@ -3,6 +3,7 @@ package gei.clavardage.controleurs;
 import java.io.IOException;
 import java.util.*;
 
+import gei.clavardage.App;
 import gei.clavardage.modeles.ModeleUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
 import javafx.fxml.FXML;
@@ -13,35 +14,66 @@ import javafx.stage.Stage;
 
 public class ControleurUtilisateurs {
 	
-	ModeleUtilisateurs modele;
-	ControleurUDP udp;
-	ControleurTCP tcp;
+	private ModeleUtilisateurs modele;
+	private ControleurUDP udp;
+	private ControleurTCP tcp;
+	
+	
+	public ControleurUtilisateurs() {
+		this.modele = new ModeleUtilisateurs();
+		this.udp = new ControleurUDP(this);
+		this.tcp = new ControleurTCP();
+	}
+	
+	public UUID getIdentifiantLocal() {
+		return modele.getUtilisateurLocal().getIdentifiant();
+	}
+	
+	public String getPseudoLocal() {
+		return modele.getUtilisateurLocal().getPseudo();
+	}
 	
 	@FXML
-	
-	public void saisiePseudo() throws IOException {
-		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("saisiePseudo.fxml"));		
+	public void saisiePseudo() {
+		FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
+		loader.setController(new ControleurPseudo());
 		Stage stage = new Stage();
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setTitle("Saisie de pseudo");
-		stage.setScene(new Scene(loader.load()));
-		stage.showAndWait();
-		
-		ControleurPseudo pseudo = loader.getController();
-		String login = pseudo.getTxt();
+		try {
+			stage.setScene(new Scene(loader.load()));
+			stage.showAndWait();
+			
+			ControleurPseudo pseudo = loader.getController();
+			String login = pseudo.getTxt();
+			udp.broadcastValidation(getIdentifiantLocal(), login);
+			modele.changementPseudo(getIdentifiantLocal(), login);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void lancementSession(UUID identifiant) {
+		
 	}
 	
-	public void demandeSession(Utilisateur utilisateur) {}
+	public void deconnexion () {
+		udp.broadcastDeconnexion();
+	}
 	
-	public void deconnexion () {}
+	protected void demandeSession(Utilisateur utilisateur) {
+	}
 	
-	protected void receptionPseudo(UUID identifiant, String adresse, String pseudo) {
+	protected void receptionUtilisateur(UUID identifiant, String adresse, String pseudo) {
+		modele.connexion(identifiant, adresse, pseudo);
 	}
 	
 	protected void deconnexionDistante(UUID identifiant) {
+		modele.deconnexion(identifiant);
+	}
+
+	protected boolean validationDistante(String pseudo) {
+		return modele.getPseudoLocal().equals(pseudo);
 	}
 
 }

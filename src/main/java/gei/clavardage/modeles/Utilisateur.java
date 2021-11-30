@@ -46,4 +46,9 @@ public class Utilisateur {
 	public String getAdresse() {
 		return this.adresse;
 	}
+	
+	@Override
+	public String toString() {
+		return pseudo;
+	}
 }
