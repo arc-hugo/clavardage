@@ -7,6 +7,8 @@ import java.util.*;
 import gei.clavardage.App;
 import gei.clavardage.modeles.ModeleUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
+import gei.clavardage.reseau.AccesTCP;
+import gei.clavardage.reseau.AccesUDP;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,14 +26,14 @@ public class ControleurUtilisateurs implements Initializable {
 	private ListView<Utilisateur> list;
 	
 	private ModeleUtilisateurs modele;
-	private ControleurUDP udp;
+	private AccesUDP udp;
 	@SuppressWarnings("unused")
-	private ControleurTCP tcp;
+	private AccesTCP tcp;
 	
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
-		this.udp = new ControleurUDP(this);
-		this.tcp = new ControleurTCP();
+		this.udp = new AccesUDP(this);
+		this.tcp = new AccesTCP();
 	}
 	
 	@Override
@@ -79,15 +81,15 @@ public class ControleurUtilisateurs implements Initializable {
 	protected void demandeSession(Utilisateur utilisateur) {
 	}
 	
-	protected void receptionUtilisateur(UUID identifiant, String adresse, String pseudo) {
+	public void receptionUtilisateur(UUID identifiant, String adresse, String pseudo) {
 		modele.connexion(identifiant, adresse, pseudo);
 	}
 	
-	protected void deconnexionDistante(UUID identifiant) {
+	public void deconnexionDistante(UUID identifiant) {
 		modele.deconnexion(identifiant);
 	}
 
-	protected boolean validationDistante(String pseudo) {
+	public boolean validationDistante(String pseudo) {
 		return modele.getPseudoLocal().equals(pseudo);
 	}
 

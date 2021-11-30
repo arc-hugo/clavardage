@@ -1,4 +1,4 @@
-package gei.clavardage.services;
+package gei.clavardage.reseau.services;
 
 import java.net.DatagramSocket;
 

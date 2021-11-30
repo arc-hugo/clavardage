@@ -1,21 +1,21 @@
-package gei.clavardage.services;
+package gei.clavardage.reseau.services;
 
 import java.util.UUID;
 
-import gei.clavardage.controleurs.ControleurUDP;
+import gei.clavardage.reseau.AccesUDP;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ServiceParseUDP extends Service<Void> {
 
-	private ControleurUDP udp;
+	private AccesUDP udp;
 	private String type;
 	private UUID uuid;
 	private String pseudo;
 	private String adresse;
 
-	public ServiceParseUDP(ControleurUDP udp, String message, String adresse) {
+	public ServiceParseUDP(AccesUDP udp, String message, String adresse) {
 		this.udp = udp;
 		
 		String[] split = message.split(" ");

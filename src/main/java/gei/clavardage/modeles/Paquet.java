@@ -3,7 +3,7 @@ package gei.clavardage.modeles;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 
-import gei.clavardage.services.ServiceReceptionUDP;
+import gei.clavardage.reseau.services.ServiceReceptionUDP;
 
 public abstract class Paquet {
 

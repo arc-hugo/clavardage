@@ -1,9 +1,10 @@
-package gei.clavardage.services;
+package gei.clavardage.reseau.services;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import gei.clavardage.controleurs.ControleurUDP;
+
+import gei.clavardage.reseau.AccesUDP;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 
@@ -11,9 +12,9 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 	
 	public final static int RECEPTION_PORT = 22540;
 	
-	private ControleurUDP udp;
+	private AccesUDP udp;
 	
-	public ServiceReceptionUDP(ControleurUDP udp) {
+	public ServiceReceptionUDP(AccesUDP udp) {
 		this.udp = udp;
 	}
 
