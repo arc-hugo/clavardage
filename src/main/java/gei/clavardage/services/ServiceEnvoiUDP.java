@@ -21,7 +21,6 @@ public class ServiceEnvoiUDP extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				if (paquet != null) {
-					System.out.println("launch");
 					DatagramSocket sock = new DatagramSocket();
 					sock.send(paquet.getPaquet());
 					sock.close();

@@ -71,19 +71,15 @@ public class ServiceParseUDP extends Service<Void> {
 			protected Void call() throws Exception {
 				switch (type) {
 				case "DECONNEXION":
-					System.out.println("Déconnexion de " + uuid);
 					deconnexion();
 					break;
 				case "UTILISATEUR":
-					System.out.println("Nouvel utilisateur " + uuid + " - " + pseudo);
 					utilisateur();
 					break;
 				case "VALIDATION":
-					System.out.println("Demande de validation de pseudo de " + uuid + " - " + pseudo);
 					validation();
 					break;
 				case "INVALIDE":
-					System.out.println("Pseudo choisi invalide !");
 					invalide();
 				default:
 					break;

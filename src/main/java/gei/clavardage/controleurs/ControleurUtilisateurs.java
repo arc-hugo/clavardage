@@ -25,6 +25,7 @@ public class ControleurUtilisateurs implements Initializable {
 	
 	private ModeleUtilisateurs modele;
 	private ControleurUDP udp;
+	@SuppressWarnings("unused")
 	private ControleurTCP tcp;
 	
 	public ControleurUtilisateurs() {
@@ -36,6 +37,7 @@ public class ControleurUtilisateurs implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.list.setItems(this.modele.getUtilisateurs());
+		saisiePseudo();
 	}
 	
 	public UUID getIdentifiantLocal() {

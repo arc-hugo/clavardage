@@ -8,4 +8,6 @@ module clavardage {
     
     exports gei.clavardage;
     exports gei.clavardage.controleurs;
+    exports gei.clavardage.modeles;
+    exports gei.clavardage.services;
 }
