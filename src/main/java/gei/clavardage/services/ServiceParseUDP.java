@@ -23,7 +23,6 @@ public class ServiceParseUDP extends Service<Void> {
 		this.uuid = UUID.fromString(split[1]);
 		this.pseudo = split[2];
 		for (int i = 3; i < split.length; i++) {
-
 			this.pseudo = this.pseudo+" "+split[i];
 		}		
 		this.adresse = adresse;

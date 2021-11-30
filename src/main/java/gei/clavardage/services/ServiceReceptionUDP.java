@@ -24,6 +24,7 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 			protected Void call() throws Exception {
 				try {
 					System.out.println("launch");
+					@SuppressWarnings("resource")
 					DatagramSocket sock = new DatagramSocket(RECEPTION_PORT);
 					byte[] buffer = new byte[256];
 					DatagramPacket paquet = new DatagramPacket(buffer, buffer.length);
