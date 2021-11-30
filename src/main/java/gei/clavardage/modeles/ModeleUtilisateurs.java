@@ -3,32 +3,54 @@ package gei.clavardage.modeles;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class ModeleUtilisateurs {
 	
 	private Utilisateur utilisateurLocal;
-	private List<Utilisateur> utilisateurs;
+	private ObservableList<Utilisateur> utilisateurs;
 	
-	Utilisateur getUtilisateurLocal() {
+	public ModeleUtilisateurs() {
+		String range = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		StringBuilder builder = new StringBuilder();
+		Random rdn = new Random();
+		while (builder.length() < 10) {
+			int i = (int) (rdn.nextFloat() * range.length());
+			builder.append(range.charAt(i));
+		}
+		
+		this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), "localhost", builder.toString(), true);
+		this.utilisateurs = FXCollections.observableArrayList();
+	}
+	
+	public Utilisateur getUtilisateurLocal() {
 		return utilisateurLocal;
 	}
 	
-	String getPseudoLocal() {
+	public String getPseudoLocal() {
 		return utilisateurLocal.getPseudo();
 	}
 	
-	void setPseudoLocal(String pseudo) {
+	public void setPseudoLocal(String pseudo) {
 		utilisateurLocal.setPseudo(pseudo);
 	}
+	
+	public ObservableList<Utilisateur> getUtilisateurs() {
+		return this.utilisateurs;
+	}
 		
-	void connexion(Utilisateur utilisateur) {
-		UUID id = utilisateur.getIdentifiant();
-		String pseudo = utilisateur.getPseudo();
-		
-		int trouve = IntStream.range(0,utilisateurs.size())
-					.filter(u -> utilisateurs.get(u).getIdentifiant().equals(id))
-					.findFirst()
-					.orElse(-1);
+	private int getIndexById(UUID id) {
+		return IntStream.range(0,utilisateurs.size())
+				.filter(u -> utilisateurs.get(u).getIdentifiant().equals(id))
+				.findFirst()
+				.orElse(-1);
+	}
+	
+	public void connexion(UUID identifiant, String adresse, String pseudo) {
+		int trouve = getIndexById(identifiant);
 		if (trouve == -1) {
+			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, true);
 			utilisateurs.add(utilisateur);
 			utilisateur.setActif(true);
 		} else {
@@ -36,35 +58,26 @@ public class ModeleUtilisateurs {
 			util.setPseudo(pseudo);
 			util.setActif(true);
 		}
-		
 	}
 	
-	void deconnexion(UUID identifiant) {
-		int trouve = IntStream.range(0,utilisateurs.size())
-				.filter(u -> utilisateurs.get(u).getIdentifiant().equals(identifiant))
-				.findFirst()
-				.orElse(-1);
+	public void deconnexion(UUID identifiant) {
+		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
 			util.setActif(false);
 		}
 		
-		
-		
 	}
 	
-	void changementPseudo(UUID identifiant, String Pseudo) {
-		int trouve = IntStream.range(0,utilisateurs.size())
-				.filter(u -> utilisateurs.get(u).getIdentifiant().equals(identifiant))
-				.findFirst()
-				.orElse(-1);
+	public void changementPseudo(UUID identifiant, String Pseudo) {
+		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
 			util.setPseudo(Pseudo);
 		}
 	}
 	
-	boolean estActif(UUID identifiant) {
+	public boolean estActif(UUID identifiant) {
 		int trouve = IntStream.range(0,utilisateurs.size())
 				.filter(u -> utilisateurs.get(u).getIdentifiant().equals(identifiant))
 				.findFirst()
@@ -78,11 +91,15 @@ public class ModeleUtilisateurs {
 		}
 	}
 	
-	Utilisateur getUtilisateurWithAdresse(String adresse) {
-		int trouve = IntStream.range(0,utilisateurs.size())
+	private int getIndexByAdresse(String adresse) {
+		return IntStream.range(0,utilisateurs.size())
 				.filter(u -> utilisateurs.get(u).getAdresse().equals(adresse))
 				.findFirst()
 				.orElse(-1);
+	}
+	
+	public Utilisateur getUtilisateurWithAdresse(String adresse) {
+		int trouve = getIndexByAdresse(adresse);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
 			return util;

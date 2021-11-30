@@ -1,9 +1,10 @@
-package gei.clavardage.services;
+package gei.clavardage.reseau.services;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import gei.clavardage.controleurs.ControleurUDP;
+
+import gei.clavardage.reseau.AccesUDP;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 
@@ -11,10 +12,10 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 	
 	public final static int RECEPTION_PORT = 22540;
 	
-	private ControleurUDP controleur;
+	private AccesUDP udp;
 	
-	public ServiceReceptionUDP(ControleurUDP controleur) {
-		this.controleur = controleur;
+	public ServiceReceptionUDP(AccesUDP udp) {
+		this.udp = udp;
 	}
 
 	@Override
@@ -23,7 +24,7 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 			@Override
 			protected Void call() throws Exception {
 				try {
-					System.out.println("launch");
+					@SuppressWarnings("resource")
 					DatagramSocket sock = new DatagramSocket(RECEPTION_PORT);
 					byte[] buffer = new byte[256];
 					DatagramPacket paquet = new DatagramPacket(buffer, buffer.length);
@@ -31,10 +32,10 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 					while (true) {
 						sock.receive(paquet);
 						String message = new String(paquet.getData(), 0, paquet.getLength());
-						System.out.println(message);
+						ServiceParseUDP parse = new ServiceParseUDP(udp, message, paquet.getAddress().toString());
+						parse.start();
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return null;
