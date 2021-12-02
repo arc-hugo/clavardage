@@ -1,5 +1,6 @@
 package gei.clavardage.modeles;
 
+import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -47,10 +48,10 @@ public class ModeleUtilisateurs {
 				.orElse(-1);
 	}
 	
-	public void connexion(UUID identifiant, String adresse, String pseudo) {
+	public void connexion(UUID identifiant, InetAddress adresse, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve == -1) {
-			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, true);
+			Utilisateur utilisateur = new Utilisateur(identifiant, adresse.getHostName(), pseudo, true);
 			utilisateurs.add(utilisateur);
 			utilisateur.setActif(true);
 		} else {

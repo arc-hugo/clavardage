@@ -1,6 +1,7 @@
 package gei.clavardage.controleurs;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.*;
 
@@ -9,6 +10,7 @@ import gei.clavardage.modeles.ModeleUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,6 +19,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ControleurUtilisateurs implements Initializable {
 	
@@ -59,10 +62,13 @@ public class ControleurUtilisateurs implements Initializable {
 		stage.setTitle("Saisie de pseudo");
 		try {
 			stage.setScene(new Scene(loader.load()));
-			stage.showAndWait();
+			String login = "";
+			while (login .equals("")) {
+				stage.showAndWait();
+				ControleurPseudo pseudo = loader.getController();
+				login = pseudo.getTxt();
+			}
 			
-			ControleurPseudo pseudo = loader.getController();
-			String login = pseudo.getTxt();
 			udp.broadcastValidation(getIdentifiantLocal(), login);
 			modele.changementPseudo(getIdentifiantLocal(), login);
 		} catch (IOException e) {
@@ -81,7 +87,7 @@ public class ControleurUtilisateurs implements Initializable {
 	protected void demandeSession(Utilisateur utilisateur) {
 	}
 	
-	public void receptionUtilisateur(UUID identifiant, String adresse, String pseudo) {
+	public void receptionUtilisateur(UUID identifiant, InetAddress adresse, String pseudo) {
 		modele.connexion(identifiant, adresse, pseudo);
 	}
 	

@@ -5,10 +5,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import gei.clavardage.reseau.AccesUDP;
-import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class ServiceReceptionUDP extends ScheduledService<Void> {
+public class ServiceReceptionUDP extends Service<Void> {
 	
 	public final static int RECEPTION_PORT = 22540;
 	
@@ -32,7 +32,7 @@ public class ServiceReceptionUDP extends ScheduledService<Void> {
 					while (true) {
 						sock.receive(paquet);
 						String message = new String(paquet.getData(), 0, paquet.getLength());
-						ServiceParseUDP parse = new ServiceParseUDP(udp, message, paquet.getAddress().toString());
+						ServiceParseUDP parse = new ServiceParseUDP(udp, message, paquet.getAddress());
 						parse.start();
 					}
 				} catch (IOException e) {

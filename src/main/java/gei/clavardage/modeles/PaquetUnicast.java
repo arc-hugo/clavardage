@@ -5,8 +5,8 @@ import java.net.UnknownHostException;
 
 public class PaquetUnicast extends Paquet {
 
-	public PaquetUnicast(String message, String hote) throws UnknownHostException {
-		super(message, InetAddress.getByName(hote));
+	public PaquetUnicast(String message, InetAddress adresse) throws UnknownHostException {
+		super(message, adresse);
 	}
 
 }

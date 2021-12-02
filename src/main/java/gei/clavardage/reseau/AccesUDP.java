@@ -1,5 +1,6 @@
 package gei.clavardage.reseau;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.UUID;
 
@@ -8,13 +9,17 @@ import gei.clavardage.modeles.Paquet;
 import gei.clavardage.modeles.PaquetBroadcast;
 import gei.clavardage.modeles.PaquetUnicast;
 import gei.clavardage.reseau.services.ServiceEnvoiUDP;
+import gei.clavardage.reseau.services.ServiceReceptionUDP;
 
 public class AccesUDP {
 	
 	ControleurUtilisateurs ctrlUtilisateurs;
+	ServiceReceptionUDP reception;
 	
 	public AccesUDP(ControleurUtilisateurs controleurUtilisateurs) {
 		this.ctrlUtilisateurs = controleurUtilisateurs;
+		this.reception = new ServiceReceptionUDP(this);
+		this.reception.start();
 	}
 	
 	public void pseudoLocalInvalide() {
@@ -27,7 +32,7 @@ public class AccesUDP {
 		
 	}
 	
-	private void pseudoInvalide(String adresse) {
+	private void pseudoInvalide(InetAddress adresse) {
 		try {
 			String msg = "INVALIDE "
 					+ ctrlUtilisateurs.getIdentifiantLocal()+" "
@@ -42,7 +47,7 @@ public class AccesUDP {
 		ctrlUtilisateurs.deconnexionDistante(identifiant);
 	}
 	
-	public boolean validationUtilisateur(UUID uuid, String adresse, String pseudo) {
+	public boolean validationUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
 		if (! ctrlUtilisateurs.validationDistante(pseudo)) {
 			pseudoInvalide(adresse);
 			return false;
@@ -59,7 +64,7 @@ public class AccesUDP {
 		return true;
 	}
 	
-	public void receptionUtilisateur(UUID uuid, String adresse, String pseudo) {
+	public void receptionUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
 		ctrlUtilisateurs.receptionUtilisateur(uuid, adresse, pseudo);
 	}
 	
