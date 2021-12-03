@@ -16,13 +16,17 @@ public class ControleurPseudo implements Initializable {
 	
 	private String txt;
 	
+	public ControleurPseudo() {
+		this.txt = "";
+	}
+	
 	public String getTxt() {
 		return txt;
 	}
 	
 	@FXML
 	private void new_pseudo () {
-		this.txt = pseudo.getText();
+		this.txt = this.pseudo.getText();
 		this.pseudo.getScene().getWindow().hide();
 	}
 
