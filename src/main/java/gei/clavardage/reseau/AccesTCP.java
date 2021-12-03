@@ -8,6 +8,8 @@ import gei.clavardage.reseau.services.ServiceReceptionTCP;
 
 public class AccesTCP {
 	
+	public static char ETX = 3;
+	
 	ControleurUtilisateurs ctrlUtilisateurs;
 	ServiceReceptionTCP reception;
 	

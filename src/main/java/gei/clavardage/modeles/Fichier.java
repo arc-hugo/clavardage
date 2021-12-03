@@ -2,6 +2,8 @@ package gei.clavardage.modeles;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.UUID;
 
@@ -16,7 +18,10 @@ public class Fichier extends Message {
 
 	@Override
 	public void send(Socket sock) throws IOException {
-		
+		OutputStream out = sock.getOutputStream();
+		PrintWriter writer = new PrintWriter(out, true);
+		writer.print("FICHIER "+ file.getName() +" ");
+		writer.println();
 	}
 
 }

@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.UUID;
 
+import gei.clavardage.reseau.AccesTCP;
+
 public class Texte extends Message {
 
 	private String txt;
@@ -17,6 +19,7 @@ public class Texte extends Message {
 	@Override
 	public void send(Socket sock) throws IOException {
 		PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-		writer.println(txt);
+		writer.print("TXT "+txt);
+		writer.print(AccesTCP.ETX);
 	}
 }

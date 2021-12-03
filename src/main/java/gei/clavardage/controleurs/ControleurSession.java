@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
+import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.ModeleSession;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.services.ServiceCommunicationTCP;
@@ -13,9 +15,9 @@ import javafx.fxml.Initializable;
 
 public class ControleurSession implements Initializable {
 
-	ModeleSession modele;
-	ServiceCommunicationTCP reception;
-	ServiceEnvoiTCP envoi;
+	private ModeleSession modele;
+	private ServiceCommunicationTCP reception;
+	private ServiceEnvoiTCP envoi;
 	
 	// TODO bdd
 	
@@ -43,8 +45,12 @@ public class ControleurSession implements Initializable {
 		
 	}
 	
-	public void receptionMessage() {
+	public void receptionMessage(Message msg) {
 		
+	}
+
+	public UUID getIdentifiant() {
+		return modele.getIdentifiant();
 	}
 	
 }
