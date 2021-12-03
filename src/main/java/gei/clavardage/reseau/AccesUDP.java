@@ -1,49 +1,49 @@
 package gei.clavardage.reseau;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.UUID;
 
 import gei.clavardage.controleurs.ControleurUtilisateurs;
-import gei.clavardage.modeles.Paquet;
-import gei.clavardage.modeles.PaquetBroadcast;
-import gei.clavardage.modeles.PaquetUnicast;
 import gei.clavardage.reseau.services.ServiceEnvoiUDP;
+import gei.clavardage.reseau.services.ServiceReceptionUDP;
 
 public class AccesUDP {
 	
 	ControleurUtilisateurs ctrlUtilisateurs;
+	ServiceReceptionUDP reception;
 	
 	public AccesUDP(ControleurUtilisateurs controleurUtilisateurs) {
 		this.ctrlUtilisateurs = controleurUtilisateurs;
+		this.reception = new ServiceReceptionUDP(this);
+		this.reception.start();
 	}
 	
 	public void pseudoLocalInvalide() {
 		ctrlUtilisateurs.saisiePseudo();
 	}
 	
-	private void envoi(Paquet paquet) {
-		ServiceEnvoiUDP envoi = new ServiceEnvoiUDP(paquet);
+	private void envoi(String msg, InetAddress adresse, boolean broadcast) {
+		ServiceEnvoiUDP envoi = new ServiceEnvoiUDP(msg, adresse, broadcast);
 		envoi.start();
 		
 	}
 	
-	private void pseudoInvalide(String adresse) {
-		try {
+	private void pseudoInvalide(InetAddress adresse) {
 			String msg = "INVALIDE "
 					+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 					+ctrlUtilisateurs.getPseudoLocal();
-			envoi(new PaquetUnicast(msg, adresse));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+			envoi(msg, adresse, false);
 	}
 	
 	public void deconnexionDistante(UUID identifiant) {
 		ctrlUtilisateurs.deconnexionDistante(identifiant);
 	}
 	
-	public boolean validationUtilisateur(UUID uuid, String adresse, String pseudo) {
+	public boolean validationUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
+		System.out.println(pseudo);
 		if (! ctrlUtilisateurs.validationDistante(pseudo)) {
+			System.out.println("pseudo invalide");
 			pseudoInvalide(adresse);
 			return false;
 		}
@@ -51,15 +51,11 @@ public class AccesUDP {
 		String msg = "UTILISATEUR " 
 				+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 				+ ctrlUtilisateurs.getPseudoLocal();
-		try {
-			envoi(new PaquetBroadcast(msg));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		envoi(msg, adresse, false);
 		return true;
 	}
 	
-	public void receptionUtilisateur(UUID uuid, String adresse, String pseudo) {
+	public void receptionUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
 		ctrlUtilisateurs.receptionUtilisateur(uuid, adresse, pseudo);
 	}
 	
@@ -68,7 +64,7 @@ public class AccesUDP {
 				+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 				+ ctrlUtilisateurs.getPseudoLocal();
 		try {
-			envoi(new PaquetBroadcast(msg));
+			envoi(msg, InetAddress.getByName("255.255.255.255"), true);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -79,7 +75,7 @@ public class AccesUDP {
 				+ id.toString()+ " " 
 				+ pseudo;
 		try {
-			envoi(new PaquetBroadcast(msg));
+			envoi(msg, InetAddress.getByName("255.255.255.255"), true);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
