@@ -50,6 +50,7 @@ public class ControleurUtilisateurs implements Initializable {
 	public String getPseudoLocal() {
 		return modele.getUtilisateurLocal().getPseudo();
 	}
+	ControleurSession session;
 	
 	@FXML
 	public void saisiePseudo() {
@@ -74,6 +75,7 @@ public class ControleurUtilisateurs implements Initializable {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	public void lancementSession(UUID identifiant) {
 		
