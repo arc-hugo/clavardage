@@ -5,13 +5,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
 public class Image extends Message {
 
 	private File image;
 
 	public Image(UUID author, File image) {
 		super(author);
-		this.image = image;
+		this.image = ImageIO;
 	}
 
 	@Override
