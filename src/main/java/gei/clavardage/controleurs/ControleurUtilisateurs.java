@@ -2,6 +2,7 @@ package gei.clavardage.controleurs;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URL;
 import java.util.*;
 
@@ -14,6 +15,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
 import javafx.stage.Modality;
@@ -34,7 +38,7 @@ public class ControleurUtilisateurs implements Initializable {
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
 		this.udp = new AccesUDP(this);
-		this.tcp = new AccesTCP();
+		this.tcp = new AccesTCP(this);
 	}
 	
 	@Override
@@ -50,7 +54,6 @@ public class ControleurUtilisateurs implements Initializable {
 	public String getPseudoLocal() {
 		return modele.getUtilisateurLocal().getPseudo();
 	}
-	ControleurSession session;
 	
 	@FXML
 	public void saisiePseudo() {
@@ -76,7 +79,6 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
-	
 	public void lancementSession(UUID identifiant) {
 		
 	}
@@ -85,7 +87,22 @@ public class ControleurUtilisateurs implements Initializable {
 		udp.broadcastDeconnexion();
 	}
 	
-	protected void demandeSession(Utilisateur utilisateur) {
+	public void demandeSession(Socket sock) throws IOException {
+		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress().getHostAddress());
+		// TODO if util == null -> demande UDP de renvoi utilisateur
+		if (util != null) {
+			Alert confirm = new Alert(AlertType.CONFIRMATION);
+			confirm.setTitle("Demande de lancement de session de "+util.getPseudo());
+			confirm.setHeaderText(util.getPseudo()+" souhaite lancer une session de discussion avec vous !");
+			confirm.setContentText("Acceptez-vous cette demande ?");
+			
+			Optional<ButtonType> result = confirm.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				
+			} else {
+				sock.close();
+			}
+		}
 	}
 	
 	public void receptionUtilisateur(UUID identifiant, InetAddress adresse, String pseudo) {
