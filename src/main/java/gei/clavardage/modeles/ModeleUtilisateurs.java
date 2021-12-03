@@ -26,15 +26,15 @@ public class ModeleUtilisateurs {
 	}
 	
 	public Utilisateur getUtilisateurLocal() {
-		return utilisateurLocal;
+		return this.utilisateurLocal;
 	}
 	
 	public String getPseudoLocal() {
-		return utilisateurLocal.getPseudo();
+		return this.utilisateurLocal.getPseudo();
 	}
 	
 	public void setPseudoLocal(String pseudo) {
-		utilisateurLocal.setPseudo(pseudo);
+		this.utilisateurLocal.setPseudo(pseudo);
 	}
 	
 	public ObservableList<Utilisateur> getUtilisateurs() {
@@ -79,10 +79,7 @@ public class ModeleUtilisateurs {
 	}
 	
 	public boolean estActif(UUID identifiant) {
-		int trouve = IntStream.range(0,utilisateurs.size())
-				.filter(u -> utilisateurs.get(u).getIdentifiant().equals(identifiant))
-				.findFirst()
-				.orElse(-1);
+		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
 			return util.isActif();

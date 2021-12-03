@@ -10,7 +10,6 @@ import gei.clavardage.modeles.ModeleUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,7 +18,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TabPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class ControleurUtilisateurs implements Initializable {
 	
@@ -70,7 +68,8 @@ public class ControleurUtilisateurs implements Initializable {
 			}
 			
 			udp.broadcastValidation(getIdentifiantLocal(), login);
-			modele.changementPseudo(getIdentifiantLocal(), login);
+			modele.setPseudoLocal(login);
+			System.out.println(modele.getPseudoLocal());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

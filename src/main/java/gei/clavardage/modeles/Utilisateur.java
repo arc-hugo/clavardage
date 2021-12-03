@@ -24,7 +24,7 @@ public class Utilisateur {
 	}
 	
 	public String getPseudo() {
-		return pseudo;
+		return this.pseudo;
 	}
 	
 	public void setPseudo(String new_pseudo) {

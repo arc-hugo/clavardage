@@ -5,9 +5,6 @@ import java.net.UnknownHostException;
 import java.util.UUID;
 
 import gei.clavardage.controleurs.ControleurUtilisateurs;
-import gei.clavardage.modeles.Paquet;
-import gei.clavardage.modeles.PaquetBroadcast;
-import gei.clavardage.modeles.PaquetUnicast;
 import gei.clavardage.reseau.services.ServiceEnvoiUDP;
 import gei.clavardage.reseau.services.ServiceReceptionUDP;
 
@@ -26,21 +23,17 @@ public class AccesUDP {
 		ctrlUtilisateurs.saisiePseudo();
 	}
 	
-	private void envoi(Paquet paquet) {
-		ServiceEnvoiUDP envoi = new ServiceEnvoiUDP(paquet);
+	private void envoi(String msg, InetAddress adresse, boolean broadcast) {
+		ServiceEnvoiUDP envoi = new ServiceEnvoiUDP(msg, adresse, broadcast);
 		envoi.start();
 		
 	}
 	
 	private void pseudoInvalide(InetAddress adresse) {
-		try {
 			String msg = "INVALIDE "
 					+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 					+ctrlUtilisateurs.getPseudoLocal();
-			envoi(new PaquetUnicast(msg, adresse));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+			envoi(msg, adresse, false);
 	}
 	
 	public void deconnexionDistante(UUID identifiant) {
@@ -56,11 +49,7 @@ public class AccesUDP {
 		String msg = "UTILISATEUR " 
 				+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 				+ ctrlUtilisateurs.getPseudoLocal();
-		try {
-			envoi(new PaquetBroadcast(msg));
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
+		envoi(msg, adresse, false);
 		return true;
 	}
 	
@@ -73,7 +62,7 @@ public class AccesUDP {
 				+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 				+ ctrlUtilisateurs.getPseudoLocal();
 		try {
-			envoi(new PaquetBroadcast(msg));
+			envoi(msg, InetAddress.getByName("255.255.255.255"), true);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -84,7 +73,7 @@ public class AccesUDP {
 				+ id.toString()+ " " 
 				+ pseudo;
 		try {
-			envoi(new PaquetBroadcast(msg));
+			envoi(msg, InetAddress.getByName("255.255.255.255"), true);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
