@@ -1,6 +1,7 @@
 package gei.clavardage.controleurs;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.*;
 
@@ -60,12 +61,16 @@ public class ControleurUtilisateurs implements Initializable {
 		stage.setTitle("Saisie de pseudo");
 		try {
 			stage.setScene(new Scene(loader.load()));
-			stage.showAndWait();
+			String login = "";
+			while (login .equals("")) {
+				stage.showAndWait();
+				ControleurPseudo pseudo = loader.getController();
+				login = pseudo.getTxt();
+			}
 			
-			ControleurPseudo pseudo = loader.getController();
-			String login = pseudo.getTxt();
 			udp.broadcastValidation(getIdentifiantLocal(), login);
-			modele.changementPseudo(getIdentifiantLocal(), login);
+			modele.setPseudoLocal(login);
+			System.out.println(modele.getPseudoLocal());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -83,7 +88,7 @@ public class ControleurUtilisateurs implements Initializable {
 	protected void demandeSession(Utilisateur utilisateur) {
 	}
 	
-	public void receptionUtilisateur(UUID identifiant, String adresse, String pseudo) {
+	public void receptionUtilisateur(UUID identifiant, InetAddress adresse, String pseudo) {
 		modele.connexion(identifiant, adresse, pseudo);
 	}
 	
@@ -92,7 +97,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public boolean validationDistante(String pseudo) {
-		return modele.getPseudoLocal().equals(pseudo);
+		return !(modele.getPseudoLocal().trim().equals(pseudo.trim()));
 	}
 
 }
