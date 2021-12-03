@@ -95,7 +95,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public boolean validationDistante(String pseudo) {
-		return modele.getPseudoLocal().equals(pseudo);
+		return !(modele.getPseudoLocal().trim().equals(pseudo.trim()));
 	}
 
 }
