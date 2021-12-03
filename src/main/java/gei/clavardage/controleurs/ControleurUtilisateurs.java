@@ -16,9 +16,9 @@ public class ControleurUtilisateurs {
 	ModeleUtilisateurs modele;
 	ControleurUDP udp;
 	ControleurTCP tcp;
+	ControleurSession session;
 	
 	@FXML
-	
 	public void saisiePseudo() throws IOException {
 		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("saisiePseudo.fxml"));		
 		Stage stage = new Stage();
@@ -31,7 +31,9 @@ public class ControleurUtilisateurs {
 		String login = pseudo.getTxt();
 	}
 	
+	
 	public void lancementSession(UUID identifiant) {
+		
 	}
 	
 	public void demandeSession(Utilisateur utilisateur) {}
