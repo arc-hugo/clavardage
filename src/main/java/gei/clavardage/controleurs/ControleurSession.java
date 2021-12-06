@@ -1,27 +1,56 @@
 package gei.clavardage.controleurs;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.UUID;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
+import gei.clavardage.modeles.Message;
+import gei.clavardage.modeles.ModeleSession;
+import gei.clavardage.modeles.Utilisateur;
+import gei.clavardage.reseau.services.ServiceReceptionTCP;
+import gei.clavardage.reseau.services.ServiceEnvoiTCP;
+import javafx.fxml.Initializable;
+
+public class ControleurSession implements Initializable {
+
+	private ModeleSession modele;
+	private ServiceReceptionTCP reception;
+	private ServiceEnvoiTCP envoi;
 	
-	public class ControleurSession extends Application {
-		    
-		public static void main(String [] args) {
-		        launch(args);
-		    }
+	// TODO AccesBDD
 	
-		 @Override
-		 public void start(Stage stage) throws Exception {
-			 Pane root = new Pane();
-			 root.getChildren().addAll();
-			 Scene scene = new Scene(root);
-			 stage.setScene(scene);
-			 stage.show();
-		    }
-		
-		
-	
+	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException {
+		this.modele = new ModeleSession(local, destinataire);
+		this.reception = new ServiceReceptionTCP(this, sock);
+		this.reception.start();
+		this.envoi = new ServiceEnvoiTCP(sock);
 	}
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		
+	}
+	
+	public void fermeture() {
+		
+	}
+	
+	public void fermetureDistante() {
+		
+	}
+	
+	public void envoiMessage() {
+		
+	}
+	
+	public void receptionMessage(Message msg) {
+		
+	}
+
+	public UUID getIdentifiant() {
+		return modele.getIdentifiant();
+	}
+	
+}

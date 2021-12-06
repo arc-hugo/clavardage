@@ -89,6 +89,13 @@ public class ModeleUtilisateurs {
 		}
 	}
 	
+	public void setEnSession(UUID identifiant, boolean session) {
+		int trouve = getIndexById(identifiant);
+		if (trouve >=0) {
+			utilisateurs.get(trouve).setEnSession(session);
+		}
+	}
+	
 	private int getIndexByAdresse(String adresse) {
 		return IntStream.range(0,utilisateurs.size())
 				.filter(u -> utilisateurs.get(u).getAdresse().equals(adresse))
@@ -105,5 +112,4 @@ public class ModeleUtilisateurs {
 			return null;
 		}
 	}
-	
 }
