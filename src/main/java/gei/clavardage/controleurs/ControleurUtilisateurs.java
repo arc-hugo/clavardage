@@ -13,6 +13,7 @@ import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
 import javafx.css.PseudoClass;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,8 +23,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -33,6 +36,10 @@ public class ControleurUtilisateurs implements Initializable {
 	private TabPane tabs;
 	@FXML
 	private ListView<Utilisateur> list;
+	@FXML
+	private MenuItem deconnexion;
+	@FXML
+	private MenuItem changerPseudo;
 	
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
@@ -82,15 +89,17 @@ public class ControleurUtilisateurs implements Initializable {
 		this.tabs.getTabs().add((Tab) loader.load());
 	}
 	
-	public void lancementSession(Utilisateur destinataire) {
+	public boolean lancementSession(Utilisateur destinataire) {
 		Socket sock = tcp.demandeConnexion(destinataire);
 		if (sock != null) {
 			try {
 				creationSession(destinataire, sock);
+				return true;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		return false;
 	}
 	
 	public void deconnexion () {
@@ -109,6 +118,7 @@ public class ControleurUtilisateurs implements Initializable {
 			PrintWriter conn = new PrintWriter(sock.getOutputStream());
 			Optional<ButtonType> result = confirm.showAndWait();
 			if (result.get() == ButtonType.OK) {
+				util.setEnSession(true);
 				conn.println("OK");
 				creationSession(util, sock);
 			} else {
@@ -127,6 +137,7 @@ public class ControleurUtilisateurs implements Initializable {
 	
 	public void deconnexionDistante(UUID identifiant) {
 		modele.deconnexion(identifiant);
+		modele.setEnSession(identifiant, false);
 	}
 
 	public boolean validationDistante(String pseudo) {
@@ -152,6 +163,26 @@ public class ControleurUtilisateurs implements Initializable {
 					}
 				}
 			}
+		});
+		
+		this.list.setOnMouseClicked(e -> new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				Utilisateur util = list.getSelectionModel().getSelectedItem();
+				if (!util.isEnSession()) {
+					if (lancementSession(util)) {
+						util.setEnSession(false);
+					}
+				}
+			}			
+		});
+		
+		this.changerPseudo.setOnAction(e -> {
+			saisiePseudo();
+		});
+		
+		this.deconnexion.setOnAction(e -> {
+			deconnexion();
 		});
 		
 		saisiePseudo();

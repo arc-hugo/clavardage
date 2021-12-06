@@ -8,19 +8,18 @@ public class Utilisateur {
 	private String adresse;
 	private String pseudo;
 	private boolean actif;
+	private boolean enSession;
 	
 	public Utilisateur(UUID uuid, String adresse, String pseudo, boolean actif) {
 		this.uuid = uuid;
 		this.adresse = adresse;
 		this.pseudo = pseudo;
 		this.actif = actif;
+		this.enSession = false;
 	}
 	
 	public Utilisateur(String adresse, String pseudo, boolean actif) {
-		this.uuid = UUID.randomUUID();
-		this.adresse = adresse;
-		this.pseudo = pseudo;
-		this.actif = actif;
+		this(UUID.randomUUID(), adresse, pseudo, actif);
 	}
 	
 	public String getPseudo() {
@@ -35,12 +34,20 @@ public class Utilisateur {
 		return this.uuid;
 	}
 	
+	public boolean isEnSession() {
+		return enSession;
+	}
+
+	public void setEnSession(boolean enSession) {
+		this.enSession = enSession;
+	}
+
 	public boolean isActif() {
 		return actif;
 	}
 	
-	public void setActif(boolean new_actif) {
-		this.actif = new_actif;
+	public void setActif(boolean actif) {
+		this.actif = actif;
 	}
 	
 	public String getAdresse() {
