@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 import gei.clavardage.controleurs.ControleurUtilisateurs;
+import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
 
 public class AccesTCP {
@@ -19,5 +20,9 @@ public class AccesTCP {
 	
 	public void receptionConnexion(Socket sock) throws IOException {
 		this.ctrlUtilisateurs.demandeSession(sock);
+	}
+
+	public Socket demandeConnexion(Utilisateur destinataire) {
+		return null;
 	}
 }

@@ -12,6 +12,7 @@ import gei.clavardage.modeles.ModeleUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -40,12 +42,6 @@ public class ControleurUtilisateurs implements Initializable {
 		this.modele = new ModeleUtilisateurs();
 		this.udp = new AccesUDP(this);
 		this.tcp = new AccesTCP(this);
-	}
-	
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		this.list.setItems(this.modele.getUtilisateurs());
-		saisiePseudo();
 	}
 	
 	public UUID getIdentifiantLocal() {
@@ -79,19 +75,26 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
-	public void lancementSession(UUID identifiant) {
-		
-	}
-	
-	public void deconnexion () {
-		udp.broadcastDeconnexion(modele.getUtilisateurLocal());
-	}
-	
 	private void creationSession(Utilisateur util, Socket sock) throws IOException {
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
 		this.tabs.getTabs().add((Tab) loader.load());
+	}
+	
+	public void lancementSession(Utilisateur destinataire) {
+		Socket sock = tcp.demandeConnexion(destinataire);
+		if (sock != null) {
+			try {
+				creationSession(destinataire, sock);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deconnexion () {
+		udp.broadcastDeconnexion(modele.getUtilisateurLocal());
 	}
 	
 	public void demandeSession(Socket sock) throws IOException {
@@ -128,6 +131,30 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public boolean validationDistante(String pseudo) {
 		return !(modele.getPseudoLocal().trim().equals(pseudo.trim()));
+	}
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		this.list.setItems(this.modele.getUtilisateurs());
+		
+		PseudoClass inactive = PseudoClass.getPseudoClass("inactive");
+		this.list.setCellFactory(cell -> new ListCell<Utilisateur>() {
+			protected void updateItem(Utilisateur item, boolean empty) {
+				if (empty) {
+					setText(null);
+					pseudoClassStateChanged(inactive, true);
+				} else {
+					setText(item.getPseudo());
+					if (item.isActif()) {
+						pseudoClassStateChanged(inactive, false);
+					} else {
+						pseudoClassStateChanged(inactive, true);
+					}
+				}
+			}
+		});
+		
+		saisiePseudo();
 	}
 
 }
