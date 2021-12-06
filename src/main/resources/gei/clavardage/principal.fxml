@@ -11,7 +11,7 @@
       <ListView fx:id="list" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar style="-fx-background-color: #555555;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Profil" />
             <Menu mnemonicParsing="false" text="Options" />
