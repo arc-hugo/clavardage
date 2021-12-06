@@ -83,23 +83,24 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 	
 	private void creationSession(Utilisateur util, Socket sock) throws IOException {
+		util.setEnSession(true);
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
 		this.tabs.getTabs().add((Tab) loader.load());
 	}
 	
-	public boolean lancementSession(Utilisateur destinataire) {
-		Socket sock = tcp.demandeConnexion(destinataire);
-		if (sock != null) {
-			try {
-				creationSession(destinataire, sock);
-				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	public void lancementSession(Utilisateur destinataire) {
+		tcp.demandeConnexion(destinataire);
+	}
+	
+	public void lancementAccepte(Socket sock) throws IOException {
+		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress().getHostAddress());
+		if (util != null) {
+			creationSession(util, sock);
+		} else {
+			sock.close();
 		}
-		return false;
 	}
 	
 	public void deconnexion () {
@@ -118,10 +119,10 @@ public class ControleurUtilisateurs implements Initializable {
 			PrintWriter conn = new PrintWriter(sock.getOutputStream());
 			Optional<ButtonType> result = confirm.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				util.setEnSession(true);
 				conn.println("OK");
 				creationSession(util, sock);
 			} else {
+				conn.println();
 				conn.close();
 				sock.close();
 			}
@@ -170,11 +171,9 @@ public class ControleurUtilisateurs implements Initializable {
 			public void handle(MouseEvent event) {
 				Utilisateur util = list.getSelectionModel().getSelectedItem();
 				if (!util.isEnSession()) {
-					if (lancementSession(util)) {
-						util.setEnSession(false);
-					}
+					lancementSession(util);
 				}
-			}			
+			}	
 		});
 		
 		this.changerPseudo.setOnAction(e -> {

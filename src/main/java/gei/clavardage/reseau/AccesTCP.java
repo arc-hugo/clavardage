@@ -5,6 +5,7 @@ import java.net.Socket;
 
 import gei.clavardage.controleurs.ControleurUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
+import gei.clavardage.reseau.services.ServiceConnexionTCP;
 import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
 
 public class AccesTCP {
@@ -22,7 +23,12 @@ public class AccesTCP {
 		this.ctrlUtilisateurs.demandeSession(sock);
 	}
 
-	public Socket demandeConnexion(Utilisateur destinataire) {
-		return null;
+	public void demandeConnexion(Utilisateur destinataire) {
+		ServiceConnexionTCP conn = new ServiceConnexionTCP(this, destinataire);
+		conn.start();
+	}
+	
+	public void connexionAccepte(Socket sock) throws IOException {
+		ctrlUtilisateurs.lancementAccepte(sock);
 	}
 }
