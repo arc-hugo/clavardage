@@ -9,21 +9,21 @@ import java.util.UUID;
 import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.ModeleSession;
 import gei.clavardage.modeles.Utilisateur;
-import gei.clavardage.reseau.services.ServiceCommunicationTCP;
+import gei.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.clavardage.reseau.services.ServiceEnvoiTCP;
 import javafx.fxml.Initializable;
 
 public class ControleurSession implements Initializable {
 
 	private ModeleSession modele;
-	private ServiceCommunicationTCP reception;
+	private ServiceReceptionTCP reception;
 	private ServiceEnvoiTCP envoi;
 	
-	// TODO bdd
+	// TODO AccesBDD
 	
-	public ControleurSession(Utilisateur util, Socket sock) throws IOException {
-		this.modele = new ModeleSession();
-		this.reception = new ServiceCommunicationTCP(this, sock);
+	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException {
+		this.modele = new ModeleSession(local, destinataire);
+		this.reception = new ServiceReceptionTCP(this, sock);
 		this.reception.start();
 		this.envoi = new ServiceEnvoiTCP(sock);
 	}

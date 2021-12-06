@@ -1,6 +1,7 @@
 package gei.clavardage.controleurs;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
@@ -19,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,7 +34,6 @@ public class ControleurUtilisateurs implements Initializable {
 	
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
-	@SuppressWarnings("unused")
 	private AccesTCP tcp;
 	
 	public ControleurUtilisateurs() {
@@ -73,7 +74,6 @@ public class ControleurUtilisateurs implements Initializable {
 			
 			udp.broadcastValidation(getIdentifiantLocal(), login);
 			modele.setPseudoLocal(login);
-			System.out.println(modele.getPseudoLocal());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -84,24 +84,37 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 	
 	public void deconnexion () {
-		udp.broadcastDeconnexion();
+		udp.broadcastDeconnexion(modele.getUtilisateurLocal());
+	}
+	
+	private void creationSession(Utilisateur util, Socket sock) throws IOException {
+		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
+		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
+		loader.setController(session);
+		this.tabs.getTabs().add((Tab) loader.load());
 	}
 	
 	public void demandeSession(Socket sock) throws IOException {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress().getHostAddress());
-		// TODO if util == null -> demande UDP de renvoi utilisateur
+		
 		if (util != null) {
 			Alert confirm = new Alert(AlertType.CONFIRMATION);
 			confirm.setTitle("Demande de lancement de session de "+util.getPseudo());
 			confirm.setHeaderText(util.getPseudo()+" souhaite lancer une session de discussion avec vous !");
 			confirm.setContentText("Acceptez-vous cette demande ?");
-			
+
+			PrintWriter conn = new PrintWriter(sock.getOutputStream());
 			Optional<ButtonType> result = confirm.showAndWait();
 			if (result.get() == ButtonType.OK) {
-				
+				conn.println("OK");
+				creationSession(util, sock);
 			} else {
+				conn.close();
 				sock.close();
 			}
+		} else {
+			// TODO if util == null -> demande UDP de renvoi utilisateur
+			sock.close();
 		}
 	}
 	

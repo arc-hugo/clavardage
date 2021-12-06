@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.UUID;
 
 import gei.clavardage.controleurs.ControleurUtilisateurs;
+import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.services.ServiceEnvoiUDP;
 import gei.clavardage.reseau.services.ServiceReceptionUDP;
 
@@ -32,7 +33,7 @@ public class AccesUDP {
 	private void pseudoInvalide(InetAddress adresse) {
 			String msg = "INVALIDE "
 					+ ctrlUtilisateurs.getIdentifiantLocal()+" "
-					+ctrlUtilisateurs.getPseudoLocal();
+					+ ctrlUtilisateurs.getPseudoLocal();
 			envoi(msg, adresse, false);
 	}
 	
@@ -59,10 +60,10 @@ public class AccesUDP {
 		ctrlUtilisateurs.receptionUtilisateur(uuid, adresse, pseudo);
 	}
 	
-	public void broadcastDeconnexion() {
+	public void broadcastDeconnexion(Utilisateur utilisateur) {
 		String msg = "DECONNEXION " 
-				+ ctrlUtilisateurs.getIdentifiantLocal()+" "
-				+ ctrlUtilisateurs.getPseudoLocal();
+				+ utilisateur.getIdentifiant() +" "
+				+ utilisateur.getPseudo();
 		try {
 			envoi(msg, InetAddress.getByName("255.255.255.255"), true);
 		} catch (UnknownHostException e) {

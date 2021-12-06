@@ -4,18 +4,16 @@ import java.io.IOException;
 import java.net.Socket;
 
 import gei.clavardage.controleurs.ControleurUtilisateurs;
-import gei.clavardage.reseau.services.ServiceReceptionTCP;
+import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
 
 public class AccesTCP {
 	
-	public static char ETX = 3;
-	
 	ControleurUtilisateurs ctrlUtilisateurs;
-	ServiceReceptionTCP reception;
+	ServiceReceptionConnexionTCP reception;
 	
 	public AccesTCP(ControleurUtilisateurs ctrlUtilisateurs) {
 		this.ctrlUtilisateurs = ctrlUtilisateurs;
-		this.reception = new ServiceReceptionTCP(this);
+		this.reception = new ServiceReceptionConnexionTCP(this);
 		reception.start();
 	}
 	

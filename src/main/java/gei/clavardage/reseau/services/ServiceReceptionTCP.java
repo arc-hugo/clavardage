@@ -1,43 +1,69 @@
 package gei.clavardage.reseau.services;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
-import gei.clavardage.reseau.AccesTCP;
+import gei.clavardage.controleurs.ControleurSession;
+import gei.clavardage.modeles.Message;
+import gei.clavardage.modeles.Texte;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ServiceReceptionTCP extends Service<Void> {
+
+	private ControleurSession session;
+	private BufferedReader reader;
 	
-	public final static int RECEPTION_PORT = 30861;
-	
-	private AccesTCP tcp;
-	
-	public ServiceReceptionTCP(AccesTCP tcp) {
-		this.tcp = tcp;
+	public ServiceReceptionTCP(ControleurSession session, Socket sock) throws IOException {
+		this.session = session;
+		this.reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 	}
 	
 	@Override
 	protected Task<Void> createTask() {
 		return new Task<Void>() {
+			
+			private Message msg;
+			
+			private void texte() throws IOException {
+				String txt = "";
+				char cha = (char) reader.read();
+				while(cha != Message.END_MSG) {
+					txt += cha;
+					cha = (char) reader.read();
+				}
+				msg = new Texte(session.getIdentifiant(), txt);
+				
+				Platform.runLater(new Runnable() {	
+					@Override
+					public void run() {
+						session.receptionMessage(msg);
+					}
+				});
+			}
+			
 			@Override
-			protected Void call() throws Exception {
-				@SuppressWarnings("resource")
-				ServerSocket sock = new ServerSocket(RECEPTION_PORT);
+			protected Void call() throws IOException {
+				String type = "";
 				while (true) {
-					Socket link = sock.accept();
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								tcp.receptionConnexion(link);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
+					char cha = (char) reader.read();
+					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
+						type += cha;
+						cha = (char) reader.read();
+					}
+					if (cha >= 0) {
+						switch (type) {
+						case "TXT":
+							texte();
+							break;
+						default:
+							break;
 						}
-					});
+						type = "";
+					}
 				}
 			}
 		};

@@ -7,11 +7,13 @@ import java.util.UUID;
 
 public abstract class Message {
 
+	public static char END_MSG = 3;
+	
 	private Date date;
-	private UUID author;
+	private UUID auteur;
 	
 	public Message(UUID author) {
-		this.author = author;
+		this.auteur = author;
 		this.date = new Date(System.currentTimeMillis());
 	}
 	
@@ -19,8 +21,8 @@ public abstract class Message {
 		return this.date;
 	}
 	
-	public UUID getAuthor() {
-		return this.author;
+	public UUID getAuteur() {
+		return this.auteur;
 	}
 	
 	public abstract void send(Socket sock) throws IOException;
