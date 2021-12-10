@@ -12,7 +12,9 @@ import gei.clavardage.modeles.ModeleUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
+import javafx.application.Platform;
 import javafx.css.PseudoClass;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -64,7 +66,7 @@ public class ControleurUtilisateurs implements Initializable {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 		loader.setController(new ControleurPseudo());
 		Stage stage = new Stage();
-		stage.initModality(Modality.WINDOW_MODAL);
+		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle("Saisie de pseudo");
 		try {
 			stage.setScene((Scene)loader.load());
@@ -89,7 +91,14 @@ public class ControleurUtilisateurs implements Initializable {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
 				
-		this.tabs.getTabs().add((Tab) loader.load());
+		Tab tab = (Tab) loader.load();
+		tab.setOnClosed(e -> new EventHandler<Event>() {
+			@Override
+			public void handle(Event event) {
+				session.fermetureLocale();
+			}
+		});
+		this.tabs.getTabs().add(tab);
 	}
 	
 	public void lancementSession(Utilisateur destinataire) {
@@ -114,8 +123,7 @@ public class ControleurUtilisateurs implements Initializable {
 		Optional<ButtonType> opt = deco.showAndWait();
 		if (opt.get() == ButtonType.OK) {
 			udp.broadcastDeconnexion(modele.getUtilisateurLocal());
-			Stage stage = (Stage) this.list.getScene().getWindow();
-			stage.close();
+			Platform.exit();
 		}
 	}
 	
