@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import gei.clavardage.concurrent.ExecuteurReseau;
 import gei.clavardage.reseau.AccesTCP;
-import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -14,9 +14,11 @@ public class ServiceReceptionConnexionTCP extends Service<Void> {
 	public final static int RECEPTION_PORT = 30861;
 	
 	private AccesTCP tcp;
+	private ExecuteurReseau executeur;
 	
 	public ServiceReceptionConnexionTCP(AccesTCP tcp) {
 		this.tcp = tcp;
+		this.executeur = ExecuteurReseau.getInstance();
 	}
 	
 	@Override
@@ -28,7 +30,7 @@ public class ServiceReceptionConnexionTCP extends Service<Void> {
 				ServerSocket sock = new ServerSocket(RECEPTION_PORT);
 				while (true) {
 					Socket link = sock.accept();
-					Platform.runLater(new Runnable() {
+					executeur.ajoutTache(new Runnable() {
 						@Override
 						public void run() {
 							try {
