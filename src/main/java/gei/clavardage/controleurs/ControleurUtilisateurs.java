@@ -67,7 +67,7 @@ public class ControleurUtilisateurs implements Initializable {
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setTitle("Saisie de pseudo");
 		try {
-			stage.setScene(new Scene(loader.load()));
+			stage.setScene((Scene)loader.load());
 			String login = "";
 			while (login .equals("")) {
 				stage.showAndWait();
