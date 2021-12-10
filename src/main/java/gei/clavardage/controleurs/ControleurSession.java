@@ -41,10 +41,12 @@ public class ControleurSession implements Initializable {
 	}
 	
 	public void fermetureLocale() {
+		// TODO
 		fermeture();
 	}
 	
 	public void fermetureDistante() {
+		// TODO
 		fermeture();
 	}
 	

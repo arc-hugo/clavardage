@@ -20,7 +20,7 @@
                <graphic>
                   <MenuButton mnemonicParsing="false" prefHeight="22.0" prefWidth="77.0" style="-fx-background-color: #888888; -fx-background-radius: 5;" text="Profile" textAlignment="CENTER" textFill="#ac0000">
                     <items>
-                      <MenuItem fx:id="changerpseudo" mnemonicParsing="false" text="Changer de pseudo" />
+                      <MenuItem fx:id="changerPseudo" mnemonicParsing="false" text="Changer de pseudo" />
                         <MenuItem fx:id="deconnexion" mnemonicParsing="false" text="Se déconnecter" />
                     </items>
                      <font>
