@@ -27,3 +27,5 @@ target/
 .settings/
 .classpath
 .project
+.idea
+.metadata/
