@@ -82,11 +82,13 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
+	
 	private void creationSession(Utilisateur util, Socket sock) throws IOException {
 		util.setEnSession(true);
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
+				
 		this.tabs.getTabs().add((Tab) loader.load());
 	}
 	
