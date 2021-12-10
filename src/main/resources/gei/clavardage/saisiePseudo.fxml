@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<Scene fill="FIREBRICK" stylesheets="@menu.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <root>
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="320.0" style="-fx-background-color: #666666;">
+         <children>
+            <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Veuillez entrer un pseudo : " textFill="#ac0000">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="pseudo" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="229.0" style="-fx-background-color: white; -fx-background-radius: 10;" />
+            <Button fx:id="validate_button" alignment="CENTER" depthTest="DISABLE" mnemonicParsing="false" onAction="#new_pseudo" prefHeight="26.0" prefWidth="90.0" style="-fx-background-color: #888888; -fx-background-radius: 10;" text="Valider" textAlignment="CENTER" textFill="#ac0000" textOverrun="LEADING_ELLIPSIS" wrapText="true">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </root>
+</Scene>
