@@ -1,0 +1,10 @@
+.menu-item .label {
+    -fx-text-fill: #ac0000;
+    -fx-font: calibri;
+    -fx-font-style: bold;
+}
+
+.context-menu {
+    -fx-background-color: #888888;
+    -fx-background-radius: 10;
+}
