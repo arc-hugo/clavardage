@@ -3,22 +3,36 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gei.clavardage.controleurs.ControleurUtilisateurs">
    <left>
-      <ListView fx:id="list" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <ListView fx:id="list" prefHeight="774.0" prefWidth="240.0" styleClass="list-cell" stylesheets="@listViewParameters.css" BorderPane.alignment="CENTER" />
    </left>
    <top>
-      <MenuBar style="-fx-background-color: #555555;" BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="Profil" />
-            <Menu mnemonicParsing="false" text="Options" />
-        </menus>
+      <MenuBar style="-fx-background-color: #666666; -fx-text-shadow: white;" stylesheets="@item.css" BorderPane.alignment="CENTER">
+         <menus>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <MenuButton mnemonicParsing="false" prefHeight="22.0" prefWidth="77.0" style="-fx-background-color: #888888; -fx-background-radius: 5;" text="Profile" textAlignment="CENTER" textFill="#ac0000">
+                    <items>
+                      <MenuItem fx:id="changerpseudo" mnemonicParsing="false" text="Changer de pseudo" />
+                        <MenuItem fx:id="deconnexion" mnemonicParsing="false" text="Se déconnecter" />
+                    </items>
+                     <font>
+                        <Font name="Calibri Bold" size="14.0" />
+                     </font>
+                  </MenuButton>
+               </graphic>
+            </Menu>
+         </menus>
       </MenuBar>
    </top>
    <center>
-      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #666666;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
