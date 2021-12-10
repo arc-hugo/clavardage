@@ -11,8 +11,10 @@ import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.ModeleSession;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionTCP;
+import javafx.fxml.FXML;
 import gei.clavardage.reseau.taches.TacheEnvoiTCP;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 
 public class ControleurSession implements Initializable {
 
@@ -20,6 +22,9 @@ public class ControleurSession implements Initializable {
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
 	private Socket sock;
+	
+	@FXML
+	private Label name;
 	
 	// TODO AccesBDD
 	
@@ -33,6 +38,8 @@ public class ControleurSession implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+			Utilisateur destinataire = this.modele.getDestinataire();
+			this.name.setText(destinataire.getPseudo());
 		
 	}
 	

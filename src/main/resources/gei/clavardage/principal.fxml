@@ -11,14 +11,14 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gei.clavardage.controleurs.ControleurUtilisateurs">
    <left>
-      <ListView fx:id="list" prefHeight="774.0" prefWidth="240.0" styleClass="list-cell" stylesheets="@listViewParameters.css" BorderPane.alignment="CENTER" />
+      <ListView fx:id="list" prefHeight="774.0" prefWidth="240.0" style="-fx-border-color: white;" styleClass="list-cell" stylesheets="@listViewParameters.css" BorderPane.alignment="CENTER" />
    </left>
    <top>
       <MenuBar style="-fx-background-color: #666666; -fx-text-shadow: white;" stylesheets="@item.css" BorderPane.alignment="CENTER">
          <menus>
             <Menu mnemonicParsing="false">
                <graphic>
-                  <MenuButton mnemonicParsing="false" prefHeight="22.0" prefWidth="77.0" style="-fx-background-color: #888888; -fx-background-radius: 5;" text="Profile" textAlignment="CENTER" textFill="#ac0000">
+                  <MenuButton mnemonicParsing="false" style="-fx-background-color: #888888; -fx-background-radius: 5;" text="Profile" textAlignment="CENTER" textFill="#ac0000">
                     <items>
                       <MenuItem fx:id="changerPseudo" mnemonicParsing="false" text="Changer de pseudo" />
                         <MenuItem fx:id="deconnexion" mnemonicParsing="false" text="Se déconnecter" />
@@ -33,6 +33,6 @@
       </MenuBar>
    </top>
    <center>
-      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #666666;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #666666; -fx-border-color: white;" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
