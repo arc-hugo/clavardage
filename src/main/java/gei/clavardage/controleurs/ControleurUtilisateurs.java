@@ -31,9 +31,10 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ControleurUtilisateurs implements Initializable {
-	
+
 	@FXML
 	private TabPane tabs;
 	@FXML
@@ -42,25 +43,25 @@ public class ControleurUtilisateurs implements Initializable {
 	private MenuItem deconnexion;
 	@FXML
 	private MenuItem changerPseudo;
-	
+
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
 	private AccesTCP tcp;
-	
+
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
 		this.udp = new AccesUDP(this);
 		this.tcp = new AccesTCP(this);
 	}
-	
+
 	public UUID getIdentifiantLocal() {
 		return modele.getUtilisateurLocal().getIdentifiant();
 	}
-	
+
 	public String getPseudoLocal() {
 		return modele.getUtilisateurLocal().getPseudo();
 	}
-	
+
 	@FXML
 	public void saisiePseudo() {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
@@ -69,42 +70,38 @@ public class ControleurUtilisateurs implements Initializable {
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle("Saisie de pseudo");
 		try {
-			stage.setScene((Scene)loader.load());
+			stage.setScene((Scene) loader.load());
 			String login = "";
-			while (login .equals("")) {
+			while (login.equals("")) {
 				stage.showAndWait();
 				ControleurPseudo pseudo = loader.getController();
 				login = pseudo.getTxt();
 			}
-			
+
 			udp.broadcastValidation(getIdentifiantLocal(), login);
 			modele.setPseudoLocal(login);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	private void creationSession(Utilisateur util, Socket sock) throws IOException {
 		util.setEnSession(true);
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
-				
+
 		Tab tab = (Tab) loader.load();
-		tab.setOnClosed(e -> new EventHandler<Event>() {
-			@Override
-			public void handle(Event event) {
-				session.fermetureLocale();
-			}
+		tab.setOnClosed(e -> {
+			session.fermetureLocale();
 		});
 		this.tabs.getTabs().add(tab);
 	}
-	
+
 	public void lancementSession(Utilisateur destinataire) {
 		tcp.demandeConnexion(destinataire);
 	}
-	
+
 	public void lancementAccepte(Socket sock) throws IOException {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress().getHostAddress());
 		if (util != null) {
@@ -113,27 +110,28 @@ public class ControleurUtilisateurs implements Initializable {
 			sock.close();
 		}
 	}
-	
-	public void deconnexion () {
+
+	public void deconnexion() {
 		Alert deco = new Alert(AlertType.CONFIRMATION);
 		deco.setTitle("Déconnexion");
-		deco.setHeaderText("Vous vous appretez à vous déconnecter de l'application");
+		deco.setHeaderText("Vous vous apprêtez à vous déconnecter de l'application.");
 		deco.setContentText("Êtes-vous sûr de vouloir continuer ?");
-		
+
 		Optional<ButtonType> opt = deco.showAndWait();
 		if (opt.get() == ButtonType.OK) {
 			udp.broadcastDeconnexion(modele.getUtilisateurLocal());
 			Platform.exit();
+			System.exit(0);
 		}
 	}
-	
+
 	public void demandeSession(Socket sock) throws IOException {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress().getHostAddress());
-		
+
 		if (util != null) {
 			Alert confirm = new Alert(AlertType.CONFIRMATION);
-			confirm.setTitle("Demande de lancement de session de "+util.getPseudo());
-			confirm.setHeaderText(util.getPseudo()+" souhaite lancer une session de discussion avec vous !");
+			confirm.setTitle("Demande de lancement de session de " + util.getPseudo());
+			confirm.setHeaderText(util.getPseudo() + " souhaite lancer une session de discussion avec vous !");
 			confirm.setContentText("Acceptez-vous cette demande ?");
 
 			PrintWriter conn = new PrintWriter(sock.getOutputStream());
@@ -151,24 +149,24 @@ public class ControleurUtilisateurs implements Initializable {
 			sock.close();
 		}
 	}
-	
+
 	public void receptionUtilisateur(UUID identifiant, InetAddress adresse, String pseudo) {
 		modele.connexion(identifiant, adresse, pseudo);
 	}
-	
+
 	public void deconnexionDistante(UUID identifiant) {
 		modele.deconnexion(identifiant);
 		modele.setEnSession(identifiant, false);
 	}
 
 	public boolean validationDistante(String pseudo) {
-		return !(modele.getPseudoLocal().trim().equals(pseudo.trim()));
+		return !(modele.getPseudoLocal().trim().toLowerCase().equals(pseudo.trim().toLowerCase()));
 	}
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.list.setItems(this.modele.getUtilisateurs());
-		
+
 		PseudoClass inactive = PseudoClass.getPseudoClass("inactive");
 		this.list.setCellFactory(cell -> new ListCell<Utilisateur>() {
 			protected void updateItem(Utilisateur item, boolean empty) {
@@ -185,25 +183,22 @@ public class ControleurUtilisateurs implements Initializable {
 				}
 			}
 		});
-		
-		this.list.setOnMouseClicked(e -> new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				Utilisateur util = list.getSelectionModel().getSelectedItem();
-				if (!util.isEnSession()) {
-					lancementSession(util);
-				}
-			}	
+
+		this.list.setOnMouseClicked(e -> {
+			Utilisateur util = list.getSelectionModel().getSelectedItem();
+			if (!util.isEnSession()) {
+				lancementSession(util);
+			}
 		});
-		
+
 		this.changerPseudo.setOnAction(e -> {
 			saisiePseudo();
 		});
-		
+
 		this.deconnexion.setOnAction(e -> {
 			deconnexion();
 		});
-		
+
 		saisiePseudo();
 	}
 
