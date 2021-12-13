@@ -2,18 +2,21 @@ package gei.clavardage.modeles;
 
 import java.util.UUID;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Utilisateur {
 	
 	private UUID uuid;
 	private String adresse;
-	private String pseudo;
+	private StringProperty pseudo;
 	private boolean actif;
 	private boolean enSession;
 	
 	public Utilisateur(UUID uuid, String adresse, String pseudo, boolean actif) {
 		this.uuid = uuid;
 		this.adresse = adresse;
-		this.pseudo = pseudo;
+		this.pseudo = new SimpleStringProperty(pseudo);
 		this.actif = actif;
 		this.enSession = false;
 	}
@@ -23,11 +26,11 @@ public class Utilisateur {
 	}
 	
 	public String getPseudo() {
-		return this.pseudo;
+		return this.pseudo.get();
 	}
 	
 	public void setPseudo(String new_pseudo) {
-		this.pseudo = new_pseudo;		
+		this.pseudo.set(new_pseudo);		
 	}
 	
 	public UUID getIdentifiant () {
@@ -56,6 +59,6 @@ public class Utilisateur {
 	
 	@Override
 	public String toString() {
-		return pseudo;
+		return pseudo.get();
 	}
 }

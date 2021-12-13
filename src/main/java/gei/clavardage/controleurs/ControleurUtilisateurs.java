@@ -175,8 +175,12 @@ public class ControleurUtilisateurs implements Initializable {
 		modele.setEnSession(identifiant, false);
 	}
 
-	public boolean validationDistante(String pseudo) {
-		return !(modele.getPseudoLocal().trim().toLowerCase().equals(pseudo.trim().toLowerCase()));
+	public boolean validationDistante(UUID uuid, String pseudo) {
+		if (!(modele.getPseudoLocal().trim().toLowerCase().equals(pseudo.trim().toLowerCase()))) {
+			this.modele.changementPseudo(uuid, pseudo);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
