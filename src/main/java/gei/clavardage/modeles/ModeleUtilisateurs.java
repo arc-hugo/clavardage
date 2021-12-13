@@ -4,7 +4,9 @@ import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 public class ModeleUtilisateurs {
@@ -22,7 +24,17 @@ public class ModeleUtilisateurs {
 		}
 		
 		this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), "localhost", builder.toString(), true);
-		this.utilisateurs = FXCollections.observableArrayList();
+		this.utilisateurs = FXCollections.observableArrayList(Utilisateur.extractor());
+		this.utilisateurs.addListener(new ListChangeListener<Utilisateur>() {
+			@Override
+			public void onChanged(Change<? extends Utilisateur> c) {
+				while (c.next()) {
+					if (c.wasUpdated()) {
+						
+					}
+				}
+			}			
+		});
 	}
 	
 	public Utilisateur getUtilisateurLocal() {
@@ -74,7 +86,12 @@ public class ModeleUtilisateurs {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
-			util.setPseudo(Pseudo);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					util.setPseudo(Pseudo);
+				}
+			});
 		}
 	}
 	

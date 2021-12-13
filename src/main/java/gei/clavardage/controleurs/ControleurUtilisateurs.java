@@ -167,7 +167,12 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void receptionUtilisateur(UUID identifiant, InetAddress adresse, String pseudo) {
-		modele.connexion(identifiant, adresse, pseudo);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				modele.connexion(identifiant, adresse, pseudo);
+			}
+		});
 	}
 
 	public void deconnexionDistante(UUID identifiant) {
@@ -176,7 +181,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public boolean validationDistante(UUID uuid, String pseudo) {
-		if (!(modele.getPseudoLocal().trim().toLowerCase().equals(pseudo.trim().toLowerCase()))) {
+		if (!(modele.getPseudoLocal().trim().equals(pseudo.trim()))) {
 			this.modele.changementPseudo(uuid, pseudo);
 			return true;
 		}
@@ -186,10 +191,11 @@ public class ControleurUtilisateurs implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.list.setItems(this.modele.getUtilisateurs());
-
+		
 		PseudoClass inactive = PseudoClass.getPseudoClass("inactive");
 		this.list.setCellFactory(cell -> new ListCell<Utilisateur>() {
 			protected void updateItem(Utilisateur item, boolean empty) {
+				super.updateItem(item, empty);
 				if (empty) {
 					setText(null);
 					pseudoClassStateChanged(inactive, true);
