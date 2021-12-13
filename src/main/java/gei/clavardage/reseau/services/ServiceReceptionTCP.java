@@ -47,6 +47,15 @@ public class ServiceReceptionTCP extends Service<Void> {
 				});
 			}
 			
+			private void fin() {
+				executeur.ajoutTache(new Runnable() {
+					@Override
+					public void run() {
+						session.fermetureDistante();
+					}
+				});
+			}
+			
 			@Override
 			protected Void call() throws IOException {
 				String type = "";
@@ -61,6 +70,8 @@ public class ServiceReceptionTCP extends Service<Void> {
 						case "TXT":
 							texte();
 							break;
+						case "FIN":
+							fin();
 						default:
 							break;
 						}
