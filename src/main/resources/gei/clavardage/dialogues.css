@@ -1,21 +1,25 @@
 .dialogues{
     -fx-background-color: #666666;
 }
-.dialogues > *.button {
+.dialogues .button {
     -fx-background-color: #888888;
 }
-.dialogues > *.button > *.label {
-    -fx-fill: -fx-fill: #ac0000;
-}
-
-.dialogues > *.label.content{
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
+.dialogues .button .label {
     -fx-fill: #ac0000;
 }
 
-.dialogues:header *.header-panel *.label{
-    -fx-font-size: 18px;
-    -fx-font-style: bold;
+.dialogues:header {
+    -fx-background-color: #666666;
+}
+
+.dialogues:header .label {
     -fx-fill: #ac0000;
+}
+
+.dialogues .label {
+    -fx-text-fill: #ac0000;
+    font: 16 calibri;
+    -fx-font: 16 calibri;
+    font-style: normal bold;
+    -fx-font-style: normal bold;
 }
