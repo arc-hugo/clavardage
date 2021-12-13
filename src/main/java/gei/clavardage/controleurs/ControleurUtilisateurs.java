@@ -94,6 +94,7 @@ public class ControleurUtilisateurs implements Initializable {
 		tab.setOnClosed(e -> {
 			session.fermetureLocale();
 		});
+		tab.setText(util.getPseudo());
 		this.tabs.getTabs().add(tab);
 	}
 
@@ -201,7 +202,7 @@ public class ControleurUtilisateurs implements Initializable {
 
 		this.list.setOnMouseClicked(e -> {
 			Utilisateur util = list.getSelectionModel().getSelectedItem();
-			if (!util.isEnSession()) {
+			if (util != null && !util.isEnSession()) {
 				lancementSession(util);
 			}
 		});

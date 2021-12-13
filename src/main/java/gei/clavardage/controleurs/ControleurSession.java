@@ -17,9 +17,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import gei.clavardage.reseau.taches.TacheEnvoiTCP;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 public class ControleurSession implements Initializable {
 
@@ -34,6 +37,8 @@ public class ControleurSession implements Initializable {
 	private Button envoyer;
 	@FXML
 	private TextField texte;
+	@FXML
+	private VBox messages;
 
 	// TODO AccesBDD
 
@@ -65,12 +70,15 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void fermetureLocale() {
-		// TODO
+		// TODO Envoi "FIN"
 		fermeture();
 	}
 
 	public void fermetureDistante() {
-		// TODO
+		Alert ferme = new Alert(AlertType.INFORMATION);
+		ferme.setTitle("Fin de discussion");
+		ferme.setContentText("L'utilisateur "+modele.getDestinataire().getPseudo()+" vient de fermer la discussion.");
+		ferme.showAndWait();
 		fermeture();
 	}
 
@@ -79,6 +87,7 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void receptionMessage(Message msg) {
+		
 	}
 
 	public UUID getIdentifiant() {
