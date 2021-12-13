@@ -14,8 +14,6 @@ import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,10 +26,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class ControleurUtilisateurs implements Initializable {
 
@@ -99,7 +95,16 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void lancementSession(Utilisateur destinataire) {
-		tcp.demandeConnexion(destinataire);
+		if (destinataire.isActif()) {
+			if (!destinataire.isEnSession()) {
+				tcp.demandeConnexion(destinataire);
+			}
+		} else {
+			Alert refus = new Alert(AlertType.INFORMATION);
+			refus.setTitle("Deconnecté");
+			refus.setContentText("L'utilisateur "+destinataire.getPseudo()+" est deconnecté");
+			refus.show();
+		}
 	}
 
 	public void lancementAccepte(Socket sock) throws IOException {
@@ -145,7 +150,7 @@ public class ControleurUtilisateurs implements Initializable {
 				sock.close();
 			}
 		} else {
-			// TODO if util == null -> demande UDP de renvoi utilisateur
+			// TODO if util == null -> demande TCP de renvoi utilisateur
 			sock.close();
 		}
 	}

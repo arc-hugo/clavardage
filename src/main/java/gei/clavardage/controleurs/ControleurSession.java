@@ -17,10 +17,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import gei.clavardage.reseau.taches.TacheEnvoiTCP;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 
 public class ControleurSession implements Initializable {
@@ -81,7 +79,6 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void receptionMessage(Message msg) {
-
 	}
 
 	public UUID getIdentifiant() {
