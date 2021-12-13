@@ -11,7 +11,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <ListView fx:id="list" prefHeight="774.0" prefWidth="240.0" style="-fx-border-color: white;" styleClass="list-cell" stylesheets="@listViewParameters.css" BorderPane.alignment="CENTER" />
+      <ListView fx:id="list" onMouseClicked="#handleMouseClick" prefHeight="774.0" prefWidth="240.0" style="-fx-border-color: white;" styleClass="list-cell" stylesheets="@listViewParameters.css" BorderPane.alignment="CENTER" />
    </left>
    <top>
       <MenuBar style="-fx-background-color: #666666; -fx-text-shadow: white;" stylesheets="@item.css" BorderPane.alignment="CENTER">
