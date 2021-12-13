@@ -33,4 +33,8 @@ public class AccesTCP {
 	public void connexionAccepte(Socket sock) throws IOException {
 		ctrlUtilisateurs.lancementAccepte(sock);
 	}
+
+	public void utilisateurDeconnecte(Utilisateur destinatiare) {
+		ctrlUtilisateurs.deconnexionDistante(destinatiare.getIdentifiant());
+	}
 }
