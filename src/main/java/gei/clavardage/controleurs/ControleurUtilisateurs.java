@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -29,6 +30,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class ControleurUtilisateurs implements Initializable {
 	
@@ -64,6 +66,7 @@ public class ControleurUtilisateurs implements Initializable {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 		loader.setController(new ControleurPseudo());
 		Stage stage = new Stage();
+        stage.initStyle(StageStyle.DECORATED);
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setTitle("Saisie de pseudo");
 		try {
@@ -114,9 +117,13 @@ public class ControleurUtilisateurs implements Initializable {
 		
 		if (util != null) {
 			Alert confirm = new Alert(AlertType.CONFIRMATION);
+			DialogPane dialogPane = confirm.getDialogPane();
+			dialogPane.getStylesheets().add(getClass().getResource("dialogues.css").toExternalForm());
+			dialogPane.getStyleClass().add("dialogues");
 			confirm.setTitle("Demande de lancement de session de "+util.getPseudo());
 			confirm.setHeaderText(util.getPseudo()+" souhaite lancer une session de discussion avec vous !");
 			confirm.setContentText("Acceptez-vous cette demande ?");
+			
 
 			PrintWriter conn = new PrintWriter(sock.getOutputStream());
 			Optional<ButtonType> result = confirm.showAndWait();
