@@ -6,12 +6,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.ModeleSession;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionTCP;
-import gei.clavardage.reseau.services.ServiceEnvoiTCP;
 import javafx.fxml.FXML;
+import gei.clavardage.reseau.taches.TacheEnvoiTCP;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
@@ -19,7 +20,8 @@ public class ControleurSession implements Initializable {
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
-	private ServiceEnvoiTCP envoi;
+	private ExecuteurSession executeur;
+	private Socket sock;
 	
 	@FXML
 	private Label name;
@@ -28,16 +30,11 @@ public class ControleurSession implements Initializable {
 	
 	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException {
 		this.modele = new ModeleSession(local, destinataire);
+		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
 		this.reception.start();
-		this.envoi = new ServiceEnvoiTCP(sock);
+		this.sock = sock;
 	}
-	
-	
-	
-	
-	
-
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -46,16 +43,22 @@ public class ControleurSession implements Initializable {
 		
 	}
 	
-	public void fermeture() {
-		
+	private void fermeture() {
+		this.reception.cancel();
+	}
+	
+	public void fermetureLocale() {
+		// TODO
+		fermeture();
 	}
 	
 	public void fermetureDistante() {
-		
+		// TODO
+		fermeture();
 	}
 	
-	public void envoiMessage() {
-		
+	private void envoiMessage(Message msg) {
+		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, msg));
 	}
 	
 	public void receptionMessage(Message msg) {

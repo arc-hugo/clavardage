@@ -109,7 +109,17 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 	
 	public void deconnexion () {
-		udp.broadcastDeconnexion(modele.getUtilisateurLocal());
+		Alert deco = new Alert(AlertType.CONFIRMATION);
+		deco.setTitle("Déconnexion");
+		deco.setHeaderText("Vous vous appretez à vous déconnecter de l'application");
+		deco.setContentText("Êtes-vous sûr de vouloir continuer ?");
+		
+		Optional<ButtonType> opt = deco.showAndWait();
+		if (opt.get() == ButtonType.OK) {
+			udp.broadcastDeconnexion(modele.getUtilisateurLocal());
+			Stage stage = (Stage) this.list.getScene().getWindow();
+			stage.close();
+		}
 	}
 	
 	public void demandeSession(Socket sock) throws IOException {

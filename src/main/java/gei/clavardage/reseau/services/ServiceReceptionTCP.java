@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.controleurs.ControleurSession;
 import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.Texte;
-import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -16,10 +16,12 @@ public class ServiceReceptionTCP extends Service<Void> {
 
 	private ControleurSession session;
 	private BufferedReader reader;
+	private ExecuteurSession executeur;
 	
 	public ServiceReceptionTCP(ControleurSession session, Socket sock) throws IOException {
 		this.session = session;
 		this.reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+		this.executeur = ExecuteurSession.getInstance();
 	}
 	
 	@Override
@@ -37,7 +39,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 				}
 				msg = new Texte(session.getIdentifiant(), txt);
 				
-				Platform.runLater(new Runnable() {	
+				executeur.ajoutTache(new Runnable() {	
 					@Override
 					public void run() {
 						session.receptionMessage(msg);
