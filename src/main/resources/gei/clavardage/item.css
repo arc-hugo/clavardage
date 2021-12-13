@@ -1,10 +1,13 @@
 .menu-item .label {
     -fx-text-fill: #ac0000;
-    -fx-font: calibri;
-    -fx-font-style: bold;
+    font: 16 calibri;
+    -fx-font: 16 calibri;
+    font-style: normal bold;
+    -fx-font-style: normal bold;
 }
 
 .context-menu {
+	background-color: #888888;
     -fx-background-color: #888888;
     -fx-background-radius: 10;
 }

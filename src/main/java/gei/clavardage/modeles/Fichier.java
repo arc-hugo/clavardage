@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.UUID;
 
+import javafx.scene.Node;
+
 public class Fichier extends Message {
 
 	private File file;
@@ -17,11 +19,17 @@ public class Fichier extends Message {
 	}
 
 	@Override
-	public void send(Socket sock) throws IOException {
+	public void envoie(Socket sock) throws IOException {
 		OutputStream out = sock.getOutputStream();
 		PrintWriter writer = new PrintWriter(out, true);
 		writer.print("FICHIER "+ file.getName() +" ");
 		writer.println();
+	}
+
+	@Override
+	public Node affichage() {
+		
+		return null;
 	}
 
 }
