@@ -125,6 +125,9 @@ public class ControleurUtilisateurs implements Initializable {
 		deco.setTitle("Déconnexion");
 		deco.setHeaderText("Vous vous apprêtez à vous déconnecter de l'application.");
 		deco.setContentText("Êtes-vous sûr de vouloir continuer ?");
+		DialogPane dialogPane = deco.getDialogPane();
+		dialogPane.getStylesheets().add(App.class.getResource("dialogues.css").toExternalForm());
+		dialogPane.getStyleClass().add("dialogues");
 
 		Optional<ButtonType> opt = deco.showAndWait();
 		if (opt.get() == ButtonType.OK) {
