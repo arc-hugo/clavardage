@@ -31,7 +31,7 @@ public class TacheConnexionTCP extends Task<Void> {
 		try {
 			Socket sock = new Socket(destinataire.getAdresse(), ServiceReceptionConnexionTCP.RECEPTION_PORT);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-			System.out.print("Dans la tache de connexion tcp");
+
 			if (reader.readLine().equals("OK")) {
 				this.executeur.ajoutTache(new Runnable() {
 					@Override
