@@ -4,18 +4,21 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.UUID;
 
+import gei.clavardage.concurrent.ExecuteurReseau;
 import gei.clavardage.controleurs.ControleurUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
-import gei.clavardage.reseau.services.ServiceEnvoiUDP;
 import gei.clavardage.reseau.services.ServiceReceptionUDP;
+import gei.clavardage.reseau.taches.TacheEnvoiUDP;
 
 public class AccesUDP {
 	
-	ControleurUtilisateurs ctrlUtilisateurs;
-	ServiceReceptionUDP reception;
+	private ControleurUtilisateurs ctrlUtilisateurs;
+	private ServiceReceptionUDP reception;
+	private ExecuteurReseau executeur;
 	
 	public AccesUDP(ControleurUtilisateurs controleurUtilisateurs) {
 		this.ctrlUtilisateurs = controleurUtilisateurs;
+		this.executeur = ExecuteurReseau.getInstance();
 		this.reception = new ServiceReceptionUDP(this);
 		this.reception.start();
 	}
@@ -25,9 +28,7 @@ public class AccesUDP {
 	}
 	
 	private void envoi(String msg, InetAddress adresse, boolean broadcast) {
-		ServiceEnvoiUDP envoi = new ServiceEnvoiUDP(msg, adresse, broadcast);
-		envoi.start();
-		
+		this.executeur.ajoutTache(new TacheEnvoiUDP(msg, adresse, broadcast));
 	}
 	
 	private void pseudoInvalide(InetAddress adresse) {

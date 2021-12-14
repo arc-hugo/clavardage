@@ -65,7 +65,7 @@ public class ControleurUtilisateurs implements Initializable {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 		loader.setController(new ControleurPseudo());
 		Stage stage = new Stage();
-    stage.initStyle(StageStyle.DECORATED);
+		stage.initStyle(StageStyle.DECORATED);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle("Saisie de pseudo");
 		try {
@@ -76,7 +76,6 @@ public class ControleurUtilisateurs implements Initializable {
 				ControleurPseudo pseudo = loader.getController();
 				login = pseudo.getTxt();
 			}
-
 			udp.broadcastValidation(getIdentifiantLocal(), login);
 			modele.setPseudoLocal(login);
 		} catch (IOException e) {
