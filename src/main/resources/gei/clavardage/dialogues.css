@@ -1,20 +1,15 @@
 .dialogues{
-    -fx-background-color: #666666;
-}
-.dialogues .button {
     -fx-background-color: #888888;
 }
-.dialogues .button .label {
-    -fx-fill: #ac0000;
+.dialogues .button {
+    -fx-background-color: #999999;
+    -fx-text-fill: #ac0000;
 }
 
-.dialogues:header {
-    -fx-background-color: #666666;
+.dialogues:header .header-panel {
+    -fx-background-color: #888888;
 }
 
-.dialogues:header .label {
-    -fx-fill: #ac0000;
-}
 
 .dialogues .label {
     -fx-text-fill: #ac0000;
