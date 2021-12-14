@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import gei.clavardage.concurrent.ExecuteurSession;
+import gei.clavardage.modeles.Fin;
 import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.ModeleSession;
 import gei.clavardage.modeles.Texte;
@@ -67,10 +68,19 @@ public class ControleurSession implements Initializable {
 
 	private void fermeture() {
 		this.reception.cancel();
+		try {
+			this.sock.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void fermetureLocale() {
-		// TODO Envoi "FIN"
+		Fin msg = new Fin(getIdentifiant());
+		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, msg));
+	}
+	
+	public void confirmerFermeture() {
 		fermeture();
 	}
 
@@ -87,11 +97,11 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void receptionMessage(Message msg) {
-		
+		this.messages.getChildren().add(msg.affichage());
 	}
 
 	public UUID getIdentifiant() {
-		return modele.getIdentifiant();
+		return this.modele.getIdentifiant();
 	}
 
 }
