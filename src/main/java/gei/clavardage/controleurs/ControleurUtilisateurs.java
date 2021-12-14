@@ -65,7 +65,7 @@ public class ControleurUtilisateurs implements Initializable {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 		loader.setController(new ControleurPseudo());
 		Stage stage = new Stage();
-		stage.initStyle(StageStyle.DECORATED);
+		stage.initStyle(StageStyle.UNDECORATED);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle("Saisie de pseudo");
 		try {
