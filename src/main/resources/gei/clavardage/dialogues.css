@@ -8,7 +8,7 @@
     -fx-fill: #ac0000;
 }
 
-.dialogues:header {
+.dialogues:header .header-panel{
     -fx-background-color: #666666;
 }
 
