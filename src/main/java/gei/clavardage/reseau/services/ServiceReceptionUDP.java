@@ -30,7 +30,7 @@ public class ServiceReceptionUDP extends Service<Void> {
 				try {
 					@SuppressWarnings("resource")
 					DatagramSocket sock = new DatagramSocket(RECEPTION_PORT);
-					byte[] buffer = new byte[100];
+					byte[] buffer = new byte[200];
 					DatagramPacket paquet = new DatagramPacket(buffer, buffer.length);
 
 					while (true) {
