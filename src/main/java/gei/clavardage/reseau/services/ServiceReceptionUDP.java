@@ -30,12 +30,14 @@ public class ServiceReceptionUDP extends Service<Void> {
 				try {
 					@SuppressWarnings("resource")
 					DatagramSocket sock = new DatagramSocket(RECEPTION_PORT);
-					byte[] buffer = new byte[100];
+					byte[] buffer = new byte[200];
 					DatagramPacket paquet = new DatagramPacket(buffer, buffer.length);
 
 					while (true) {
+						System.out.println("wait udp");
 						sock.receive(paquet);
 						String message = new String(paquet.getData(), 0, paquet.getLength());
+						System.out.println(message);
 						executeur.ajoutTache(new TacheParseUDP(udp, message, paquet.getAddress()));
 					}
 				} catch (IOException e) {
