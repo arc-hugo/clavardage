@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.modeles.Fin;
+import gei.clavardage.modeles.FinOK;
 import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.ModeleSession;
 import gei.clavardage.modeles.Texte;
@@ -89,7 +90,11 @@ public class ControleurSession implements Initializable {
 		ferme.setTitle("Fin de discussion");
 		ferme.setContentText("L'utilisateur "+modele.getDestinataire().getPseudo()+" vient de fermer la discussion.");
 		ferme.showAndWait();
-		fermeture();
+		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, new FinOK(getIdentifiant()));
+		envoi.onSucceededProperty().addListener(e -> {
+			fermeture();
+		});
+		this.executeur.ajoutTache(envoi);
 	}
 
 	private void envoiMessage(Message msg) {

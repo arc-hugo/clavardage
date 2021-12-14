@@ -56,6 +56,15 @@ public class ServiceReceptionTCP extends Service<Void> {
 				});
 			}
 			
+			private void finok() {
+				executeur.ajoutTache(new Runnable() {
+					@Override
+					public void run() {
+						session.confirmerFermeture();
+					}
+				});
+			}
+			
 			@Override
 			protected Void call() throws IOException {
 				String type = "";
@@ -72,6 +81,9 @@ public class ServiceReceptionTCP extends Service<Void> {
 							break;
 						case "FIN":
 							fin();
+						case "FINOK":
+							finok();
+							break;
 						default:
 							break;
 						}
