@@ -2,23 +2,27 @@ package gei.clavardage.modeles;
 
 import java.util.UUID;
 
+import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.Callback;
 
 public class Utilisateur {
 	
 	private UUID uuid;
 	private String adresse;
 	private StringProperty pseudo;
-	private boolean actif;
-	private boolean enSession;
+	private BooleanProperty actif;
+	private BooleanProperty enSession;
 	
 	public Utilisateur(UUID uuid, String adresse, String pseudo, boolean actif) {
 		this.uuid = uuid;
 		this.adresse = adresse;
 		this.pseudo = new SimpleStringProperty(pseudo);
-		this.actif = actif;
-		this.enSession = false;
+		this.actif = new SimpleBooleanProperty(actif);
+		this.enSession = new SimpleBooleanProperty(false);
 	}
 	
 	public Utilisateur(String adresse, String pseudo, boolean actif) {
@@ -38,27 +42,36 @@ public class Utilisateur {
 	}
 	
 	public boolean isEnSession() {
-		return enSession;
+		return enSession.get();
 	}
 
 	public void setEnSession(boolean enSession) {
-		this.enSession = enSession;
+		this.enSession.set(enSession);
 	}
 
 	public boolean isActif() {
-		return actif;
+		return actif.get();
 	}
 	
 	public void setActif(boolean actif) {
-		this.actif = actif;
+		this.actif.set(actif);
 	}
 	
 	public String getAdresse() {
 		return this.adresse;
 	}
 	
+	public static Callback<Utilisateur, Observable[]> extractor() {
+        return new Callback<Utilisateur, Observable[]>() {
+            @Override
+            public Observable[] call(Utilisateur param) {
+                return new Observable[]{param.pseudo, param.actif, param.enSession};
+            }
+        };
+    }
+
 	@Override
 	public String toString() {
-		return pseudo.get();
+		return ""+pseudo.get()+":"+uuid;
 	}
 }
