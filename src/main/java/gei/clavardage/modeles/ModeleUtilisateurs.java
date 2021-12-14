@@ -1,6 +1,7 @@
 package gei.clavardage.modeles;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -23,7 +24,12 @@ public class ModeleUtilisateurs {
 			builder.append(range.charAt(i));
 		}
 		
-		this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), "localhost", builder.toString(), true);
+		try {
+			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), true);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.utilisateurs = FXCollections.observableArrayList(Utilisateur.extractor());
 		this.utilisateurs.addListener(new ListChangeListener<Utilisateur>() {
 			@Override
@@ -63,7 +69,7 @@ public class ModeleUtilisateurs {
 	public void connexion(UUID identifiant, InetAddress adresse, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve == -1) {
-			Utilisateur utilisateur = new Utilisateur(identifiant, adresse.getHostName(), pseudo, true);
+			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, true);
 			utilisateurs.add(utilisateur);
 			utilisateur.setActif(true);
 		} else {
@@ -113,15 +119,15 @@ public class ModeleUtilisateurs {
 		}
 	}
 	
-	private int getIndexByAdresse(String adresse) {
+	private int getIndexByAdresse(InetAddress inetAddress) {
 		return IntStream.range(0,utilisateurs.size())
-				.filter(u -> utilisateurs.get(u).getAdresse().equals(adresse))
+				.filter(u -> utilisateurs.get(u).getAdresse().equals(inetAddress))
 				.findFirst()
 				.orElse(-1);
 	}
 	
-	public Utilisateur getUtilisateurWithAdresse(String adresse) {
-		int trouve = getIndexByAdresse(adresse);
+	public Utilisateur getUtilisateurWithAdresse(InetAddress inetAddress) {
+		int trouve = getIndexByAdresse(inetAddress);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
 			return util;

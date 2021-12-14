@@ -9,6 +9,7 @@ import gei.clavardage.controleurs.ControleurUtilisateurs;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionUDP;
 import gei.clavardage.reseau.taches.TacheEnvoiUDP;
+import javafx.application.Platform;
 
 public class AccesUDP {
 	
@@ -24,7 +25,12 @@ public class AccesUDP {
 	}
 	
 	public void pseudoLocalInvalide() {
-		ctrlUtilisateurs.saisiePseudo();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				ctrlUtilisateurs.saisiePseudo();
+			}
+		});
 	}
 	
 	private void envoi(String msg, InetAddress adresse, boolean broadcast) {

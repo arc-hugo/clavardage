@@ -31,8 +31,11 @@ public class TacheConnexionTCP extends Task<Void> {
 		try {
 			Socket sock = new Socket(destinataire.getAdresse(), ServiceReceptionConnexionTCP.RECEPTION_PORT);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+			System.out.println("Read ok");
 
-			if (reader.readLine().equals("OK")) {
+			String line = reader.readLine();
+			System.out.println(line);
+			if (line.equals("OK")) {
 				this.executeur.ajoutTache(new Runnable() {
 					@Override
 					public void run() {

@@ -89,11 +89,10 @@ public class ControleurUtilisateurs implements Initializable {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
 
-		Tab tab = (Tab) loader.load();
+		Tab tab = new Tab(util.getPseudo(), loader.load());
 		tab.setOnClosed(e -> {
 			session.fermetureLocale();
 		});
-		tab.setText(util.getPseudo());
 		this.tabs.getTabs().add(tab);
 	}
 
@@ -105,15 +104,24 @@ public class ControleurUtilisateurs implements Initializable {
 		} else {
 			Alert refus = new Alert(AlertType.INFORMATION);
 			refus.setTitle("Deconnecté");
-			refus.setContentText("L'utilisateur "+destinataire.getPseudo()+" est deconnecté");
+			refus.setContentText("L'utilisateur " + destinataire.getPseudo() + " est deconnecté");
 			refus.show();
 		}
 	}
 
 	public void lancementAccepte(Socket sock) throws IOException {
-		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress().getHostAddress());
+		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		if (util != null) {
-			creationSession(util, sock);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						creationSession(util, sock);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		} else {
 			sock.close();
 		}
@@ -135,30 +143,45 @@ public class ControleurUtilisateurs implements Initializable {
 			System.exit(0);
 		}
 	}
+	
+	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException {
+		Alert confirm = new Alert(AlertType.CONFIRMATION);
+		DialogPane dialogPane = confirm.getDialogPane();
+		dialogPane.getStylesheets().add(App.class.getResource("dialogues.css").toExternalForm());
+		dialogPane.getStyleClass().add("dialogues");
+		confirm.setTitle("Demande de lancement de session de " + util.getPseudo());
+		confirm.setHeaderText(util.getPseudo() + " souhaite lancer une session de discussion avec vous !");
+		confirm.setContentText("Acceptez-vous cette demande ?");
+
+		PrintWriter conn = new PrintWriter(sock.getOutputStream());
+		Optional<ButtonType> result = confirm.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			conn.println("OK");
+			creationSession(util, sock);
+		} else {
+			conn.println();
+			conn.close();
+			sock.close();
+		}
+	}
 
 	public void demandeSession(Socket sock) throws IOException {
-		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress().getHostAddress());
+		System.out.println(sock.getInetAddress());
+		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 
 		if (util != null) {
-			Alert confirm = new Alert(AlertType.CONFIRMATION);
-			DialogPane dialogPane = confirm.getDialogPane();
-			dialogPane.getStylesheets().add(getClass().getResource("dialogues.css").toExternalForm());
-			dialogPane.getStyleClass().add("dialogues");
-			confirm.setTitle("Demande de lancement de session de "+util.getPseudo());
-			confirm.setHeaderText(util.getPseudo()+" souhaite lancer une session de discussion avec vous !");
-			confirm.setContentText("Acceptez-vous cette demande ?");
-			
-
-			PrintWriter conn = new PrintWriter(sock.getOutputStream());
-			Optional<ButtonType> result = confirm.showAndWait();
-			if (result.get() == ButtonType.OK) {
-				conn.println("OK");
-				creationSession(util, sock);
-			} else {
-				conn.println();
-				conn.close();
-				sock.close();
-			}
+			System.out.println("Utilisateur trouvé");
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						accepterConnexion(util, sock);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
 		} else {
 			// TODO if util == null -> demande TCP de renvoi utilisateur
 			sock.close();
@@ -190,31 +213,40 @@ public class ControleurUtilisateurs implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.list.setItems(this.modele.getUtilisateurs());
-		
+
 		PseudoClass inactive = PseudoClass.getPseudoClass("inactive");
-		this.list.setCellFactory(cell -> new ListCell<Utilisateur>() {
-			protected void updateItem(Utilisateur item, boolean empty) {
-				super.updateItem(item, empty);
-				if (empty) {
-					setText(null);
-					pseudoClassStateChanged(inactive, true);
-				} else {
-					setText(item.getPseudo());
-					if (item.isActif()) {
-						pseudoClassStateChanged(inactive, false);
-					} else {
+		this.list.setCellFactory(lv -> {
+			ListCell<Utilisateur> cell = new ListCell<Utilisateur>() {
+				protected void updateItem(Utilisateur item, boolean empty) {
+					super.updateItem(item, empty);
+					if (empty) {
+						setText(null);
 						pseudoClassStateChanged(inactive, true);
+					} else {
+						setText(item.getPseudo());
+						if (item.isActif()) {
+							pseudoClassStateChanged(inactive, false);
+						} else {
+							pseudoClassStateChanged(inactive, true);
+						}
 					}
 				}
-			}
+			};
+			cell.setOnMouseClicked(e -> {
+				System.out.println("Cellule clickée");
+				if (!cell.isEmpty()) {
+					lancementSession(cell.getItem());
+				}
+			});
+			return cell;
 		});
 
-		this.list.setOnMouseClicked(e -> {
+		/*this.list.setOnMouseClicked(e -> {
 			Utilisateur util = list.getSelectionModel().getSelectedItem();
 			if (util != null && !util.isEnSession()) {
 				lancementSession(util);
 			}
-		});
+		});*/
 
 		this.changerPseudo.setOnAction(e -> {
 			saisiePseudo();

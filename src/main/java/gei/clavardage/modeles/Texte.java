@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.UUID;
 
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 public class Texte extends Message {
 
@@ -25,7 +27,8 @@ public class Texte extends Message {
 
 	@Override
 	public Node affichage() {
-		// TODO Auto-generated method stub
-		return null;
+		Label msg = new Label(txt);
+		Label date = new Label(getDate().toString());
+		return new VBox(msg,date);
 	}
 }

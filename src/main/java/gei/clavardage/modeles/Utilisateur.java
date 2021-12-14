@@ -1,5 +1,6 @@
 package gei.clavardage.modeles;
 
+import java.net.InetAddress;
 import java.util.UUID;
 
 import javafx.beans.Observable;
@@ -12,20 +13,21 @@ import javafx.util.Callback;
 public class Utilisateur {
 	
 	private UUID uuid;
-	private String adresse;
+	private InetAddress adresse;
 	private StringProperty pseudo;
 	private BooleanProperty actif;
 	private BooleanProperty enSession;
 	
-	public Utilisateur(UUID uuid, String adresse, String pseudo, boolean actif) {
+	public Utilisateur(UUID uuid, InetAddress adresse, String pseudo, boolean actif) {
 		this.uuid = uuid;
 		this.adresse = adresse;
+		System.out.println(adresse);
 		this.pseudo = new SimpleStringProperty(pseudo);
 		this.actif = new SimpleBooleanProperty(actif);
 		this.enSession = new SimpleBooleanProperty(false);
 	}
 	
-	public Utilisateur(String adresse, String pseudo, boolean actif) {
+	public Utilisateur(InetAddress adresse, String pseudo, boolean actif) {
 		this(UUID.randomUUID(), adresse, pseudo, actif);
 	}
 	
@@ -57,7 +59,7 @@ public class Utilisateur {
 		this.actif.set(actif);
 	}
 	
-	public String getAdresse() {
+	public InetAddress getAdresse() {
 		return this.adresse;
 	}
 	

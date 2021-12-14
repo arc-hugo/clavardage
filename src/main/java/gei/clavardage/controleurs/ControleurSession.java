@@ -11,6 +11,7 @@ import gei.clavardage.modeles.Fin;
 import gei.clavardage.modeles.FinOK;
 import gei.clavardage.modeles.Message;
 import gei.clavardage.modeles.ModeleSession;
+import gei.clavardage.modeles.OK;
 import gei.clavardage.modeles.Texte;
 import gei.clavardage.modeles.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionTCP;
@@ -19,12 +20,14 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class ControleurSession implements Initializable {
 
@@ -62,9 +65,11 @@ public class ControleurSession implements Initializable {
 			public void handle(Event event) {
 				String txt = texte.getText();
 				envoiMessage(new Texte(modele.getIdentifiant(), txt));
+				texte.clear();
 			}
 		});
 		
+		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiant())));
 	}
 
 	private void fermeture() {
@@ -102,7 +107,9 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void receptionMessage(Message msg) {
-		this.messages.getChildren().add(msg.affichage());
+		Node noeud = msg.affichage();
+		if (noeud != null)
+			this.messages.getChildren().add(noeud);
 	}
 
 	public UUID getIdentifiant() {
