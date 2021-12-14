@@ -37,7 +37,6 @@ public class TacheEnvoiUDP extends Task<Void> {
 						if (broadcast != null) {
 							DatagramPacket packet = new DatagramPacket(this.message.getBytes(), this.message.length(), broadcast,
 									ServiceReceptionUDP.RECEPTION_PORT);
-							System.out.println(packet.getAddress());
 							sock.send(packet);
 						}
 					}
