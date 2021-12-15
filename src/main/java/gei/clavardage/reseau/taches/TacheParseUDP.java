@@ -74,7 +74,7 @@ public class TacheParseUDP extends Task<Void> {
 	
 	@Override
 	protected Void call() throws Exception {
-		if (NetworkInterface.getByInetAddress(adresse) == null) {
+		if (NetworkInterface.getByInetAddress(adresse) != null) {
 			switch (type) {
 			case "DECONNEXION":
 				deconnexion();

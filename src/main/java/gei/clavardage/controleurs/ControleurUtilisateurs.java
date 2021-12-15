@@ -233,20 +233,12 @@ public class ControleurUtilisateurs implements Initializable {
 				}
 			};
 			cell.setOnMouseClicked(e -> {
-				System.out.println("Cellule clickée");
 				if (!cell.isEmpty()) {
 					lancementSession(cell.getItem());
 				}
 			});
 			return cell;
 		});
-
-		/*this.list.setOnMouseClicked(e -> {
-			Utilisateur util = list.getSelectionModel().getSelectedItem();
-			if (util != null && !util.isEnSession()) {
-				lancementSession(util);
-			}
-		});*/
 
 		this.changerPseudo.setOnAction(e -> {
 			saisiePseudo();
