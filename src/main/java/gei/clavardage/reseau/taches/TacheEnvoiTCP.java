@@ -17,6 +17,8 @@ public class TacheEnvoiTCP extends Task<Void> {
 	
 	@Override
 	protected Void call() throws Exception {
+		System.out.println("envoi");
+		System.out.println(msg);
 		if (msg != null) {
 			msg.envoie(sock);
 		}

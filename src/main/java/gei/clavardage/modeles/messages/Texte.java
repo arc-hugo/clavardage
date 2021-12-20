@@ -32,4 +32,9 @@ public class Texte extends Message {
 		Label date = new Label(getDate().toString());
 		return new VBox(msg,date);
 	}
+	
+	@Override
+	public String toString() {
+		return txt;
+	}
 }
