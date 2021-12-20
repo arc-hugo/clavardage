@@ -68,7 +68,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			@Override
 			protected Void call() throws IOException {
 				String type = "";
-				System.out.println("OK Reception");
+				System.out.println("OK reception");
 				while (true) {
 					char cha = (char) reader.read();
 					System.out.print(cha);

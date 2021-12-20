@@ -16,8 +16,7 @@ public class Fin extends Message {
 	@Override
 	public void envoie(Socket sock) throws IOException {
 		PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-		writer.print("FIN ");
-		writer.print(Message.END_MSG);
+		writer.println("FIN");
 	}
 
 	@Override

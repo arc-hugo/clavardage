@@ -14,7 +14,6 @@ public class FinOK extends Fin {
 	@Override
 	public void envoie(Socket sock) throws IOException {
 		PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-		writer.print("FINOK ");
-		writer.print(Message.END_MSG);
+		writer.println("FINOK");
 	}
 }

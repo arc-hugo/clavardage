@@ -1,13 +1,14 @@
 package gei.clavardage.controleurs;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.util.*;
 
 import gei.clavardage.App;
+import gei.clavardage.modeles.messages.Fin;
+import gei.clavardage.modeles.messages.OK;
 import gei.clavardage.modeles.utilisateurs.Etat;
 import gei.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
@@ -151,15 +152,15 @@ public class ControleurUtilisateurs implements Initializable {
 		confirm.setTitle("Demande de lancement de session de " + util.getPseudo());
 		confirm.setHeaderText(util.getPseudo() + " souhaite lancer une session de discussion avec vous !");
 		confirm.setContentText("Acceptez-vous cette demande ?");
-
-		PrintWriter conn = new PrintWriter(sock.getOutputStream());
+		
 		Optional<ButtonType> result = confirm.showAndWait();
 		if (result.get() == ButtonType.OK) {
-			conn.println("OK");
+			OK ok = new OK(getIdentifiantLocal());
+			ok.envoie(sock);
 			creationSession(util, sock);
 		} else {
-			conn.println();
-			conn.close();
+			Fin fin = new Fin(getIdentifiantLocal());
+			fin.envoie(sock);
 			sock.close();
 		}
 	}

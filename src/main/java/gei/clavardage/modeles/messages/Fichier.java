@@ -23,7 +23,7 @@ public class Fichier extends Message {
 		OutputStream out = sock.getOutputStream();
 		PrintWriter writer = new PrintWriter(out, true);
 		writer.print("FICHIER "+ file.getName() +" ");
-		writer.println();
+		writer.print(Message.END_MSG);
 	}
 
 	@Override
