@@ -27,6 +27,7 @@ public class Texte extends Message {
 
 	@Override
 	public Node affichage() {
+		System.out.println(txt);
 		Label msg = new Label(txt);
 		Label date = new Label(getDate().toString());
 		return new VBox(msg,date);
