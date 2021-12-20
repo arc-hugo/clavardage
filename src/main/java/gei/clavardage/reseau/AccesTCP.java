@@ -23,12 +23,10 @@ public class AccesTCP {
 	}
 	
 	public void receptionConnexion(Socket sock) throws IOException {
-		System.out.println("Réception Connexion");
 		this.ctrlUtilisateurs.demandeSession(sock);
 	}
 
 	public void demandeConnexion(Utilisateur destinataire) {
-		System.out.println("Ajout tache connexion");
 		this.executeur.ajoutTache(new TacheConnexionTCP(this, destinataire));
 	}
 	

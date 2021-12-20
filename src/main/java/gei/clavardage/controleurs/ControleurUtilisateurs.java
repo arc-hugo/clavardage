@@ -165,9 +165,7 @@ public class ControleurUtilisateurs implements Initializable {
 	public void demandeSession(Socket sock) throws IOException {
 		System.out.println(sock.getInetAddress());
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
-
 		if (util != null) {
-			System.out.println("Utilisateur trouvé");
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
@@ -224,7 +222,6 @@ public class ControleurUtilisateurs implements Initializable {
 			ListCell<Utilisateur> cell = new ListCell<Utilisateur>() {
 				protected void updateItem(Utilisateur item, boolean empty) {
 					super.updateItem(item, empty);
-					System.out.println("update "+item);
 					if (empty) {
 						setText(null);
 					} else {
