@@ -21,7 +21,7 @@
                   <MenuButton mnemonicParsing="false" style="-fx-background-color: #888888; -fx-background-radius: 5;" text="Profile" textAlignment="CENTER" textFill="#ac0000">
                     <items>
                       <MenuItem fx:id="changerPseudo" mnemonicParsing="false" text="Changer de pseudo" />
-                        <MenuItem fx:id="deconnexion" mnemonicParsing="false" text="Se déconnecter" />
+                      <MenuItem fx:id="deconnexion" mnemonicParsing="false" text="Se déconnecter" />
                     </items>
                      <font>
                         <Font name="Calibri Bold" size="14.0" />

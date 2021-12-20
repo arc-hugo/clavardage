@@ -205,8 +205,13 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public boolean validationDistante(UUID uuid, String pseudo) {
-		if (!(modele.getPseudoLocal().trim().equals(pseudo.trim()))) {
-			this.modele.changementPseudo(uuid, pseudo);
+		if (!(this.modele.getPseudoLocal().trim().equals(pseudo.trim()))) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					modele.changementPseudo(uuid, pseudo);
+				}
+			});
 			return true;
 		}
 		return false;
@@ -218,7 +223,7 @@ public class ControleurUtilisateurs implements Initializable {
 		this.list.setItems(this.modele.getUtilisateurs());
 
 		// Change l'apparence des pseudos dans la liste des utilisateurs
-		// Lance une demande de session lorsque l'on click sur l
+		// Lance une demande de session lorsque l'on click sur un pseudo
 		PseudoClass inactive = PseudoClass.getPseudoClass("inactive");
 		PseudoClass session = PseudoClass.getPseudoClass("session");
 		this.list.setCellFactory(lv -> {
@@ -251,14 +256,17 @@ public class ControleurUtilisateurs implements Initializable {
 			return cell;
 		});
 
+		// Associe le changement de pseudo à une option du menu
 		this.changerPseudo.setOnAction(e -> {
 			saisiePseudo();
 		});
 
+		// Associe la déconnexion à une option du menu
 		this.deconnexion.setOnAction(e -> {
 			deconnexion();
 		});
 
+		// Lance le choix de pseudo avant la fin de l'initialisation
 		saisiePseudo();
 	}
 

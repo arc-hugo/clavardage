@@ -5,7 +5,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -87,16 +86,11 @@ public class ModeleUtilisateurs {
 		
 	}
 	
-	public void changementPseudo(UUID identifiant, String Pseudo) {
+	public void changementPseudo(UUID identifiant, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					util.setPseudo(Pseudo);
-				}
-			});
+			util.setPseudo(pseudo);
 		}
 	}
 	

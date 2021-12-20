@@ -31,7 +31,6 @@ public class TacheEnvoiUDP extends Task<Void> {
 			Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
 			while (interfaces.hasMoreElements()) {
 				NetworkInterface inter = interfaces.nextElement();
-				System.out.println(inter);
 				if (!inter.isLoopback()) {
 					for (InterfaceAddress interAdd : inter.getInterfaceAddresses()) {
 						InetAddress broadcast = interAdd.getBroadcast();
