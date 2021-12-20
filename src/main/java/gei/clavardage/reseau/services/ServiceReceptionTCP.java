@@ -71,19 +71,20 @@ public class ServiceReceptionTCP extends Service<Void> {
 				System.out.println("OK Reception");
 				while (true) {
 					char cha = (char) reader.read();
+					
 					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
 						type += cha;
 						cha = (char) reader.read();
 					}
 					if (cha >= 0) {
+						System.out.println(type);
 						switch (type) {
 						case "TXT":
-							System.out.println("OK TXT");
 							texte();
 							break;
 						case "FIN":
-							System.out.println("OK FIN");
 							fin();
+							break;
 						case "FINOK":
 							finok();
 							break;
