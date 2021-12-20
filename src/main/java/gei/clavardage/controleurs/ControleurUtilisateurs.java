@@ -28,6 +28,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -136,6 +137,7 @@ public class ControleurUtilisateurs implements Initializable {
 		Optional<ButtonType> opt = deco.showAndWait();
 		if (opt.get() == ButtonType.OK) {
 			udp.broadcastDeconnexion(modele.getUtilisateurLocal());
+			this.tabs.getTabs().clear();
 			Platform.exit();
 			System.exit(0);
 		}
@@ -252,6 +254,9 @@ public class ControleurUtilisateurs implements Initializable {
 			});
 			return cell;
 		});
+		
+		// Fermeture possible de l'onglet selectionné
+		this.tabs.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 
 		// Associe le changement de pseudo à une option du menu
 		this.changerPseudo.setOnAction(e -> {
