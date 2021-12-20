@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 public class ModeleUtilisateurs {
@@ -24,22 +23,12 @@ public class ModeleUtilisateurs {
 		}
 		
 		try {
-			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), new Connecte());
+			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), Etat.CONNECTE);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.utilisateurs = FXCollections.observableArrayList(Utilisateur.extractor());
-		this.utilisateurs.addListener(new ListChangeListener<Utilisateur>() {
-			@Override
-			public void onChanged(Change<? extends Utilisateur> c) {
-				while (c.next()) {
-					if (c.wasUpdated()) {
-						
-					}
-				}
-			}			
-		});
 	}
 	
 	public Utilisateur getUtilisateurLocal() {
@@ -68,12 +57,12 @@ public class ModeleUtilisateurs {
 	public void connexion(UUID identifiant, InetAddress adresse, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve == -1) {
-			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, new Connecte());
+			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, Etat.CONNECTE);
 			utilisateurs.add(utilisateur);
 		} else {
 			Utilisateur util = utilisateurs.get(trouve);
 			util.setPseudo(pseudo);
-			util.changementEtat(new Connecte());
+			util.setEtat(Etat.CONNECTE);
 		}
 	}
 
@@ -85,10 +74,10 @@ public class ModeleUtilisateurs {
 		}
 	}
 	
-	public void setEtat(UUID identifiant,Etat etat) {
+	public void setEtat(UUID identifiant, Etat etat) {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
-			utilisateurs.get(trouve).changementEtat(etat);
+			utilisateurs.get(trouve).setEtat(etat);
 		}
 	}
 	

@@ -1,7 +1,8 @@
 package gei.clavardage.modeles.utilisateurs;
 
-public interface Etat {
-	public boolean isActif();
-	public boolean isEnSession();
-	public boolean isEnAttente();
+public enum Etat  {
+	CONNECTE,
+	DECONNECTE,
+	EN_SESSION,
+	EN_ATTENTE
 }

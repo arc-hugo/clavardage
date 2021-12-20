@@ -8,9 +8,7 @@ import java.net.URL;
 import java.util.*;
 
 import gei.clavardage.App;
-import gei.clavardage.modeles.utilisateurs.Deconnecte;
-import gei.clavardage.modeles.utilisateurs.EnAttente;
-import gei.clavardage.modeles.utilisateurs.EnSession;
+import gei.clavardage.modeles.utilisateurs.Etat;
 import gei.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
@@ -84,7 +82,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	private void creationSession(Utilisateur util, Socket sock) throws IOException {
-		this.modele.setEtat(util.getIdentifiant(), new EnSession());
+		this.modele.setEtat(util.getIdentifiant(), Etat.EN_SESSION);
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
@@ -97,11 +95,9 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void lancementSession(Utilisateur destinataire) {
-		if (destinataire.isActif()) {
-			if (!destinataire.isEnSession() && !destinataire.isEnAttente()) {
-				destinataire.changementEtat(new EnAttente());
+		if (destinataire.getEtat() == Etat.CONNECTE) {
+				destinataire.setEtat(Etat.EN_ATTENTE);
 				tcp.demandeConnexion(destinataire);
-			}
 		} else {
 			Alert refus = new Alert(AlertType.INFORMATION);
 			refus.setTitle("Deconnecté");
@@ -199,7 +195,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void deconnexionDistante(UUID identifiant) {
-		this.modele.setEtat(identifiant, new Deconnecte());
+		this.modele.setEtat(identifiant, Etat.DECONNECTE);
 	}
 
 	public boolean validationDistante(UUID uuid, String pseudo) {
@@ -233,16 +229,21 @@ public class ControleurUtilisateurs implements Initializable {
 						setText(null);
 					} else {
 						setText(item.getPseudo());
-						if (item.isActif()) {
-							if (item.isEnSession()) {
-								pseudoClassStateChanged(session, true);
-							} else {
-								pseudoClassStateChanged(session, false);
-							}
-							pseudoClassStateChanged(inactive, false);
-						} else {
-							pseudoClassStateChanged(inactive, true);
+						switch (item.getEtat()) {
+						case CONNECTE:
 							pseudoClassStateChanged(session, false);
+							pseudoClassStateChanged(inactive, false);
+							break;
+						case DECONNECTE:
+							pseudoClassStateChanged(session, false);
+							pseudoClassStateChanged(inactive, true);
+							break;
+						case EN_SESSION:
+							pseudoClassStateChanged(session, true);
+							pseudoClassStateChanged(inactive, false);
+							break;
+						default:
+							break;
 						}
 					}
 				}

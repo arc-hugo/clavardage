@@ -4,6 +4,8 @@ import java.net.InetAddress;
 import java.util.UUID;
 
 import javafx.beans.Observable;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
@@ -13,14 +15,14 @@ public class Utilisateur {
 	private UUID uuid;
 	private InetAddress adresse;
 	private StringProperty pseudo;
-	private Etat etat;
+	private ObjectProperty<Etat> etat;
 	
 	public Utilisateur(UUID uuid, InetAddress adresse, String pseudo, Etat etat) {
 		this.uuid = uuid;
 		this.adresse = adresse;
 		System.out.println(adresse);
 		this.pseudo = new SimpleStringProperty(pseudo);
-		this.etat = etat;
+		this.etat = new SimpleObjectProperty<Etat>(etat);
 	}
 	
 	public Utilisateur(InetAddress adresse, String pseudo, Etat etat) {
@@ -39,20 +41,12 @@ public class Utilisateur {
 		return this.uuid;
 	}
 	
-	public void changementEtat(Etat etat) {
-		this.etat = etat;
+	public void setEtat(Etat etat) {
+		this.etat.set(etat);
 	}
 	
-	public boolean isActif() {
-		return this.etat.isActif();
-	}
-	
-	public boolean isEnSession() {
-		return this.etat.isEnSession();
-	}
-	
-	public boolean isEnAttente() {
-		return this.etat.isEnAttente();
+	public Etat getEtat() {
+		return this.etat.get();
 	}
 	
 	public InetAddress getAdresse() {
@@ -63,7 +57,7 @@ public class Utilisateur {
         return new Callback<Utilisateur, Observable[]>() {
             @Override
             public Observable[] call(Utilisateur param) {
-                return new Observable[]{param.pseudo};
+                return new Observable[]{param.pseudo, param.etat};
             }
         };
     }
