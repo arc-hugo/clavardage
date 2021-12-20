@@ -68,6 +68,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			@Override
 			protected Void call() throws IOException {
 				String type = "";
+				System.out.println("OK Reception");
 				while (true) {
 					char cha = (char) reader.read();
 					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
@@ -77,9 +78,11 @@ public class ServiceReceptionTCP extends Service<Void> {
 					if (cha >= 0) {
 						switch (type) {
 						case "TXT":
+							System.out.println("OK TXT");
 							texte();
 							break;
 						case "FIN":
+							System.out.println("OK FIN");
 							fin();
 						case "FINOK":
 							finok();
