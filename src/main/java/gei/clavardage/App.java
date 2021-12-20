@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,9 +24,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-    	ControleurUtilisateurs controleur = new ControleurUtilisateurs();
-    	VBox box = new VBox();
-    	
+    	ControleurUtilisateurs controleur = new ControleurUtilisateurs();    	
     	
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("principal.fxml"));
         fxmlLoader.setController(controleur);

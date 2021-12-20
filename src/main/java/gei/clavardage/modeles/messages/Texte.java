@@ -1,4 +1,4 @@
-package gei.clavardage.modeles;
+package gei.clavardage.modeles.messages;
 
 import java.io.IOException;
 import java.io.PrintWriter;

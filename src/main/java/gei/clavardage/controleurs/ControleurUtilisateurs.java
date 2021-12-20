@@ -8,8 +8,10 @@ import java.net.URL;
 import java.util.*;
 
 import gei.clavardage.App;
-import gei.clavardage.modeles.ModeleUtilisateurs;
-import gei.clavardage.modeles.Utilisateur;
+import gei.clavardage.modeles.utilisateurs.EnAttente;
+import gei.clavardage.modeles.utilisateurs.EnSession;
+import gei.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
+import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
 import javafx.application.Platform;
@@ -84,7 +86,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	private void creationSession(Utilisateur util, Socket sock) throws IOException {
-		util.setEnSession(true);
+		this.modele.setEtat(util.getIdentifiant(), new EnSession());
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
@@ -98,7 +100,8 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public void lancementSession(Utilisateur destinataire) {
 		if (destinataire.isActif()) {
-			if (!destinataire.isEnSession()) {
+			if (!destinataire.isEnSession() && !destinataire.isEnAttente()) {
+				this.modele.setEtat(destinataire.getIdentifiant(), new EnAttente());
 				tcp.demandeConnexion(destinataire);
 			}
 		} else {
@@ -199,7 +202,6 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public void deconnexionDistante(UUID identifiant) {
 		modele.deconnexion(identifiant);
-		modele.setEnSession(identifiant, false);
 	}
 
 	public boolean validationDistante(UUID uuid, String pseudo) {
@@ -212,22 +214,31 @@ public class ControleurUtilisateurs implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		// Lie la vue de la liste à la liste d'utilisateurs du modèle
 		this.list.setItems(this.modele.getUtilisateurs());
 
+		// Change l'apparence des pseudos dans la liste des utilisateurs
+		// Lance une demande de session lorsque l'on click sur l
 		PseudoClass inactive = PseudoClass.getPseudoClass("inactive");
+		PseudoClass session = PseudoClass.getPseudoClass("session");
 		this.list.setCellFactory(lv -> {
 			ListCell<Utilisateur> cell = new ListCell<Utilisateur>() {
 				protected void updateItem(Utilisateur item, boolean empty) {
 					super.updateItem(item, empty);
 					if (empty) {
 						setText(null);
-						pseudoClassStateChanged(inactive, true);
 					} else {
 						setText(item.getPseudo());
 						if (item.isActif()) {
+							if (item.isEnSession()) {
+								pseudoClassStateChanged(session, true);
+							} else {
+								pseudoClassStateChanged(session, false);
+							}
 							pseudoClassStateChanged(inactive, false);
 						} else {
 							pseudoClassStateChanged(inactive, true);
+							pseudoClassStateChanged(session, false);
 						}
 					}
 				}

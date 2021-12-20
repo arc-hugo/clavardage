@@ -1,11 +1,9 @@
-package gei.clavardage.modeles;
+package gei.clavardage.modeles.utilisateurs;
 
 import java.net.InetAddress;
 import java.util.UUID;
 
 import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.util.Callback;
@@ -15,20 +13,18 @@ public class Utilisateur {
 	private UUID uuid;
 	private InetAddress adresse;
 	private StringProperty pseudo;
-	private BooleanProperty actif;
-	private BooleanProperty enSession;
+	private Etat etat;
 	
-	public Utilisateur(UUID uuid, InetAddress adresse, String pseudo, boolean actif) {
+	public Utilisateur(UUID uuid, InetAddress adresse, String pseudo, Etat etat) {
 		this.uuid = uuid;
 		this.adresse = adresse;
 		System.out.println(adresse);
 		this.pseudo = new SimpleStringProperty(pseudo);
-		this.actif = new SimpleBooleanProperty(actif);
-		this.enSession = new SimpleBooleanProperty(false);
+		this.etat = etat;
 	}
 	
-	public Utilisateur(InetAddress adresse, String pseudo, boolean actif) {
-		this(UUID.randomUUID(), adresse, pseudo, actif);
+	public Utilisateur(InetAddress adresse, String pseudo, Etat etat) {
+		this(UUID.randomUUID(), adresse, pseudo, etat);
 	}
 	
 	public String getPseudo() {
@@ -43,20 +39,20 @@ public class Utilisateur {
 		return this.uuid;
 	}
 	
-	public boolean isEnSession() {
-		return enSession.get();
-	}
-
-	public void setEnSession(boolean enSession) {
-		this.enSession.set(enSession);
-	}
-
-	public boolean isActif() {
-		return actif.get();
+	public void changementEtat(Etat etat) {
+		this.etat = etat;
 	}
 	
-	public void setActif(boolean actif) {
-		this.actif.set(actif);
+	public boolean isActif() {
+		return this.etat.isActif();
+	}
+	
+	public boolean isEnSession() {
+		return this.etat.isEnSession();
+	}
+	
+	public boolean isEnAttente() {
+		return this.etat.isEnAttente();
 	}
 	
 	public InetAddress getAdresse() {
@@ -67,7 +63,7 @@ public class Utilisateur {
         return new Callback<Utilisateur, Observable[]>() {
             @Override
             public Observable[] call(Utilisateur param) {
-                return new Observable[]{param.pseudo, param.actif, param.enSession};
+                return new Observable[]{param.pseudo};
             }
         };
     }

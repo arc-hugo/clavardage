@@ -1,4 +1,4 @@
-package gei.clavardage.modeles;
+package gei.clavardage.modeles.utilisateurs;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,7 +25,7 @@ public class ModeleUtilisateurs {
 		}
 		
 		try {
-			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), true);
+			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), new Connecte());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,13 +69,12 @@ public class ModeleUtilisateurs {
 	public void connexion(UUID identifiant, InetAddress adresse, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve == -1) {
-			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, true);
+			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, new Connecte());
 			utilisateurs.add(utilisateur);
-			utilisateur.setActif(true);
 		} else {
 			Utilisateur util = utilisateurs.get(trouve);
 			util.setPseudo(pseudo);
-			util.setActif(true);
+			util.changementEtat(new Connecte());
 		}
 	}
 	
@@ -83,7 +82,7 @@ public class ModeleUtilisateurs {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
-			util.setActif(false);
+			util.changementEtat(new Deconnecte());
 		}
 		
 	}
@@ -101,21 +100,10 @@ public class ModeleUtilisateurs {
 		}
 	}
 	
-	public boolean estActif(UUID identifiant) {
+	public void setEtat(UUID identifiant,Etat etat) {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
-			Utilisateur util = utilisateurs.get(trouve);
-			return util.isActif();
-		
-		} else {
-			return false;
-		}
-	}
-	
-	public void setEnSession(UUID identifiant, boolean session) {
-		int trouve = getIndexById(identifiant);
-		if (trouve >=0) {
-			utilisateurs.get(trouve).setEnSession(session);
+			utilisateurs.get(trouve).changementEtat(etat);
 		}
 	}
 	

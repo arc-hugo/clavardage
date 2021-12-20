@@ -7,8 +7,8 @@ import java.net.Socket;
 
 import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.controleurs.ControleurSession;
-import gei.clavardage.modeles.Message;
-import gei.clavardage.modeles.Texte;
+import gei.clavardage.modeles.messages.Message;
+import gei.clavardage.modeles.messages.Texte;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 

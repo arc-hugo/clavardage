@@ -1,6 +1,8 @@
-package gei.clavardage.modeles;
+package gei.clavardage.modeles.session;
 
 import java.util.UUID;
+
+import gei.clavardage.modeles.utilisateurs.Utilisateur;
 
 public class ModeleSession {
 

@@ -1,4 +1,4 @@
-package gei.clavardage.modeles;
+package gei.clavardage.modeles.messages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -7,20 +7,22 @@ import java.util.UUID;
 
 import javafx.scene.Node;
 
-public class OK extends Message {
+public class Fin extends Message {
 
-	public OK(UUID author) {
+	public Fin(UUID author) {
 		super(author);
 	}
 
 	@Override
 	public void envoie(Socket sock) throws IOException {
 		PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-		writer.println("OK");
+		writer.print("FIN ");
+		writer.print(Message.END_MSG);
 	}
 
 	@Override
 	public Node affichage() {
 		return null;
 	}
+
 }

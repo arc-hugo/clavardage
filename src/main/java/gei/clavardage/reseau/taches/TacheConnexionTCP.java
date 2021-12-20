@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import gei.clavardage.concurrent.ExecuteurSession;
-import gei.clavardage.modeles.Utilisateur;
+import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
 import javafx.concurrent.Task;

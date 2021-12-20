@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import gei.clavardage.concurrent.ExecuteurReseau;
 import gei.clavardage.controleurs.ControleurUtilisateurs;
-import gei.clavardage.modeles.Utilisateur;
+import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionUDP;
 import gei.clavardage.reseau.taches.TacheEnvoiUDP;
 import javafx.application.Platform;

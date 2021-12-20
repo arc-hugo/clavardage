@@ -5,7 +5,7 @@ import java.net.Socket;
 
 import gei.clavardage.concurrent.ExecuteurReseau;
 import gei.clavardage.controleurs.ControleurUtilisateurs;
-import gei.clavardage.modeles.Utilisateur;
+import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
 import gei.clavardage.reseau.taches.TacheConnexionTCP;
 
