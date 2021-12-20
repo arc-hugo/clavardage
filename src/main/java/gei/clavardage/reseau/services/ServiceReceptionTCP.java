@@ -71,7 +71,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 				System.out.println("OK Reception");
 				while (true) {
 					char cha = (char) reader.read();
-					
+					System.out.print(cha);
 					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
 						type += cha;
 						cha = (char) reader.read();
