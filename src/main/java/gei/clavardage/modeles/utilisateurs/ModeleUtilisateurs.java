@@ -76,16 +76,7 @@ public class ModeleUtilisateurs {
 			util.changementEtat(new Connecte());
 		}
 	}
-	
-	public void deconnexion(UUID identifiant) {
-		int trouve = getIndexById(identifiant);
-		if (trouve >=0) {
-			Utilisateur util = utilisateurs.get(trouve);
-			util.changementEtat(new Deconnecte());
-		}
-		
-	}
-	
+
 	public void changementPseudo(UUID identifiant, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {

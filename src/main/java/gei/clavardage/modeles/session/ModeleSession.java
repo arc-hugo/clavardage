@@ -14,7 +14,7 @@ public class ModeleSession {
 		this.destinataire = destinataire;
 	}
 	
-	public UUID getIdentifiant() {
+	public UUID getIdentifiantLocal() {
 		return this.utilisateurLocal.getIdentifiant();
 	}
 	

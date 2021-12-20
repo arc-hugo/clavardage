@@ -37,7 +37,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					txt += cha;
 					cha = (char) reader.read();
 				}
-				msg = new Texte(session.getIdentifiant(), txt);
+				msg = new Texte(session.getIdentifiantLocal(), txt);
 				
 				executeur.ajoutTache(new Runnable() {	
 					@Override

@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.*;
 
 import gei.clavardage.App;
+import gei.clavardage.modeles.utilisateurs.Deconnecte;
 import gei.clavardage.modeles.utilisateurs.EnAttente;
 import gei.clavardage.modeles.utilisateurs.EnSession;
 import gei.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
@@ -35,14 +36,10 @@ import javafx.stage.StageStyle;
 
 public class ControleurUtilisateurs implements Initializable {
 
-	@FXML
-	private TabPane tabs;
-	@FXML
-	private ListView<Utilisateur> list;
-	@FXML
-	private MenuItem deconnexion;
-	@FXML
-	private MenuItem changerPseudo;
+	@FXML private TabPane tabs;
+	@FXML private ListView<Utilisateur> list;
+	@FXML private MenuItem deconnexion;
+	@FXML private MenuItem changerPseudo;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
@@ -62,26 +59,27 @@ public class ControleurUtilisateurs implements Initializable {
 		return modele.getUtilisateurLocal().getPseudo();
 	}
 
-	@FXML
 	public void saisiePseudo() {
-		FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
-		loader.setController(new ControleurPseudo());
-		Stage stage = new Stage();
-		stage.initStyle(StageStyle.DECORATED);
-		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setTitle("Saisie de pseudo");
-		try {
-			stage.setScene((Scene) loader.load());
-			String login = "";
-			while (login.equals("")) {
-				stage.showAndWait();
-				ControleurPseudo pseudo = loader.getController();
-				login = pseudo.getTxt();
+		if (!ControleurPseudo.isActif()) {
+			FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
+			loader.setController(new ControleurPseudo());
+			Stage stage = new Stage();
+			stage.initStyle(StageStyle.DECORATED);
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.setTitle("Saisie de pseudo");
+			try {
+				stage.setScene((Scene) loader.load());
+				String login = "";
+				while (login.equals("")) {
+					stage.showAndWait();
+					ControleurPseudo pseudo = loader.getController();
+					login = pseudo.getTxt();
+				}
+				udp.broadcastValidation(getIdentifiantLocal(), login);
+				modele.setPseudoLocal(login);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			udp.broadcastValidation(getIdentifiantLocal(), login);
-			modele.setPseudoLocal(login);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -101,7 +99,7 @@ public class ControleurUtilisateurs implements Initializable {
 	public void lancementSession(Utilisateur destinataire) {
 		if (destinataire.isActif()) {
 			if (!destinataire.isEnSession() && !destinataire.isEnAttente()) {
-				this.modele.setEtat(destinataire.getIdentifiant(), new EnAttente());
+				destinataire.changementEtat(new EnAttente());
 				tcp.demandeConnexion(destinataire);
 			}
 		} else {
@@ -201,7 +199,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void deconnexionDistante(UUID identifiant) {
-		modele.deconnexion(identifiant);
+		this.modele.setEtat(identifiant, new Deconnecte());
 	}
 
 	public boolean validationDistante(UUID uuid, String pseudo) {
