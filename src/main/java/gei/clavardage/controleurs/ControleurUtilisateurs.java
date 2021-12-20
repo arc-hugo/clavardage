@@ -228,6 +228,7 @@ public class ControleurUtilisateurs implements Initializable {
 			ListCell<Utilisateur> cell = new ListCell<Utilisateur>() {
 				protected void updateItem(Utilisateur item, boolean empty) {
 					super.updateItem(item, empty);
+					System.out.println("update "+item);
 					if (empty) {
 						setText(null);
 					} else {
