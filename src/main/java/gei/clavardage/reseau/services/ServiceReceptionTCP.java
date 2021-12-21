@@ -32,6 +32,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			private Message msg;
 			
 			private void texte() throws IOException {
+				System.out.println("TXT recu");
 				String txt = "";
 				char cha = (char) reader.read();
 				while(cha != Message.END_MSG) {
@@ -49,6 +50,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			}
 			
 			private void fin() {
+				System.out.println("FIN recu");
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
@@ -58,6 +60,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			}
 			
 			private void finok() {
+				System.out.println("FINOK recu");
 				executeur.ajoutTache(new Runnable() {
 					@Override
 					public void run() {
@@ -72,13 +75,11 @@ public class ServiceReceptionTCP extends Service<Void> {
 				System.out.println("OK reception");
 				while (true) {
 					char cha = (char) reader.read();
-					System.out.print(cha);
 					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
 						type += cha;
 						cha = (char) reader.read();
 					}
 					if (cha >= 0) {
-						System.out.println(type);
 						switch (type) {
 						case "TXT":
 							texte();
