@@ -62,7 +62,9 @@ public class ModeleUtilisateurs {
 		} else {
 			Utilisateur util = utilisateurs.get(trouve);
 			util.setPseudo(pseudo);
-			util.setEtat(EtatUtilisateur.CONNECTE);
+			if (util.getEtat() != EtatUtilisateur.EN_ATTENTE || util.getEtat() != EtatUtilisateur.EN_SESSION) {
+				util.setEtat(EtatUtilisateur.CONNECTE);
+			}
 		}
 	}
 

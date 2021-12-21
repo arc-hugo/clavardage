@@ -48,18 +48,16 @@ public class AccesUDP {
 		ctrlUtilisateurs.deconnexionDistante(identifiant);
 	}
 	
-	public boolean validationUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
+	public void validationUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
 		System.out.println(pseudo);
 		if (! ctrlUtilisateurs.validationDistante(uuid, pseudo)) {
 			pseudoInvalide(adresse);
-			return false;
 		}
 		ctrlUtilisateurs.receptionUtilisateur(uuid, adresse, pseudo);
 		String msg = "UTILISATEUR " 
 				+ ctrlUtilisateurs.getIdentifiantLocal()+" "
 				+ ctrlUtilisateurs.getPseudoLocal();
 		envoi(msg, adresse, false);
-		return true;
 	}
 	
 	public void receptionUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
