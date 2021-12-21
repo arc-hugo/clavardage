@@ -67,11 +67,6 @@ public class ControleurSession implements Initializable {
 			@Override
 			public void run() {
 				reception.cancel();
-				try {
-					sock.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		});
 	}
