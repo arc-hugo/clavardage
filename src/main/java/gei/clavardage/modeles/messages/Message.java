@@ -7,8 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import javafx.scene.Node;
-
 public abstract class Message {
 
 	public static char END_MSG = 3;

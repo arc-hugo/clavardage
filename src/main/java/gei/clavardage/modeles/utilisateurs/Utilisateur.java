@@ -20,7 +20,6 @@ public class Utilisateur {
 	public Utilisateur(UUID uuid, InetAddress adresse, String pseudo, EtatUtilisateur etat) {
 		this.uuid = uuid;
 		this.adresse = adresse;
-		System.out.println(adresse);
 		this.pseudo = new SimpleStringProperty(pseudo);
 		this.etat = new SimpleObjectProperty<EtatUtilisateur>(etat);
 	}

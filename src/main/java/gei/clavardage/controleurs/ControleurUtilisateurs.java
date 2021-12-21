@@ -171,7 +171,6 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void demandeSession(Socket sock) throws IOException {
-		System.out.println(sock.getInetAddress());
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		if (util != null) {
 			Platform.runLater(new Runnable() {

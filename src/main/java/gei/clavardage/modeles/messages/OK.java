@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.UUID;
 
-import javafx.scene.Node;
-
 public class OK extends Message {
 
 	public OK(UUID author) {

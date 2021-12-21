@@ -38,14 +38,12 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("cancel");
 	}
 	
 	@Override
 	protected Task<Void> createTask() {
 		return new Task<Void>() {
 			private void texte() throws IOException {
-				System.out.println("TXT recu");
 				String txt = "";
 				char cha = (char) reader.read();
 				while(cha != Message.END_MSG) {
@@ -73,7 +71,6 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 			}
 			
 			private void fin() {
-				System.out.println("FIN recu");
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
@@ -83,7 +80,6 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 			}
 			
 			private void finok() {
-				System.out.println("FINOK recu");
 				executeur.ajoutTache(new Runnable() {
 					@Override
 					public void run() {
@@ -101,7 +97,6 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 						cha = (char) reader.read();
 					}
 					if (cha >= 0) {
-						System.out.println(type);
 						switch (type) {
 						case "TXT":
 							texte();

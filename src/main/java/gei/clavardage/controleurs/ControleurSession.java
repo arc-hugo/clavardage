@@ -56,8 +56,10 @@ public class ControleurSession implements Initializable {
 		
 		this.envoyer.setOnAction(e ->  {
 				String txt = texte.getText();
-				envoiMessage(new Texte(modele.getIdentifiantLocal(), txt));
-				texte.clear();
+				if (!txt.equals("")) {
+					envoiMessage(new Texte(modele.getIdentifiantLocal(), txt));
+					texte.clear();
+				}
 		});
 		
 		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiantLocal())));

@@ -29,7 +29,6 @@ public class Texte extends MessageAffiche {
 
 	@Override
 	public Node affichage() {
-		System.out.println(txt);
 		Label msg = new Label(txt);
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
 		return new VBox(msg,date);
