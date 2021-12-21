@@ -3,8 +3,10 @@ package gei.clavardage.modeles.utilisateurs;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.prefs.Preferences;
 import java.util.stream.IntStream;
 
+import gei.clavardage.App;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,7 +25,14 @@ public class ModeleUtilisateurs {
 		}
 		
 		try {
-			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), EtatUtilisateur.CONNECTE);
+			Preferences pref = Preferences.userNodeForPackage(App.class);
+			String uuid = pref.get("uuid", null);
+			if (uuid == null) {
+				this.utilisateurLocal = new Utilisateur(InetAddress.getAllByName("localhost")[0], builder.toString(), EtatUtilisateur.CONNECTE);
+				pref.put("uuid", this.utilisateurLocal.getIdentifiant().toString());
+			} else {
+				this.utilisateurLocal = new Utilisateur(UUID.fromString(uuid), InetAddress.getAllByName("localhost")[0], builder.toString(), EtatUtilisateur.CONNECTE);
+			}
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
