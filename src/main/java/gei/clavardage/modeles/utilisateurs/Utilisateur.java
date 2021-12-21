@@ -33,6 +33,10 @@ public class Utilisateur {
 		return this.pseudo.get();
 	}
 	
+	public StringProperty getPseudoPropery() {
+		return this.pseudo;
+	}
+	
 	public void setPseudo(String new_pseudo) {
 		this.pseudo.set(new_pseudo);		
 	}

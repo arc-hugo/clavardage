@@ -52,7 +52,7 @@ public class ControleurSession implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Utilisateur destinataire = this.modele.getDestinataire();
-		this.name.setText(destinataire.getPseudo());
+		this.name.textProperty().bind(destinataire.getPseudoPropery());
 		
 		this.envoyer.setOnAction(e ->  {
 				String txt = texte.getText();

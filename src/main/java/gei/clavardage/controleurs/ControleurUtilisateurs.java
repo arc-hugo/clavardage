@@ -90,6 +90,7 @@ public class ControleurUtilisateurs implements Initializable {
 		loader.setController(session);
 
 		Tab tab = new Tab(util.getPseudo(), loader.load());
+		tab.textProperty().bind(util.getPseudoPropery());
 		tab.setOnClosed(e -> {
 			session.fermetureLocale();
 			if (this.modele.getEtat(util.getIdentifiant()) != EtatUtilisateur.DECONNECTE) {
