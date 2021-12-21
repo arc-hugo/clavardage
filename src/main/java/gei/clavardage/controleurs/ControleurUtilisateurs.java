@@ -9,7 +9,7 @@ import java.util.*;
 import gei.clavardage.App;
 import gei.clavardage.modeles.messages.Fin;
 import gei.clavardage.modeles.messages.OK;
-import gei.clavardage.modeles.utilisateurs.Etat;
+import gei.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
@@ -84,7 +84,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	private void creationSession(Utilisateur util, Socket sock) throws IOException {
-		this.modele.setEtat(util.getIdentifiant(), Etat.EN_SESSION);
+		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
@@ -92,8 +92,8 @@ public class ControleurUtilisateurs implements Initializable {
 		Tab tab = new Tab(util.getPseudo(), loader.load());
 		tab.setOnClosed(e -> {
 			session.fermetureLocale();
-			if (this.modele.getEtat(util.getIdentifiant()) != Etat.DECONNECTE) {
-				this.modele.setEtat(util.getIdentifiant(), Etat.CONNECTE);
+			if (this.modele.getEtat(util.getIdentifiant()) != EtatUtilisateur.DECONNECTE) {
+				this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
 			}
 		});
 		tab.setUserData(session);
@@ -101,8 +101,8 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void lancementSession(Utilisateur destinataire) {
-		if (destinataire.getEtat() == Etat.CONNECTE) {
-				destinataire.setEtat(Etat.EN_ATTENTE);
+		if (destinataire.getEtat() == EtatUtilisateur.CONNECTE) {
+				destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
 				tcp.demandeConnexion(destinataire);
 		} else {
 			Alert refus = new Alert(AlertType.INFORMATION);
@@ -200,7 +200,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void deconnexionDistante(UUID identifiant) {
-		if (this.modele.getEtat(identifiant) == Etat.EN_SESSION) {
+		if (this.modele.getEtat(identifiant) == EtatUtilisateur.EN_SESSION) {
 			String pseudo = this.modele.getPseudo(identifiant);
 			for (Tab tab : this.tabs.getTabs()) {
 				if (tab.getText().equals(pseudo)) {
@@ -214,7 +214,7 @@ public class ControleurUtilisateurs implements Initializable {
 				}
 			}
 		}
-		this.modele.setEtat(identifiant, Etat.DECONNECTE);
+		this.modele.setEtat(identifiant, EtatUtilisateur.DECONNECTE);
 	}
 
 	public boolean validationDistante(UUID uuid, String pseudo) {

@@ -1,6 +1,6 @@
 package gei.clavardage.modeles.utilisateurs;
 
-public enum Etat  {
+public enum EtatUtilisateur  {
 	CONNECTE,
 	DECONNECTE,
 	EN_SESSION,

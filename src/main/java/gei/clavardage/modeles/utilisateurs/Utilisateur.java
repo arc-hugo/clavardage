@@ -15,17 +15,17 @@ public class Utilisateur {
 	private UUID uuid;
 	private InetAddress adresse;
 	private StringProperty pseudo;
-	private ObjectProperty<Etat> etat;
+	private ObjectProperty<EtatUtilisateur> etat;
 	
-	public Utilisateur(UUID uuid, InetAddress adresse, String pseudo, Etat etat) {
+	public Utilisateur(UUID uuid, InetAddress adresse, String pseudo, EtatUtilisateur etat) {
 		this.uuid = uuid;
 		this.adresse = adresse;
 		System.out.println(adresse);
 		this.pseudo = new SimpleStringProperty(pseudo);
-		this.etat = new SimpleObjectProperty<Etat>(etat);
+		this.etat = new SimpleObjectProperty<EtatUtilisateur>(etat);
 	}
 	
-	public Utilisateur(InetAddress adresse, String pseudo, Etat etat) {
+	public Utilisateur(InetAddress adresse, String pseudo, EtatUtilisateur etat) {
 		this(UUID.randomUUID(), adresse, pseudo, etat);
 	}
 	
@@ -41,11 +41,11 @@ public class Utilisateur {
 		return this.uuid;
 	}
 	
-	public void setEtat(Etat etat) {
+	public void setEtat(EtatUtilisateur etat) {
 		this.etat.set(etat);
 	}
 	
-	public Etat getEtat() {
+	public EtatUtilisateur getEtat() {
 		return this.etat.get();
 	}
 	

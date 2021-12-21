@@ -23,7 +23,7 @@ public class ModeleUtilisateurs {
 		}
 		
 		try {
-			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), Etat.CONNECTE);
+			this.utilisateurLocal = new Utilisateur(UUID.randomUUID(), InetAddress.getAllByName("localhost")[0], builder.toString(), EtatUtilisateur.CONNECTE);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,12 +57,12 @@ public class ModeleUtilisateurs {
 	public void connexion(UUID identifiant, InetAddress adresse, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve == -1) {
-			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, Etat.CONNECTE);
+			Utilisateur utilisateur = new Utilisateur(identifiant, adresse, pseudo, EtatUtilisateur.CONNECTE);
 			utilisateurs.add(utilisateur);
 		} else {
 			Utilisateur util = utilisateurs.get(trouve);
 			util.setPseudo(pseudo);
-			util.setEtat(Etat.CONNECTE);
+			util.setEtat(EtatUtilisateur.CONNECTE);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class ModeleUtilisateurs {
 		}
 	}
 	
-	public Etat getEtat(UUID identifiant) {
+	public EtatUtilisateur getEtat(UUID identifiant) {
 		int trouve = getIndexById(identifiant);
 		if (trouve >= 0) {
 			return utilisateurs.get(trouve).getEtat();
@@ -90,7 +90,7 @@ public class ModeleUtilisateurs {
 		return null;
 	}
 	
-	public void setEtat(UUID identifiant, Etat etat) {
+	public void setEtat(UUID identifiant, EtatUtilisateur etat) {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			utilisateurs.get(trouve).setEtat(etat);

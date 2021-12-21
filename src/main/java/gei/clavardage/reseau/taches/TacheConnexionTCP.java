@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import gei.clavardage.concurrent.ExecuteurSession;
-import gei.clavardage.modeles.utilisateurs.Etat;
+import gei.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
@@ -47,7 +47,7 @@ public class TacheConnexionTCP extends Task<Void> {
 				refus.setTitle("Refus");
 				refus.setContentText("L'utilisateur "+destinataire.getPseudo()+" à refusé la demande de discussion");
 				refus.show();
-				destinataire.setEtat(Etat.CONNECTE);
+				destinataire.setEtat(EtatUtilisateur.CONNECTE);
 			}
 		} catch (UnknownHostException e) {
 			Alert refus = new Alert(AlertType.INFORMATION);
