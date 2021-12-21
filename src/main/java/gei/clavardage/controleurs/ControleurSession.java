@@ -16,6 +16,7 @@ import gei.clavardage.modeles.session.ModeleSession;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.clavardage.reseau.taches.TacheEnvoiTCP;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -63,7 +64,12 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void fermeture() {
-		this.reception.cancel();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				reception.cancel();
+			}
+		});
 		try {
 			this.sock.close();
 		} catch (IOException e) {
