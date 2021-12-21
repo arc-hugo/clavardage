@@ -21,7 +21,7 @@ public class Texte extends Message {
 	@Override
 	public void envoie(Socket sock) throws IOException {
 		PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-		System.out.println(writer);
+		System.out.println(txt);
 		writer.print("TXT "+txt);
 		writer.print(Message.END_MSG);
 	}

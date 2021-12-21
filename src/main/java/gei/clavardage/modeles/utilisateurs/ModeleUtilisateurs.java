@@ -17,7 +17,7 @@ public class ModeleUtilisateurs {
 		String range = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		StringBuilder builder = new StringBuilder();
 		Random rdn = new Random();
-		while (builder.length() < 25) {
+		while (builder.length() < 20) {
 			int i = (int) (rdn.nextFloat() * range.length());
 			builder.append(range.charAt(i));
 		}
