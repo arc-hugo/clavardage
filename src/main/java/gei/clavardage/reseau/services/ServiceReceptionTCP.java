@@ -9,6 +9,7 @@ import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.controleurs.ControleurSession;
 import gei.clavardage.modeles.messages.Message;
 import gei.clavardage.modeles.messages.Texte;
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -48,7 +49,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			}
 			
 			private void fin() {
-				executeur.ajoutTache(new Runnable() {
+				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
 						session.fermetureDistante();
