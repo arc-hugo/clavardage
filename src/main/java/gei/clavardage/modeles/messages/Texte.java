@@ -31,7 +31,7 @@ public class Texte extends MessageAffiche {
 	public Node affichage() {
 		System.out.println(txt);
 		Label msg = new Label(txt);
-		Label date = new Label(getDate().toString());
+		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
 		return new VBox(msg,date);
 	}
 	
