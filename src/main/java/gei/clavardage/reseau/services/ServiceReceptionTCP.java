@@ -87,6 +87,7 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 						cha = (char) reader.read();
 					}
 					if (cha >= 0) {
+						System.out.println(type);
 						switch (type) {
 						case "TXT":
 							texte();
