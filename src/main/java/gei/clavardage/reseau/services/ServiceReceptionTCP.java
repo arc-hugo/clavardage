@@ -10,10 +10,10 @@ import gei.clavardage.controleurs.ControleurSession;
 import gei.clavardage.modeles.messages.Message;
 import gei.clavardage.modeles.messages.Texte;
 import javafx.application.Platform;
-import javafx.concurrent.Service;
+import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 
-public class ServiceReceptionTCP extends Service<Void> {
+public class ServiceReceptionTCP extends ScheduledService<Void> {
 
 	private ControleurSession session;
 	private BufferedReader reader;
@@ -81,7 +81,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 			@Override
 			protected Void call() throws IOException {
 				String type = "";
-				while (true) {
 					char cha = (char) reader.read();
 					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
 						type += cha;
@@ -103,8 +102,8 @@ public class ServiceReceptionTCP extends Service<Void> {
 						}
 						type = "";
 					}
+					return null;
 				}
-			}
 		};
 	}
 
