@@ -203,7 +203,12 @@ public class ControleurUtilisateurs implements Initializable {
 			for (Tab tab : this.tabs.getTabs()) {
 				if (tab.getText().equals(pseudo)) {
 					ControleurSession session = (ControleurSession) tab.getUserData();
-					session.fermetureDistante();
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							session.fermetureDistante();
+						}
+					});
 				}
 			}
 		}
