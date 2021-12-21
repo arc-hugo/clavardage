@@ -90,6 +90,7 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void fermetureDistante() {
+		// TODO passage en mode lecture d'historique
 		Alert ferme = new Alert(AlertType.INFORMATION);
 		ferme.setTitle("Fin de discussion");
 		ferme.setContentText("L'utilisateur "+modele.getDestinataire().getPseudo()+" vient de fermer la discussion.");

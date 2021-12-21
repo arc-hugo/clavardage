@@ -92,7 +92,9 @@ public class ControleurUtilisateurs implements Initializable {
 		Tab tab = new Tab(util.getPseudo(), loader.load());
 		tab.setOnClosed(e -> {
 			session.fermetureLocale();
+			this.modele.setEtat(util.getIdentifiant(), Etat.CONNECTE);
 		});
+		tab.setUserData(session);
 		this.tabs.getTabs().add(tab);
 	}
 
@@ -196,6 +198,15 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void deconnexionDistante(UUID identifiant) {
+		if (this.modele.getEtat(identifiant) == Etat.EN_SESSION) {
+			String pseudo = this.modele.getPseudo(identifiant);
+			for (Tab tab : this.tabs.getTabs()) {
+				if (tab.getText().equals(pseudo)) {
+					ControleurSession session = (ControleurSession) tab.getUserData();
+					session.fermetureDistante();
+				}
+			}
+		}
 		this.modele.setEtat(identifiant, Etat.DECONNECTE);
 	}
 
@@ -204,7 +215,7 @@ public class ControleurUtilisateurs implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					modele.changementPseudo(uuid, pseudo);
+					modele.setPseudo(uuid, pseudo);
 				}
 			});
 			return true;

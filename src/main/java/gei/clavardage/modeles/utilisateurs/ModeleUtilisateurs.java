@@ -66,12 +66,28 @@ public class ModeleUtilisateurs {
 		}
 	}
 
-	public void changementPseudo(UUID identifiant, String pseudo) {
+	public String getPseudo(UUID identifiant) {
+		int trouve = getIndexById(identifiant);
+		if (trouve >=0) {
+			return utilisateurs.get(trouve).getPseudo();
+		}
+		return "";
+	}
+	
+	public void setPseudo(UUID identifiant, String pseudo) {
 		int trouve = getIndexById(identifiant);
 		if (trouve >=0) {
 			Utilisateur util = utilisateurs.get(trouve);
 			util.setPseudo(pseudo);
 		}
+	}
+	
+	public Etat getEtat(UUID identifiant) {
+		int trouve = getIndexById(identifiant);
+		if (trouve >= 0) {
+			return utilisateurs.get(trouve).getEtat();
+		}
+		return null;
 	}
 	
 	public void setEtat(UUID identifiant, Etat etat) {
@@ -91,10 +107,16 @@ public class ModeleUtilisateurs {
 	public Utilisateur getUtilisateurWithAdresse(InetAddress inetAddress) {
 		int trouve = getIndexByAdresse(inetAddress);
 		if (trouve >=0) {
-			Utilisateur util = utilisateurs.get(trouve);
-			return util;
-		} else {
-			return null;
+			return utilisateurs.get(trouve);
 		}
+		return null;
+	}
+	
+	public Utilisateur getUtilisateurWithUUID(UUID identifiant) {
+		int trouve = getIndexById(identifiant);
+		if (trouve >= 0) {
+			return utilisateurs.get(trouve);
+		}
+		return null;
 	}
 }
