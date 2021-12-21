@@ -64,6 +64,7 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void fermeture() {
+		System.out.println("fermeture");
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
