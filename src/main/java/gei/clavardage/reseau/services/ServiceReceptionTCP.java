@@ -9,6 +9,8 @@ import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.controleurs.ControleurSession;
 import gei.clavardage.modeles.messages.Message;
 import gei.clavardage.modeles.messages.Texte;
+import gei.clavardage.modeles.messages.MessageOK;
+import gei.clavardage.reseau.taches.TacheEnvoiTCP;
 import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
@@ -16,11 +18,13 @@ import javafx.concurrent.Task;
 public class ServiceReceptionTCP extends ScheduledService<Void> {
 
 	private ControleurSession session;
+	private Socket sock;
 	private BufferedReader reader;
 	private ExecuteurSession executeur;
 	
 	public ServiceReceptionTCP(ControleurSession session, Socket sock) throws IOException {
 		this.session = session;
+		this.sock = sock;
 		this.reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		this.executeur = ExecuteurSession.getInstance();
 	}
@@ -54,6 +58,16 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 					@Override
 					public void run() {
 						session.receptionMessage(msg);
+					}
+				});
+				executeur.ajoutTache(new TacheEnvoiTCP(sock, new MessageOK(session.getIdentifiantLocal())));
+			}
+			
+			private void messageok() {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						session.envoiRecu();
 					}
 				});
 			}
@@ -91,6 +105,11 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 						switch (type) {
 						case "TXT":
 							texte();
+							break;
+						case "MSGOK":
+							messageok();
+							break;
+						case "FICHIER":
 							break;
 						case "FIN":
 							fin();

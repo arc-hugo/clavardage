@@ -28,5 +28,4 @@ public abstract class Message {
 	}
 	
 	public abstract void envoie(Socket sock) throws IOException;
-	public abstract Node affichage();
 }

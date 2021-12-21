@@ -9,7 +9,7 @@ import java.util.UUID;
 import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.modeles.messages.Fin;
 import gei.clavardage.modeles.messages.FinOK;
-import gei.clavardage.modeles.messages.Message;
+import gei.clavardage.modeles.messages.MessageAffiche;
 import gei.clavardage.modeles.messages.OK;
 import gei.clavardage.modeles.messages.Texte;
 import gei.clavardage.modeles.session.ModeleSession;
@@ -72,7 +72,8 @@ public class ControleurSession implements Initializable {
 		});
 	}
 
-	private void envoiMessage(Message msg) {
+	private void envoiMessage(MessageAffiche msg) {
+		this.modele.ajoutEnvoi(msg);
 		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, msg));
 	}
 
@@ -102,10 +103,16 @@ public class ControleurSession implements Initializable {
 		this.executeur.ajoutTache(envoi);
 	}
 
-	public void receptionMessage(Message msg) {
+	public void receptionMessage(MessageAffiche msg) {
 		Node noeud = msg.affichage();
-		if (noeud != null)
-			this.messages.getChildren().add(noeud);
+		if (noeud != null) {	
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					messages.getChildren().add(noeud);
+				}
+			});
+		}
 	}
 
 	public UUID getIdentifiantLocal() {
@@ -114,5 +121,17 @@ public class ControleurSession implements Initializable {
 	
 	public Utilisateur getDestinataire() {
 		return this.modele.getDestinataire();
+	}
+
+	public void envoiRecu() {
+		MessageAffiche msg = this.modele.envoiTermine();
+		if (msg != null) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					messages.getChildren().add(msg.affichage());
+				}
+			});
+		}
 	}
 }

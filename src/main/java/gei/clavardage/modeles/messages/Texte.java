@@ -9,7 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-public class Texte extends Message {
+public class Texte extends MessageAffiche {
 
 	private String txt;
 	
@@ -20,10 +20,11 @@ public class Texte extends Message {
 
 	@Override
 	public void envoie(Socket sock) throws IOException {
-		PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-		writer.print("TXT "+txt+Message.END_MSG);
-		writer.flush();
-		System.out.println("OK TXT");
+		synchronized (sock.getOutputStream()) {
+			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
+			writer.print("TXT "+txt+Message.END_MSG);
+			writer.flush();
+		}
 	}
 
 	@Override

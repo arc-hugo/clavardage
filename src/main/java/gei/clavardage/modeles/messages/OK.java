@@ -15,12 +15,9 @@ public class OK extends Message {
 
 	@Override
 	public void envoie(Socket sock) throws IOException {
-		PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-		writer.println("OK");
-	}
-
-	@Override
-	public Node affichage() {
-		return null;
+		synchronized (sock.getOutputStream()) {
+			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
+			writer.println("OK");
+		}
 	}
 }
