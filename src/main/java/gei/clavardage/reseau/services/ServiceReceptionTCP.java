@@ -26,6 +26,18 @@ public class ServiceReceptionTCP extends Service<Void> {
 	}
 
 	@Override
+	protected void cancelled() {
+		super.cancelled();
+		try {
+			this.reader.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("cancel");
+	}
+	
+	@Override
 	protected Task<Void> createTask() {
 		return new Task<Void>() {
 			private void texte() throws IOException {
