@@ -47,8 +47,6 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
-		this.udp = new AccesUDP(this);
-		this.tcp = new AccesTCP(this);
 	}
 
 	public UUID getIdentifiantLocal() {
@@ -271,6 +269,9 @@ public class ControleurUtilisateurs implements Initializable {
 
 		// Lance le choix de pseudo avant la fin de l'initialisation
 		saisiePseudo();
+		
+		this.udp = new AccesUDP(this);
+		this.tcp = new AccesTCP(this);
 	}
 
 }

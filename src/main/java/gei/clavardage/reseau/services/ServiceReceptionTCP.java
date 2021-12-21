@@ -28,9 +28,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 	@Override
 	protected Task<Void> createTask() {
 		return new Task<Void>() {
-			
-			private Message msg;
-			
 			private void texte() throws IOException {
 				System.out.println("TXT recu");
 				String txt = "";
@@ -39,7 +36,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					txt += cha;
 					cha = (char) reader.read();
 				}
-				msg = new Texte(session.getIdentifiantLocal(), txt);
+				Texte msg = new Texte(session.getDestinataire().getIdentifiant(), txt);
 				
 				executeur.ajoutTache(new Runnable() {	
 					@Override
@@ -72,7 +69,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 			@Override
 			protected Void call() throws IOException {
 				String type = "";
-				System.out.println("OK reception");
 				while (true) {
 					char cha = (char) reader.read();
 					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {

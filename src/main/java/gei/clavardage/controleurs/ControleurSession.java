@@ -112,5 +112,8 @@ public class ControleurSession implements Initializable {
 	public UUID getIdentifiantLocal() {
 		return this.modele.getIdentifiantLocal();
 	}
-
+	
+	public Utilisateur getDestinataire() {
+		return this.modele.getDestinataire();
+	}
 }
