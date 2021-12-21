@@ -67,14 +67,13 @@ public class ControleurSession implements Initializable {
 			@Override
 			public void run() {
 				reception.cancel();
+				try {
+					sock.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
-		try {
-			this.sock.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 	}
 
 	private void envoiMessage(Message msg) {
@@ -99,7 +98,6 @@ public class ControleurSession implements Initializable {
 		ferme.setTitle("Fin de discussion");
 		ferme.setContentText("L'utilisateur "+modele.getDestinataire().getPseudo()+" vient de fermer la discussion.");
 		ferme.showAndWait();
-		this.envoyer.getScene().getWindow().hide();
 		fermeture();
 	}
 
