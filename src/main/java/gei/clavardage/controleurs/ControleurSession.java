@@ -16,12 +16,11 @@ import gei.clavardage.modeles.session.ModeleSession;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.clavardage.reseau.taches.TacheEnvoiTCP;
+import gei.clavardage.utils.Alerte;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -108,9 +107,7 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureDistante() {
 		// TODO passage en mode lecture d'historique
-		Alert ferme = new Alert(AlertType.INFORMATION);
-		ferme.setTitle("Fin de discussion");
-		ferme.setContentText("L'utilisateur "+modele.getDestinataire().getPseudo()+" vient de fermer la discussion.");
+		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.showAndWait();
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, new FinOK(getIdentifiantLocal()));
 		envoi.setOnSucceeded(e -> {

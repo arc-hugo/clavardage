@@ -11,9 +11,8 @@ import gei.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
+import gei.clavardage.utils.Alerte;
 import javafx.concurrent.Task;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 public class TacheConnexionTCP extends Task<Void> {
 	private AccesTCP tcp;
@@ -43,16 +42,12 @@ public class TacheConnexionTCP extends Task<Void> {
 					}
 				});
 			} else {
-				Alert refus = new Alert(AlertType.INFORMATION);
-				refus.setTitle("Refus");
-				refus.setContentText("L'utilisateur "+destinataire.getPseudo()+" à refusé la demande de discussion");
+				Alerte refus = Alerte.refusConnexion(destinataire.getPseudo());
 				refus.show();
 				destinataire.setEtat(EtatUtilisateur.CONNECTE);
 			}
 		} catch (UnknownHostException e) {
-			Alert refus = new Alert(AlertType.INFORMATION);
-			refus.setTitle("Deconnecté");
-			refus.setContentText("L'utilisateur "+destinataire.getPseudo()+" est deconnecté");
+			Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
 			refus.show();
 			this.executeur.ajoutTache(new Runnable() {
 				@Override
