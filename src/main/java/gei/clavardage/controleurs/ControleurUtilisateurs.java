@@ -14,6 +14,7 @@ import gei.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
 import gei.clavardage.reseau.AccesUDP;
+import gei.clavardage.utils.Alerte;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -23,7 +24,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -105,10 +105,8 @@ public class ControleurUtilisateurs implements Initializable {
 		if (destinataire.getEtat() == EtatUtilisateur.CONNECTE) {
 				destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
 				tcp.demandeConnexion(destinataire);
-		} else {
-			Alert refus = new Alert(AlertType.INFORMATION);
-			refus.setTitle("Deconnecté");
-			refus.setContentText("L'utilisateur " + destinataire.getPseudo() + " est deconnecté");
+		} else if (destinataire.getEtat() == EtatUtilisateur.DECONNECTE) {
+			Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
 			refus.show();
 		}
 	}
@@ -132,13 +130,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void deconnexion() {
-		Alert deco = new Alert(AlertType.CONFIRMATION);
-		deco.setTitle("Déconnexion");
-		deco.setHeaderText("Vous vous apprêtez à vous déconnecter de l'application.");
-		deco.setContentText("Êtes-vous sûr de vouloir continuer ?");
-		DialogPane dialogPane = deco.getDialogPane();
-		dialogPane.getStylesheets().add(App.class.getResource("dialogues.css").toExternalForm());
-		dialogPane.getStyleClass().add("dialogues");
+		Alerte deco = Alerte.confirmationDeconnexion();
 
 		Optional<ButtonType> opt = deco.showAndWait();
 		if (opt.get() == ButtonType.OK) {
@@ -150,13 +142,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 	
 	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException {
-		Alert confirm = new Alert(AlertType.CONFIRMATION);
-		DialogPane dialogPane = confirm.getDialogPane();
-		dialogPane.getStylesheets().add(App.class.getResource("dialogues.css").toExternalForm());
-		dialogPane.getStyleClass().add("dialogues");
-		confirm.setTitle("Demande de lancement de session de " + util.getPseudo());
-		confirm.setHeaderText(util.getPseudo() + " souhaite lancer une session de discussion avec vous !");
-		confirm.setContentText("Acceptez-vous cette demande ?");
+		Alerte confirm = Alerte.accepterConnexion(util.getPseudo());
 		
 		Optional<ButtonType> result = confirm.showAndWait();
 		if (result.get() == ButtonType.OK) {

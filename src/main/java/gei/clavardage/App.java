@@ -1,19 +1,15 @@
 package gei.clavardage;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 import gei.clavardage.controleurs.ControleurUtilisateurs;
+import gei.clavardage.utils.Decoration;
 
 /**
  * JavaFX App
@@ -37,7 +33,7 @@ public class App extends Application {
         borderPane.setStyle("-fx-background-color: #666666;");*/
 
         ToolBar toolBar = new ToolBar();
-        toolBar.getItems().add(new WindowButtons());
+        toolBar.getItems().add(new Decoration());
 
         /*borderPane.setTop(toolBar);
 
@@ -52,25 +48,6 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
-    }
-    
-    class WindowButtons extends HBox {
-
-        public WindowButtons() {
-            Button closeBtn = new Button("X");
-
-            closeBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    Platform.exit();
-                }
-            });
-
-            this.getChildren().add(closeBtn);
-        }
-    }
-    
-    
+    }    
 
 }

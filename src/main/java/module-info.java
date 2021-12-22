@@ -16,4 +16,5 @@ module clavardage {
     exports gei.clavardage.modeles.utilisateurs;
     exports gei.clavardage.reseau;
     exports gei.clavardage.reseau.services;
+    exports gei.clavardage.utils;
 }
