@@ -77,7 +77,8 @@ public class App extends Application {
 						break;
 					}
 				} else {
-
+					System.err.println("Erreur dans le nombre de paramètres");
+					System.exit(1);
 				}
 			}
 		}

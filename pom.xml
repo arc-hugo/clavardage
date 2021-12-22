@@ -33,6 +33,18 @@
 			<artifactId>jai-imageio-core</artifactId>
 			<version>1.4.0</version>
 		</dependency>
+		<dependency>
+    		<groupId>junit</groupId>
+    		<artifactId>junit</artifactId>
+    		<version>4.13-beta-3</version>
+    		<scope>test</scope>
+		</dependency>
+		<dependency>
+    		<groupId>org.testfx</groupId>
+    		<artifactId>testfx-core</artifactId>
+    		<version>4.0.16-alpha</version>
+    		<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
