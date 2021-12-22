@@ -25,6 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 public class ControleurSession implements Initializable {
@@ -55,16 +56,29 @@ public class ControleurSession implements Initializable {
 		this.name.textProperty().bind(destinataire.getPseudoPropery());
 		
 		this.envoyer.setOnAction(e ->  {
-				String txt = texte.getText();
-				if (!txt.equals("")) {
-					envoiMessage(new Texte(modele.getIdentifiantLocal(), txt));
-					texte.clear();
-				}
+			envoiTexte();
+		});
+		
+		this.texte.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER && e.isControlDown()) {
+				texte.setText(texte.getText()+"\n");
+			} else if (e.getCode() == KeyCode.ENTER) {
+				envoiTexte();
+			}
+			
 		});
 		
 		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiantLocal())));
 	}
 
+	private void envoiTexte() {
+		String txt = texte.getText();
+		if (!txt.equals("")) {
+			envoiMessage(new Texte(modele.getIdentifiantLocal(), txt));
+			texte.clear();
+		}
+	}
+	
 	private void fermeture() {
 		Platform.runLater(new Runnable() {
 			@Override

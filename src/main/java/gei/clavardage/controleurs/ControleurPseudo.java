@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 
 public class ControleurPseudo implements Initializable {
 	
@@ -38,6 +39,11 @@ public class ControleurPseudo implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.pseudo.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER) {
+				new_pseudo();
+			}
+		});
 	}
 	
 }
