@@ -7,7 +7,7 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
-import gei.clavardage.reseau.services.ServiceReceptionUDP;
+import gei.clavardage.App;
 import javafx.concurrent.Task;
 
 public class TacheEnvoiUDP extends Task<Void> {
@@ -35,8 +35,7 @@ public class TacheEnvoiUDP extends Task<Void> {
 					for (InterfaceAddress interAdd : inter.getInterfaceAddresses()) {
 						InetAddress broadcast = interAdd.getBroadcast();
 						if (broadcast != null) {
-							DatagramPacket packet = new DatagramPacket(this.message.getBytes(), this.message.length(), broadcast,
-									ServiceReceptionUDP.RECEPTION_PORT);
+							DatagramPacket packet = new DatagramPacket(this.message.getBytes(), this.message.length(), broadcast, App.UDP_PORT_ENVOI);
 							sock.send(packet);
 						}
 					}
@@ -44,8 +43,7 @@ public class TacheEnvoiUDP extends Task<Void> {
 			}
 
 		} else {
-			DatagramPacket packet = new DatagramPacket(this.message.getBytes(), this.message.length(), this.hote,
-					ServiceReceptionUDP.RECEPTION_PORT);
+			DatagramPacket packet = new DatagramPacket(this.message.getBytes(), this.message.length(), this.hote, App.UDP_PORT_ENVOI);
 			sock.send(packet);
 		}
 		sock.close();

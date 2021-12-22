@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import gei.clavardage.App;
 import gei.clavardage.concurrent.ExecuteurReseau;
 import gei.clavardage.reseau.AccesTCP;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ServiceReceptionConnexionTCP extends Service<Void> {
-	
-	public final static int RECEPTION_PORT = 30861;
 	
 	private AccesTCP tcp;
 	private ExecuteurReseau executeur;
@@ -27,7 +26,7 @@ public class ServiceReceptionConnexionTCP extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				@SuppressWarnings("resource")
-				ServerSocket sock = new ServerSocket(RECEPTION_PORT);
+				ServerSocket sock = new ServerSocket(App.TCP_PORT_RECEPTION);
 				while (true) {
 					Socket link = sock.accept();
 					executeur.ajoutTache(new Runnable() {

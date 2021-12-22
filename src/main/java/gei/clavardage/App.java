@@ -16,38 +16,72 @@ import gei.clavardage.utils.Decoration;
  */
 public class App extends Application {
 
-    private static Scene scene;
+	private static Scene scene;
 
-    @Override
-    public void start(Stage stage) throws IOException {
-    	ControleurUtilisateurs controleur = new ControleurUtilisateurs();    	
-    	
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("principal.fxml"));
-        fxmlLoader.setController(controleur);
-        scene = new Scene(fxmlLoader.load());
-        
-        stage.setTitle("Logiciel de clavardage");
-        stage.setScene(scene);
+	public static int UDP_PORT_ENVOI = 22540;
+	public static int UDP_PORT_RECEPTION = 22540;
+	public static int TCP_PORT_ENVOI = 30861;
+	public static int TCP_PORT_RECEPTION = 30861;
 
-       /* BorderPane borderPane = new BorderPane();
-        borderPane.setStyle("-fx-background-color: #666666;");*/
+	@Override
+	public void start(Stage stage) throws IOException {
+		ControleurUtilisateurs controleur = new ControleurUtilisateurs();
 
-        ToolBar toolBar = new ToolBar();
-        toolBar.getItems().add(new Decoration());
+		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("principal.fxml"));
+		fxmlLoader.setController(controleur);
+		scene = new Scene(fxmlLoader.load());
 
-        /*borderPane.setTop(toolBar);
+		stage.setTitle("Logiciel de clavardage");
+		stage.setScene(scene);
 
-        stage.setScene(new Scene(borderPane, 300, 250));*/
-        
-        stage.setOnCloseRequest(e -> {
-        	controleur.deconnexion();
-        	e.consume();
-        });
-        stage.show();
-    }
+		/*
+		 * BorderPane borderPane = new BorderPane();
+		 * borderPane.setStyle("-fx-background-color: #666666;");
+		 */
 
-    public static void main(String[] args) {
-        launch();
-    }    
+		ToolBar toolBar = new ToolBar();
+		toolBar.getItems().add(new Decoration());
+
+		/*
+		 * borderPane.setTop(toolBar);
+		 * 
+		 * stage.setScene(new Scene(borderPane, 300, 250));
+		 */
+
+		stage.setOnCloseRequest(e -> {
+			controleur.deconnexion();
+			e.consume();
+		});
+		stage.show();
+	}
+
+	public static void main(String[] args) {
+		if (args.length > 0) {
+			for (int i = 0; i < args.length; i += 2) {
+				if (i + 1 < args.length) {
+					int port = Integer.parseInt(args[i+1]);
+					switch (args[i]) {
+					case "--tcp-envoi":
+						App.TCP_PORT_ENVOI = port;
+						break;
+					case "--tcp-reception":
+						App.TCP_PORT_RECEPTION = port;
+						break;
+					case "--udp-envoi":
+						App.UDP_PORT_ENVOI = port;
+						break;
+					case "--udp-reception":
+						App.UDP_PORT_RECEPTION = port;
+						break;
+					default:
+						break;
+					}
+				} else {
+
+				}
+			}
+		}
+		launch();
+	}
 
 }

@@ -17,40 +17,40 @@ public class Alerte extends Alert {
 	}
 
 	public static Alerte confirmationDeconnexion() {
-		Alerte deco = new Alerte(AlertType.CONFIRMATION);
-		deco.setTitle("Déconnexion");
-		deco.setHeaderText("Vous vous apprêtez à vous déconnecter de l'application.");
-		deco.setContentText("Êtes-vous sûr de vouloir continuer ?");
-		return deco;
+		Alerte alert = new Alerte(AlertType.CONFIRMATION);
+		alert.setTitle("Déconnexion");
+		alert.setHeaderText("Vous vous apprêtez à vous déconnecter de l'application.");
+		alert.setContentText("Êtes-vous sûr de vouloir continuer ?");
+		return alert;
 	}
 	
 	public static Alerte accepterConnexion(String pseudo) {
-		Alerte confirm = new Alerte(AlertType.CONFIRMATION);
-		confirm.setTitle("Demande de lancement de session de " + pseudo);
-		confirm.setHeaderText(pseudo + " souhaite lancer une session de discussion avec vous !");
-		confirm.setContentText("Acceptez-vous cette demande ?");
-		return confirm;
+		Alerte alert = new Alerte(AlertType.CONFIRMATION);
+		alert.setTitle("Demande de lancement de session de " + pseudo);
+		alert.setHeaderText(pseudo + " souhaite lancer une session de discussion avec vous !");
+		alert.setContentText("Acceptez-vous cette demande ?");
+		return alert;
 	}
 	
 	public static Alerte utilisateurDeconnecte(String pseudo) {
-		Alerte refus = new Alerte(AlertType.INFORMATION);
-		refus.setTitle("Deconnecté");
-		refus.setContentText("L'utilisateur " + pseudo + " est deconnecté");
-		return refus;
+		Alerte alert = new Alerte(AlertType.INFORMATION);
+		alert.setTitle("Deconnecté");
+		alert.setContentText("L'utilisateur " + pseudo + " est deconnecté");
+		return alert;
 	}
 	
 	public static Alerte refusConnexion(String pseudo) {
-		Alerte refus = new Alerte(AlertType.INFORMATION);
-		refus.setTitle("Refus");
-		refus.setContentText("L'utilisateur "+pseudo+" à refusé la demande de discussion");
-		return refus;
+		Alerte alert = new Alerte(AlertType.INFORMATION);
+		alert.setTitle("Refus");
+		alert.setContentText("L'utilisateur "+pseudo+" à refusé la demande de discussion");
+		return alert;
 	}
 	
 	public static Alerte fermetureSession(String pseudo) {
-		Alerte ferme = new Alerte(AlertType.INFORMATION);
-		ferme.setTitle("Fin de discussion");
-		ferme.setContentText("L'utilisateur "+ pseudo +" vient de fermer la discussion.");
-		return ferme;
+		Alerte alert = new Alerte(AlertType.INFORMATION);
+		alert.setTitle("Fin de discussion");
+		alert.setContentText("L'utilisateur "+ pseudo +" vient de fermer la discussion.");
+		return alert;
 	}
 	
 }

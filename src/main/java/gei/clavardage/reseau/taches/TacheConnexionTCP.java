@@ -6,11 +6,11 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import gei.clavardage.App;
 import gei.clavardage.concurrent.ExecuteurSession;
 import gei.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.clavardage.reseau.AccesTCP;
-import gei.clavardage.reseau.services.ServiceReceptionConnexionTCP;
 import gei.clavardage.utils.Alerte;
 import javafx.concurrent.Task;
 
@@ -28,7 +28,7 @@ public class TacheConnexionTCP extends Task<Void> {
 	@Override
 	protected Void call() throws Exception {
 		try {
-			Socket sock = new Socket(destinataire.getAdresse(), ServiceReceptionConnexionTCP.RECEPTION_PORT);
+			Socket sock = new Socket(destinataire.getAdresse(), App.TCP_PORT_ENVOI);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 			if (reader.readLine().equals("OK")) {
 				this.executeur.ajoutTache(new Runnable() {
