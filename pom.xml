@@ -2,30 +2,35 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>gei</groupId>
+	<groupId>gei.barralberry</groupId>
 	<artifactId>clavardage</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
+		<app.name>clavardage</app.name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.build.timestamp.format>yy.ww.WWkkmm</maven.build.timestamp.format>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
+		<javafx.version>17.0.1</javafx.version>
+        <windows.upgrade.uuid>f220c213-e525-46b5-98bc-0f2ce2d62677</windows.upgrade.uuid>
+        <windows.vendor>Barral-Berry</windows.vendor>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.openjfx/ -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-base</artifactId>
-			<version>17.0.1</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>17.0.1</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>17.0.1</version>
+			<version>${javafx.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.jai-imageio/jai-imageio-core -->
 		<dependency>
@@ -45,6 +50,12 @@
     		<version>4.0.16-alpha</version>
     		<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
+		<dependency>
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-shade-plugin</artifactId>
+    		<version>3.2.4</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -60,17 +71,37 @@
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.8</version>
-				<executions>
-					<execution>
-						<!-- Default configuration for running -->
-						<!-- Usage: mvn clean javafx:run -->
-						<id>default-cli</id>
-						<configuration>
-							<mainClass>clavardage/gei.clavardage.App</mainClass>
-						</configuration>
-					</execution>
-				</executions>
+				<configuration>
+					<compress>2</compress>
+    				<noHeaderFiles>true</noHeaderFiles>
+    				<stripDebug>true</stripDebug>
+    				<noManPages>true</noManPages>
+    				<launcher>clavardage</launcher>
+					<mainClass>clavardage/gei.clavardage.App</mainClass>
+					<jlinkImageName>clavardage</jlinkImageName>
+    				<jlinkZipName>clavardage</jlinkZipName>
+				</configuration>
 			</plugin>
+			<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-shade-plugin</artifactId>
+        		<version>3.2.4</version>
+        		<executions>
+          			<execution>
+            			<phase>package</phase>
+            			<goals>
+              				<goal>shade</goal>
+            			</goals>
+            			<configuration>
+              				<transformers>
+                				<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  					<mainClass>gei.barralberry.clavardage.Main</mainClass>
+                				</transformer>
+              				</transformers>
+            			</configuration>
+          			</execution>
+        		</executions>
+      		</plugin>
 		</plugins>
 	</build>
 </project>
