@@ -11,5 +11,5 @@ public abstract class MessageAffiche extends Message {
 	}
 
 	public abstract Node affichage();
-
+	public abstract String description();
 }

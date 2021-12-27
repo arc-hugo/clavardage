@@ -14,6 +14,9 @@
 		<javafx.version>17.0.1</javafx.version>
         <windows.upgrade.uuid>f220c213-e525-46b5-98bc-0f2ce2d62677</windows.upgrade.uuid>
         <windows.vendor>Barral-Berry</windows.vendor>
+        <mainJavafx>gei.barralberry.clavardage.App</mainJavafx>
+        <mainPackage>gei.barralberry.clavardage.Main</mainPackage>
+        <moduleName>clavardage</moduleName>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.openjfx/ -->
@@ -56,6 +59,13 @@
     		<artifactId>maven-shade-plugin</artifactId>
     		<version>3.2.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<dependency>
+    		<groupId>com.h2database</groupId>
+    		<artifactId>h2</artifactId>
+    		<version>2.0.204</version>
+    		<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -64,7 +74,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.0</version>
 				<configuration>
-					<release>11</release>
+					<release>${maven.compiler.target}</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -76,10 +86,10 @@
     				<noHeaderFiles>true</noHeaderFiles>
     				<stripDebug>true</stripDebug>
     				<noManPages>true</noManPages>
-    				<launcher>clavardage</launcher>
-					<mainClass>clavardage/gei.clavardage.App</mainClass>
-					<jlinkImageName>clavardage</jlinkImageName>
-    				<jlinkZipName>clavardage</jlinkZipName>
+    				<launcher>${moduleName}</launcher>
+					<mainClass>${moduleName}/${mainJavafx}</mainClass>
+					<jlinkImageName>${moduleName}</jlinkImageName>
+    				<jlinkZipName>${moduleName}</jlinkZipName>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -95,7 +105,7 @@
             			<configuration>
               				<transformers>
                 				<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  					<mainClass>gei.barralberry.clavardage.Main</mainClass>
+                  					<mainClass>${mainPackage}</mainClass>
                 				</transformer>
               				</transformers>
             			</configuration>

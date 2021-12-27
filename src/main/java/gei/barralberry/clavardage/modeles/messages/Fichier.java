@@ -32,4 +32,9 @@ public class Fichier extends MessageAffiche {
 		return null;
 	}
 
+	@Override
+	public String description() {
+		return file.getName();
+	}
+
 }

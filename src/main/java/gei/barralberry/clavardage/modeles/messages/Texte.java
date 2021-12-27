@@ -38,4 +38,9 @@ public class Texte extends MessageAffiche {
 	public String toString() {
 		return txt;
 	}
+
+	@Override
+	public String description() {
+		return this.txt;
+	}
 }
