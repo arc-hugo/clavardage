@@ -1,4 +1,4 @@
-package gei.barralberry.clavardage.modeles.messages;
+package gei.barralberry.clavardage.reseau.messages;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,6 +18,11 @@ public abstract class Message {
 	public Message(UUID author) {
 		this.auteur = author;
 		this.date = new Date(System.currentTimeMillis());
+	}
+	
+	public Message(UUID author, Date date) {
+		this.auteur = author;
+		this.date = date;
 	}
 	
 	public Date getDate() {

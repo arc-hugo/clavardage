@@ -8,11 +8,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.Vector;
 
-import gei.barralberry.clavardage.modeles.messages.Fichier;
-import gei.barralberry.clavardage.modeles.messages.MessageAffiche;
+import gei.barralberry.clavardage.reseau.messages.Fichier;
+import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
+import gei.barralberry.clavardage.reseau.messages.Texte;
 
 public class AccesDB {
 	
@@ -36,8 +38,9 @@ public class AccesDB {
 	
 	private Connection conn;
 	private UUID destinataire;
+	private UUID local;
 	
-	public AccesDB(UUID destinataire) throws SQLException {
+	public AccesDB(UUID destinataire, UUID local) throws SQLException {
 		this.destinataire = destinataire;
 		this.conn = DriverManager.getConnection(DB_ACCES+DB_OPTIONS);
 		
@@ -56,8 +59,8 @@ public class AccesDB {
 		}
 	}
 	
-	public List<String> getDerniersMessages(int max) throws SQLException {
-		List<String> list = new Vector<>();
+	public List<MessageAffiche> getDerniersMessages(int max) throws SQLException {
+		Stack<MessageAffiche> list = new Stack<>();
 		
 		PreparedStatement ps = conn.prepareStatement(GET_DERNIERS_MESSAGES);
 		ps.setString(1, this.destinataire.toString());
@@ -65,12 +68,19 @@ public class AccesDB {
 		
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
-			list.add(
-					rs.getString("CONTENU")+";"+
-					rs.getString("DATE")+";"+
-					rs.getString("FICHIER")+";"+
-					rs.getString("RECU")
-			);
+			UUID auteur;
+			if (rs.getBoolean("RECU")) {
+				auteur = this.destinataire;
+			} else {
+				auteur = this.local;
+			}
+			String contenu;
+			if (rs.getBoolean("FICHIER")) {
+				contenu = "transmission du fichier "+rs.getString("CONTENU");
+			} else {
+				contenu = rs.getString("CONTENU");
+			}
+			list.push(new Texte(auteur, contenu, rs.getTimestamp("DATE")));
 		}
 		
 		return list;

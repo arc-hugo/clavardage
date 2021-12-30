@@ -1,8 +1,9 @@
-package gei.barralberry.clavardage.modeles.messages;
+package gei.barralberry.clavardage.reseau.messages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Date;
 import java.util.UUID;
 
 import javafx.scene.Node;
@@ -15,6 +16,11 @@ public class Texte extends MessageAffiche {
 	
 	public Texte(UUID author, String txt) {
 		super(author);
+		this.txt = txt;
+	}
+	
+	public Texte(UUID author, String txt, Date date) {
+		super(author,date);
 		this.txt = txt;
 	}
 

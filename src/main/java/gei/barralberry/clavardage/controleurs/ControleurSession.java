@@ -3,17 +3,20 @@ package gei.barralberry.clavardage.controleurs;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
-import gei.barralberry.clavardage.modeles.messages.Fin;
-import gei.barralberry.clavardage.modeles.messages.FinOK;
-import gei.barralberry.clavardage.modeles.messages.MessageAffiche;
-import gei.barralberry.clavardage.modeles.messages.OK;
-import gei.barralberry.clavardage.modeles.messages.Texte;
+import gei.barralberry.clavardage.donnees.AccesDB;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
+import gei.barralberry.clavardage.reseau.messages.Fin;
+import gei.barralberry.clavardage.reseau.messages.FinOK;
+import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
+import gei.barralberry.clavardage.reseau.messages.OK;
+import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import gei.barralberry.clavardage.utils.Alerte;
@@ -28,6 +31,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 public class ControleurSession implements Initializable {
+	
+	private final static int HIST_SIZE = 30;
 
 	@FXML private Label name;
 	@FXML private Button envoyer;
@@ -35,14 +40,16 @@ public class ControleurSession implements Initializable {
 	@FXML private VBox messages;
 	
 	private ModeleSession modele;
+	private AccesDB db;
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
 	private Socket sock;
 
 	// TODO AccesBDD
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException {
+	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException, SQLException {
 		this.modele = new ModeleSession(local, destinataire);
+		this.db = new AccesDB(destinataire.getIdentifiant(), local.getIdentifiant());
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
 		this.reception.start();
@@ -68,6 +75,16 @@ public class ControleurSession implements Initializable {
 		});
 		
 		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiantLocal())));
+		
+		try {
+			List<MessageAffiche> hist = this.db.getDerniersMessages(HIST_SIZE);
+			for (MessageAffiche oldMsg : hist) {
+				
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	private void envoiTexte() {
@@ -96,6 +113,12 @@ public class ControleurSession implements Initializable {
 		Fin msg = new Fin(getIdentifiantLocal());
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, msg);
 		envoi.setOnSucceeded(e -> {
+			try {
+				db.close();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			fermeture();
 		});
 		this.executeur.ajoutTache(envoi);
@@ -142,6 +165,12 @@ public class ControleurSession implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
+					try {
+						db.ajoutMessage(msg);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					messages.getChildren().add(msg.affichage());
 				}
 			});

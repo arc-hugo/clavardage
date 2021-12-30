@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.*;
 
 import gei.barralberry.clavardage.App;
-import gei.barralberry.clavardage.modeles.messages.Fin;
-import gei.barralberry.clavardage.modeles.messages.OK;
 import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.AccesTCP;
 import gei.barralberry.clavardage.reseau.AccesUDP;
+import gei.barralberry.clavardage.reseau.messages.Fin;
+import gei.barralberry.clavardage.reseau.messages.OK;
 import gei.barralberry.clavardage.utils.Alerte;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
@@ -81,7 +82,7 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 
-	private void creationSession(Utilisateur util, Socket sock) throws IOException {
+	private void creationSession(Utilisateur util, Socket sock) throws IOException, SQLException {
 		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
@@ -117,7 +118,7 @@ public class ControleurUtilisateurs implements Initializable {
 				public void run() {
 					try {
 						creationSession(util, sock);
-					} catch (IOException e) {
+					} catch (IOException | SQLException e) {
 						e.printStackTrace();
 					}
 				}
@@ -139,7 +140,7 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
-	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException {
+	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException, SQLException {
 		Alerte confirm = Alerte.accepterConnexion(util.getPseudo());
 		
 		Optional<ButtonType> result = confirm.showAndWait();
@@ -162,7 +163,7 @@ public class ControleurUtilisateurs implements Initializable {
 				public void run() {
 					try {
 						accepterConnexion(util, sock);
-					} catch (IOException e) {
+					} catch (IOException | SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

@@ -1,9 +1,10 @@
-package gei.barralberry.clavardage.modeles.messages;
+package gei.barralberry.clavardage.reseau.messages;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Date;
 import java.util.UUID;
 
 import javafx.scene.Node;
@@ -14,6 +15,11 @@ public class Fichier extends MessageAffiche {
 	
 	public Fichier(UUID author, File file) {
 		super(author);
+		this.file = file;
+	}
+	
+	public Fichier(UUID author, File file, Date date) {
+		super(author,date);
 		this.file = file;
 	}
 

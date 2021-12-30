@@ -2,7 +2,7 @@ package gei.barralberry.clavardage.reseau.taches;
 
 import java.net.Socket;
 
-import gei.barralberry.clavardage.modeles.messages.Message;
+import gei.barralberry.clavardage.reseau.messages.Message;
 import javafx.concurrent.Task;
 
 public class TacheEnvoiTCP extends Task<Void> {

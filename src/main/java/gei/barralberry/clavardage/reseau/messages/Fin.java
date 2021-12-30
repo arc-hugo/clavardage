@@ -1,13 +1,13 @@
-package gei.barralberry.clavardage.modeles.messages;
+package gei.barralberry.clavardage.reseau.messages;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.UUID;
 
-public class OK extends Message {
+public class Fin extends Message {
 
-	public OK(UUID author) {
+	public Fin(UUID author) {
 		super(author);
 	}
 
@@ -15,7 +15,8 @@ public class OK extends Message {
 	public void envoie(Socket sock) throws IOException {
 		synchronized (sock.getOutputStream()) {
 			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-			writer.println("OK");
+			writer.println("FIN");
 		}
 	}
+
 }

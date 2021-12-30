@@ -7,9 +7,9 @@ import java.net.Socket;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.controleurs.ControleurSession;
-import gei.barralberry.clavardage.modeles.messages.Message;
-import gei.barralberry.clavardage.modeles.messages.Texte;
-import gei.barralberry.clavardage.modeles.messages.MessageOK;
+import gei.barralberry.clavardage.reseau.messages.Message;
+import gei.barralberry.clavardage.reseau.messages.MessageOK;
+import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;

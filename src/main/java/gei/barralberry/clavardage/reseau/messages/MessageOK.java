@@ -1,4 +1,4 @@
-package gei.barralberry.clavardage.modeles.messages;
+package gei.barralberry.clavardage.reseau.messages;
 
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -4,8 +4,8 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.UUID;
 
-import gei.barralberry.clavardage.modeles.messages.MessageAffiche;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
+import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 
 public class ModeleSession {
 
