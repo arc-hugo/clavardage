@@ -6,6 +6,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -33,9 +34,9 @@ public class App extends Application {
 		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("principal.fxml"));
 		fxmlLoader.setController(controleur);
 		scene = (Scene) (fxmlLoader.load());
-
+		scene.setFill(Color.TRANSPARENT);
 		stage.setTitle("Logiciel de clavardage");
-		stage.initStyle(StageStyle.UNDECORATED);
+		stage.initStyle(StageStyle.TRANSPARENT);
 		stage.setScene(scene);
 
 		ToolBar toolBar = new ToolBar();

@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Scene stylesheets="@menu.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<Scene fill="#ffffff00" stylesheets="@menu.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <root>
-      <VBox fx:id="vb" alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20;" styleClass="menu">
+      <VBox fx:id="vb" alignment="CENTER" style="-fx-background-color: #f9f9f9; -fx-background-radius: 20; -fx-border-radius: 20;" styleClass="menu">
          <children>
-            <ButtonBar fx:id="buttonbar" buttonMinWidth="0.0" minWidth="-Infinity" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="34.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20;" VBox.vgrow="NEVER">
+            <ButtonBar fx:id="buttonbar" buttonMinWidth="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="2.0" minWidth="5.0" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="30.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-border-radius: 20;">
               <buttons>
-                <Button mnemonicParsing="false" onMouseClicked="#diminue" padding="$null" stylesheets="@bouton.css" text="-" textFill="#fc4444">
+                  <Button minWidth="40.0" mnemonicParsing="false" onMouseClicked="#change" prefHeight="26.0" stylesheets="@bouton.css" text="O" textFill="#fc4444">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -26,29 +26,20 @@
                         <String fx:value="boutonO" />
                      </styleClass>
                   </Button>
-                  <Button minWidth="40.0" mnemonicParsing="false" onMouseClicked="#change" prefHeight="26.0" stylesheets="@bouton.css" text="O" textFill="#fc4444">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                     <styleClass>
-                        <String fx:value="bouton" />
-                        <String fx:value="boutonV" />
-                     </styleClass>
-                  </Button>
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="40.0" mnemonicParsing="false" onMouseClicked="#ferme" onMouseDragged="#dragged" onMousePressed="#pressed" prefWidth="40.0" style="-fx-background-color: red;" styleClass="bouton" stylesheets="@bouton.css" text="X" textFill="#d42a2a">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
               </buttons>
-               <padding>
-                  <Insets right="12.0" />
-               </padding>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
             </ButtonBar>
-            <SplitPane prefHeight="14.0" style="-fx-background-color: white;" />
+            <SplitPane prefHeight="14.0" />
             <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Veuillez entrer un pseudo : " textFill="RED">
                <font>
                   <Font name="Calibri Bold" size="16.0" />
@@ -66,7 +57,7 @@
                   <Insets />
                </opaqueInsets>
                <VBox.margin>
-                  <Insets top="15.0" />
+                  <Insets bottom="7.0" top="15.0" />
                </VBox.margin>
             </Button>
          </children>

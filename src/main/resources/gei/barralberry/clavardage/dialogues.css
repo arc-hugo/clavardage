@@ -1,8 +1,9 @@
-.dialogues{
-    -fx-background-color: white;
+.dialogues {
+    -fx-background-color: #f9f9f9;
 }
+
 .dialogues .button {
-    -fx-background-color:  #bbbbbb;
+    -fx-background-color:  #cccccc;
     -fx-text-fill: red;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
@@ -10,7 +11,7 @@
 }
 
 .dialogues:header .header-panel {
-    -fx-background-color: white;
+    -fx-background-color:#f9f9f9;
 }
 
 

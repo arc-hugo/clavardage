@@ -35,6 +35,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -75,11 +76,13 @@ public class ControleurUtilisateurs implements Initializable {
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 			loader.setController(new ControleurPseudo());
 			Stage stage = new Stage();
-			stage.initStyle(StageStyle.UNDECORATED);
+			stage.initStyle(StageStyle.TRANSPARENT);
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.setTitle("Saisie de pseudo");
 			try {
-				stage.setScene((Scene) loader.load());
+				Scene scene = (Scene) loader.load();
+				scene.setFill(Color.TRANSPARENT);
+				stage.setScene(scene);
 				String login = "";
 				while (login.equals("")) {
 					stage.showAndWait();
