@@ -12,10 +12,10 @@ module clavardage {
     exports gei.barralberry.clavardage;
     exports gei.barralberry.clavardage.concurrent;
     exports gei.barralberry.clavardage.controleurs;
-    exports gei.barralberry.clavardage.modeles.messages;
     exports gei.barralberry.clavardage.modeles.session;
     exports gei.barralberry.clavardage.modeles.utilisateurs;
     exports gei.barralberry.clavardage.reseau;
+    exports gei.barralberry.clavardage.reseau.messages;
     exports gei.barralberry.clavardage.reseau.services;
     exports gei.barralberry.clavardage.utils;
 }

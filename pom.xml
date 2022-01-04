@@ -68,6 +68,57 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+            		<groupId>com.github.akman</groupId>
+            		<artifactId>jpackage-maven-plugin</artifactId>
+            		<version>0.1.3</version>
+					<configuration>
+							<toolhome>$‍{env.JPACKAGE_HOME}</toolhome>
+							<dest>target/jpackage</dest>
+							<name>${app.name}</name>
+							<appversion>0.1</appversion>
+							<description>Application de discussion textuelle sur réseau local</description>
+							<vendor>Hugo Barral et Oriane Berry</vendor>
+							<modulepath>
+                				<dependencysets>
+                  					<dependencyset>
+                    					<includeoutput>true</includeoutput>
+                    					<excludeautomatic>true</excludeautomatic>
+                  					</dependencyset>
+                				</dependencysets>
+              				</modulepath>
+							<addmodules>
+                				<addmodule>${moduleName}</addmodule>
+              				</addmodules>
+							<module>${moduleName}/${mainPackage}</module>
+							<arguments>--opt</arguments>
+							<javaoptions>-Dfile.encoding=UTF-8 -Xms256m -Xmx512m</javaoptions>
+							<addlaunchers>
+                				<addlauncher>
+                  					<name>${app.name}-cli</name>
+                  					<module>${moduleName}/${mainPackage}</module>
+                  					<arguments>--help</arguments>
+                  					<javaoptions>-Xms256m -Xmx512m</javaoptions>
+                  					<appversion>${project.version}</appversion>
+                  					<!-- <icon>$‍{project.basedir}/config/jpackage/resources/appname-cli.ico</icon> -->
+                  					<winconsole>true</winconsole>
+                				</addlauncher>
+              				</addlaunchers>
+							<installdir>BarralBerry/clavardage</installdir>
+							<licensefile>LICENSE</licensefile>
+							<windirchooser>true</windirchooser>
+							<winmenu>true</winmenu>
+							<winmenugroup>BarralBerry/clavardage</winmenugroup>
+							<winperuserinstall>true</winperuserinstall>
+							<winshortcut>true</winshortcut>
+							<winupgradeuuid>${windows.upgrade.uuid}</winupgradeuuid>
+              				<!-- put your configurations here -->
+            		</configuration>
+          		</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -93,22 +144,14 @@
 				</configuration>
 			</plugin>
 			<plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-shade-plugin</artifactId>
-        		<version>3.2.4</version>
+        		<groupId>com.github.akman</groupId>
+        		<artifactId>jpackage-maven-plugin</artifactId>
         		<executions>
-          			<execution>
-            			<phase>package</phase>
+         			<execution>
+            			<phase>verify</phase>
             			<goals>
-              				<goal>shade</goal>
+              				<goal>jpackage</goal>
             			</goals>
-            			<configuration>
-              				<transformers>
-                				<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  					<mainClass>${mainPackage}</mainClass>
-                				</transformer>
-              				</transformers>
-            			</configuration>
           			</execution>
         		</executions>
       		</plugin>

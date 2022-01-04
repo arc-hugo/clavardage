@@ -11,6 +11,7 @@ import java.util.UUID;
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.donnees.AccesDB;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
+import gei.barralberry.clavardage.modeles.session.SessionMode;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.FinOK;
@@ -39,15 +40,22 @@ public class ControleurSession implements Initializable {
 	@FXML private TextField texte;
 	@FXML private VBox messages;
 	
+	private SessionMode mode;
 	private ModeleSession modele;
 	private AccesDB db;
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
 	private Socket sock;
 
-	// TODO AccesBDD
-
+	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws IOException, SQLException {
+		this.mode = SessionMode.HISTORIQUE;
+		this.modele = new ModeleSession(local, destinataire);
+		this.db = new AccesDB(destinataire.getIdentifiant(), local.getIdentifiant());
+		this.executeur = ExecuteurSession.getInstance();
+	} 
+	
 	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException, SQLException {
+		this.mode = SessionMode.CONNECTE;
 		this.modele = new ModeleSession(local, destinataire);
 		this.db = new AccesDB(destinataire.getIdentifiant(), local.getIdentifiant());
 		this.executeur = ExecuteurSession.getInstance();
@@ -105,8 +113,10 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void envoiMessage(MessageAffiche msg) {
-		this.modele.ajoutEnvoi(msg);
-		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, msg));
+		if (this.mode == SessionMode.CONNECTE) {
+			this.modele.ajoutEnvoi(msg);
+			this.executeur.ajoutTache(new TacheEnvoiTCP(sock, msg));
+		}
 	}
 
 	public void fermetureLocale() {
@@ -130,6 +140,7 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureDistante() {
 		// TODO passage en mode lecture d'historique
+		this.mode = SessionMode.FIN;
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.showAndWait();
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, new FinOK(getIdentifiantLocal()));
