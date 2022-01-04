@@ -214,6 +214,26 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 		return false;
 	}
+	
+	@FXML 
+	private void ferme() {
+		this.tabs.getScene().getWindow().hide();
+	}
+	
+	@FXML 
+	private void diminue() {
+		Stage st;
+		st = (Stage)this.tabs.getScene().getWindow();
+		st.setFullScreen(false);
+	}
+	
+	
+	@FXML 
+	private void augmente() {
+		Stage st;
+		st = (Stage)this.tabs.getScene().getWindow();
+		st.setFullScreen(true);
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
