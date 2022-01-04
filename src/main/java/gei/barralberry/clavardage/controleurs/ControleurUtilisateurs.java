@@ -22,13 +22,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -39,10 +45,16 @@ public class ControleurUtilisateurs implements Initializable {
 	@FXML private ListView<Utilisateur> list;
 	@FXML private MenuItem deconnexion;
 	@FXML private MenuItem changerPseudo;
+	@FXML private ButtonBar buttonbar;
+	@FXML private MenuButton name;
+	@FXML private VBox vb;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
 	private AccesTCP tcp;
+
+	private int x = 0;
+    private int y = 0;
 
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
@@ -63,7 +75,7 @@ public class ControleurUtilisateurs implements Initializable {
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 			loader.setController(new ControleurPseudo());
 			Stage stage = new Stage();
-			stage.initStyle(StageStyle.DECORATED);
+			stage.initStyle(StageStyle.UNDECORATED);
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.setTitle("Saisie de pseudo");
 			try {
@@ -127,7 +139,7 @@ public class ControleurUtilisateurs implements Initializable {
 			sock.close();
 		}
 	}
-
+	
 	public void deconnexion() {
 		Alerte deco = Alerte.confirmationDeconnexion();
 
@@ -217,28 +229,48 @@ public class ControleurUtilisateurs implements Initializable {
 	
 	@FXML 
 	private void ferme() {
-		this.tabs.getScene().getWindow().hide();
+		deconnexion();
 	}
 	
 	@FXML 
 	private void diminue() {
 		Stage st;
 		st = (Stage)this.tabs.getScene().getWindow();
-		st.setFullScreen(false);
+		st.setIconified(true);
 	}
 	
 	
 	@FXML 
-	private void augmente() {
+	private void change() {
 		Stage st;
 		st = (Stage)this.tabs.getScene().getWindow();
-		st.setFullScreen(true);
+		if (st.isFullScreen()) {
+			st.setFullScreen(false);
+		}
+		else {
+			st.setFullScreen(true);
+		}
+	}
+	
+	@FXML
+	private void dragged(MouseEvent event) {
+	    Stage stage = (Stage) buttonbar.getScene().getWindow();
+	    stage.setY(event.getScreenY() - y);
+	    stage.setX(event.getScreenX() - x);
+	}      
+
+	@FXML
+	private void pressed(MouseEvent event) {
+	    x = (int) event.getSceneX();
+	    y = (int) event.getSceneY();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Lie la vue de la liste à la liste d'utilisateurs du modèle
 		this.list.setItems(this.modele.getUtilisateurs());
+		
+		this.name.textProperty().bind(this.modele.getUtilisateurLocal().getPseudoPropery());
 
 		// Change l'apparence des pseudos dans la liste des utilisateurs
 		// Lance une demande de session lorsque l'on click sur un pseudo

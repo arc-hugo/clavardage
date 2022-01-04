@@ -2,9 +2,12 @@ package gei.barralberry.clavardage;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.MouseButton;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -22,16 +25,17 @@ public class App extends Application {
 	public static int UDP_PORT_RECEPTION = 22540;
 	public static int TCP_PORT_ENVOI = 30861;
 	public static int TCP_PORT_RECEPTION = 30861;
-
+	
 	@Override
 	public void start(Stage stage) throws IOException {
 		ControleurUtilisateurs controleur = new ControleurUtilisateurs();
 
 		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("principal.fxml"));
 		fxmlLoader.setController(controleur);
-		scene = new Scene(fxmlLoader.load());
+		scene = (Scene) (fxmlLoader.load());
 
 		stage.setTitle("Logiciel de clavardage");
+		stage.initStyle(StageStyle.UNDECORATED);
 		stage.setScene(scene);
 
 		ToolBar toolBar = new ToolBar();
@@ -41,6 +45,7 @@ public class App extends Application {
 			controleur.deconnexion();
 			e.consume();
 		});
+		
 		stage.show();
 	}
 

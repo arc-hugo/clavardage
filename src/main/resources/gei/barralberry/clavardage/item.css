@@ -1,9 +1,7 @@
 .menu-item .label {
     -fx-text-fill: red;
-    font: 16 calibri;
-    /*-fx-font: 16 calibri;*/
-    font-style: bold;
-    /*-fx-font-style: normal bold;*/
+    -fx-font: 16 calibri;
+    -fx-font-style: normal bold;
 }
 
 .context-menu {
