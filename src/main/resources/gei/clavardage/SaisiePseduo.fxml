@@ -13,9 +13,9 @@
 
 <Scene fill="FIREBRICK" stylesheets="@menu.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <root>
-      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="320.0" style="-fx-background-color: #666666;">
+      <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="320.0" style="-fx-background-color: white; -fx-background-radius: 20;">
          <children>
-            <ButtonBar buttonMinWidth="0.0" prefHeight="34.0" style="-fx-background-color: #999999;">
+            <ButtonBar buttonMinWidth="0.0" prefHeight="34.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: white;">
               <buttons>
                 <Button mnemonicParsing="false" onMouseClicked="#diminue" stylesheets="@bouton.css" text="-" textFill="#fc4444">
                      <font>
@@ -44,9 +44,12 @@
                <padding>
                   <Insets right="12.0" />
                </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </ButtonBar>
-            <SplitPane prefHeight="14.0" style="-fx-background-color: #666666;" />
-            <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Veuillez entrer un pseudo : " textFill="#ac0000">
+            <SplitPane prefHeight="14.0" style="-fx-background-color: white;" />
+            <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Veuillez entrer un pseudo : " textFill="RED">
                <font>
                   <Font name="Calibri Bold" size="16.0" />
                </font>
@@ -54,8 +57,8 @@
                   <Insets bottom="15.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="pseudo" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="229.0" style="-fx-background-color: white; -fx-background-radius: 10;" />
-            <Button fx:id="validate_button" alignment="CENTER" depthTest="DISABLE" mnemonicParsing="false" onAction="#new_pseudo" prefHeight="26.0" prefWidth="90.0" style="-fx-background-color: #888888; -fx-background-radius: 10;" text="Valider" textAlignment="CENTER" textFill="#ac0000" textOverrun="LEADING_ELLIPSIS" wrapText="true">
+            <TextField fx:id="pseudo" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="229.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: red;" />
+            <Button fx:id="validate_button" alignment="CENTER" depthTest="DISABLE" mnemonicParsing="false" onAction="#new_pseudo" prefHeight="26.0" prefWidth="90.0" style="-fx-background-color: #bbbbbb; -fx-background-radius: 10; -fx-border-color: red; -fx-border-radius: 10;" text="Valider" textAlignment="CENTER" textFill="RED" textOverrun="LEADING_ELLIPSIS" wrapText="true">
                <font>
                   <Font name="Calibri Bold" size="16.0" />
                </font>
