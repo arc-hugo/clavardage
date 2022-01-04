@@ -22,7 +22,7 @@ public class AccesDB {
 	private final static String DB_DRIVER = "jdbc:sqlite:";
 	private final static File DB_PATH = new File(System.getProperty("user.home")+"/.config/clavardage/clavardage.db");
 	
-	private final static String CREATE_TABLE_UTILISATEUR = "CREATE TABLE IF NOT EXISTS UTILISATEUR(ID UUID PRIMARY KEY)";
+	private final static String CREATE_TABLE_UTILISATEUR = "CREATE TABLE IF NOT EXISTS UTILISATEUR(ID UUID UNIQUE PRIMARY KEY)";
 	private final static String CREATE_TABLE_MESSAGE = "CREATE TABLE IF NOT EXISTS MESSAGE("
 			+ "ID INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,"
 			+ "CONTENU TEXT,"
