@@ -34,19 +34,8 @@ public class App extends Application {
 		stage.setTitle("Logiciel de clavardage");
 		stage.setScene(scene);
 
-		/*
-		 * BorderPane borderPane = new BorderPane();
-		 * borderPane.setStyle("-fx-background-color: #666666;");
-		 */
-
 		ToolBar toolBar = new ToolBar();
 		toolBar.getItems().add(new Decoration());
-
-		/*
-		 * borderPane.setTop(toolBar);
-		 * 
-		 * stage.setScene(new Scene(borderPane, 300, 250));
-		 */
 
 		stage.setOnCloseRequest(e -> {
 			controleur.deconnexion();
