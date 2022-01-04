@@ -46,12 +46,13 @@ public class AccesDB {
 		Class.forName("org.sqlite.JDBC");
 		
 		DB_PATH.getParentFile().mkdirs();
-		DB_PATH.createNewFile();
+		boolean nouveau = DB_PATH.createNewFile();
 		
 		this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
 		
-		Statement stm = conn.createStatement();
-		if (stm.executeUpdate(CREATE_TABLE_UTILISATEUR) > 0) {
+		if (nouveau) {
+			Statement stm = conn.createStatement();
+			stm.executeUpdate(CREATE_TABLE_UTILISATEUR);
 			stm.executeUpdate(CREATE_TABLE_MESSAGE);
 		}
 		
