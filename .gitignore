@@ -31,3 +31,4 @@ target/
 .metadata/
 .mvn/
 mvnw*
+dependency-reduced-pom.xml

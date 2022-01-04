@@ -3,14 +3,19 @@ module clavardage {
 	requires transitive javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;
+	requires java.prefs;
+	requires java.sql;
 
-    opens gei.clavardage to javafx.fxml;
-    opens gei.clavardage.controleurs to javafx.fxml;
+    opens gei.barralberry.clavardage to javafx.fxml;
+    opens gei.barralberry.clavardage.controleurs to javafx.fxml;
     
-    exports gei.clavardage;
-    exports gei.clavardage.concurrent;
-    exports gei.clavardage.controleurs;
-    exports gei.clavardage.modeles;
-    exports gei.clavardage.reseau;
-    exports gei.clavardage.reseau.services;
+    exports gei.barralberry.clavardage;
+    exports gei.barralberry.clavardage.concurrent;
+    exports gei.barralberry.clavardage.controleurs;
+    exports gei.barralberry.clavardage.modeles.session;
+    exports gei.barralberry.clavardage.modeles.utilisateurs;
+    exports gei.barralberry.clavardage.reseau;
+    exports gei.barralberry.clavardage.reseau.messages;
+    exports gei.barralberry.clavardage.reseau.services;
+    exports gei.barralberry.clavardage.utils;
 }
