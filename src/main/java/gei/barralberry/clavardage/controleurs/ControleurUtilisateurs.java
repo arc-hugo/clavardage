@@ -82,7 +82,7 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 
-	private void creationSession(Utilisateur util, Socket sock) throws IOException, SQLException {
+	private void creationSession(Utilisateur util, Socket sock) throws IOException, SQLException, ClassNotFoundException {
 		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
@@ -118,7 +118,7 @@ public class ControleurUtilisateurs implements Initializable {
 				public void run() {
 					try {
 						creationSession(util, sock);
-					} catch (IOException | SQLException e) {
+					} catch (IOException | SQLException | ClassNotFoundException e) {
 						e.printStackTrace();
 					}
 				}
@@ -140,7 +140,7 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
-	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException, SQLException {
+	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException, SQLException, ClassNotFoundException {
 		Alerte confirm = Alerte.accepterConnexion(util.getPseudo());
 		
 		Optional<ButtonType> result = confirm.showAndWait();
@@ -163,7 +163,7 @@ public class ControleurUtilisateurs implements Initializable {
 				public void run() {
 					try {
 						accepterConnexion(util, sock);
-					} catch (IOException | SQLException e) {
+					} catch (IOException | SQLException | ClassNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}

@@ -7,6 +7,8 @@ import javafx.scene.control.ToolBar;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
 import gei.barralberry.clavardage.utils.Decoration;
@@ -22,7 +24,7 @@ public class App extends Application {
 	public static int UDP_PORT_RECEPTION = 22540;
 	public static int TCP_PORT_ENVOI = 30861;
 	public static int TCP_PORT_RECEPTION = 30861;
-
+	
 	@Override
 	public void start(Stage stage) throws IOException {
 		ControleurUtilisateurs controleur = new ControleurUtilisateurs();

@@ -16,6 +16,7 @@
         <windows.vendor>Barral-Berry</windows.vendor>
         <mainJavafx>gei.barralberry.clavardage.App</mainJavafx>
         <mainPackage>gei.barralberry.clavardage.Main</mainPackage>
+		<vendor>Hugo Barral et Oriane Berry</vendor>
         <moduleName>clavardage</moduleName>
 	</properties>
 	<dependencies>
@@ -59,66 +60,14 @@
     		<artifactId>maven-shade-plugin</artifactId>
     		<version>3.2.4</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+		<!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
 		<dependency>
-    		<groupId>com.h2database</groupId>
-    		<artifactId>h2</artifactId>
-    		<version>2.0.204</version>
-    		<scope>test</scope>
+    		<groupId>org.xerial</groupId>
+    		<artifactId>sqlite-jdbc</artifactId>
+   	 		<version>3.36.0.3</version>
 		</dependency>
 	</dependencies>
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-            		<groupId>com.github.akman</groupId>
-            		<artifactId>jpackage-maven-plugin</artifactId>
-            		<version>0.1.3</version>
-					<configuration>
-							<toolhome>$‍{env.JPACKAGE_HOME}</toolhome>
-							<dest>target/jpackage</dest>
-							<name>${app.name}</name>
-							<appversion>0.1</appversion>
-							<description>Application de discussion textuelle sur réseau local</description>
-							<vendor>Hugo Barral et Oriane Berry</vendor>
-							<modulepath>
-                				<dependencysets>
-                  					<dependencyset>
-                    					<includeoutput>true</includeoutput>
-                    					<excludeautomatic>true</excludeautomatic>
-                  					</dependencyset>
-                				</dependencysets>
-              				</modulepath>
-							<addmodules>
-                				<addmodule>${moduleName}</addmodule>
-              				</addmodules>
-							<module>${moduleName}/${mainPackage}</module>
-							<arguments>--opt</arguments>
-							<javaoptions>-Dfile.encoding=UTF-8 -Xms256m -Xmx512m</javaoptions>
-							<addlaunchers>
-                				<addlauncher>
-                  					<name>${app.name}-cli</name>
-                  					<module>${moduleName}/${mainPackage}</module>
-                  					<arguments>--help</arguments>
-                  					<javaoptions>-Xms256m -Xmx512m</javaoptions>
-                  					<appversion>${project.version}</appversion>
-                  					<!-- <icon>$‍{project.basedir}/config/jpackage/resources/appname-cli.ico</icon> -->
-                  					<winconsole>true</winconsole>
-                				</addlauncher>
-              				</addlaunchers>
-							<installdir>BarralBerry/clavardage</installdir>
-							<licensefile>LICENSE</licensefile>
-							<windirchooser>true</windirchooser>
-							<winmenu>true</winmenu>
-							<winmenugroup>BarralBerry/clavardage</winmenugroup>
-							<winperuserinstall>true</winperuserinstall>
-							<winshortcut>true</winshortcut>
-							<winupgradeuuid>${windows.upgrade.uuid}</winupgradeuuid>
-              				<!-- put your configurations here -->
-            		</configuration>
-          		</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -143,18 +92,6 @@
     				<jlinkZipName>${moduleName}</jlinkZipName>
 				</configuration>
 			</plugin>
-			<plugin>
-        		<groupId>com.github.akman</groupId>
-        		<artifactId>jpackage-maven-plugin</artifactId>
-        		<executions>
-         			<execution>
-            			<phase>verify</phase>
-            			<goals>
-              				<goal>jpackage</goal>
-            			</goals>
-          			</execution>
-        		</executions>
-      		</plugin>
 		</plugins>
 	</build>
 </project>
