@@ -45,7 +45,7 @@ public class AccesDB {
 		this.destinataire = destinataire;
 		Class.forName("org.sqlite.JDBC");
 		
-		DB_PATH.mkdirs();
+		DB_PATH.getParentFile().mkdirs();
 		DB_PATH.createNewFile();
 		
 		this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
