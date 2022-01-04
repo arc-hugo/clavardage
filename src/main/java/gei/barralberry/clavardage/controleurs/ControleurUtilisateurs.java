@@ -127,7 +127,7 @@ public class ControleurUtilisateurs implements Initializable {
 			sock.close();
 		}
 	}
-
+	
 	public void deconnexion() {
 		Alerte deco = Alerte.confirmationDeconnexion();
 
@@ -213,6 +213,26 @@ public class ControleurUtilisateurs implements Initializable {
 			return true;
 		}
 		return false;
+	}
+	
+	@FXML 
+	private void ferme() {
+		deconnexion();
+	}
+	
+	@FXML 
+	private void diminue() {
+		Stage st;
+		st = (Stage)this.tabs.getScene().getWindow();
+		st.setFullScreen(false);
+	}
+	
+	
+	@FXML 
+	private void augmente() {
+		Stage st;
+		st = (Stage)this.tabs.getScene().getWindow();
+		st.setFullScreen(true);
 	}
 
 	@Override

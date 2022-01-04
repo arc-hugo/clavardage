@@ -29,7 +29,7 @@ public class App extends Application {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("principal.fxml"));
 		fxmlLoader.setController(controleur);
-		scene = new Scene(fxmlLoader.load());
+		scene = (Scene) (fxmlLoader.load());
 
 		stage.setTitle("Logiciel de clavardage");
 		stage.setScene(scene);
