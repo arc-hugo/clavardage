@@ -1,14 +1,14 @@
 .list-cell:session{
-    -fx-text-fill: #ac0000;
-    -fx-background-color: #888888;
+    -fx-text-fill: red;
+    -fx-background-color: #bbbbbb;
 
 }
 .list-cell{
     -fx-text-fill: white;    
-    -fx-background-color: #888888;
+    -fx-background-color: #bbbbbb;
 }
 .list-cell:inactive{
     -fx-text-fill: black;    
-    -fx-background-color: #888888;
+    -fx-background-color: #bbbbbb;
 
 }
