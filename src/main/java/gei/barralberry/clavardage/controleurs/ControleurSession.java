@@ -161,6 +161,12 @@ public class ControleurSession implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
+					try {
+						db.ajoutMessage(msg);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					messages.getChildren().add(noeud);
 				}
 			});
