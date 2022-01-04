@@ -22,12 +22,12 @@ jobs:
       - uses: actions/checkout@v2
       
       # Mise à place du JDK 11
-      - name: JDK 11
+      - name: JDK 16
         uses: actions/setup-java@v2
         with:
           # JDK 11 distibué par Adopt
           distribution: adopt
-          java-version: 11
+          java-version: 16
       
       # Cache des dépendances Maven
       - name: Cache
@@ -41,7 +41,7 @@ jobs:
       - run: mvn -B package --file pom.xml -DskipTests
       
       # Exporte le build pour le publier en tant que paquet
-      - run: mkdir staging && cp target/*jar-with-dependencies.jar staging
+      - run: mkdir staging && cp target/clavardage*.jar staging
       
       # Téléverse l'artéfacte généré par le workflow
       - uses: actions/upload-artifact@v2
