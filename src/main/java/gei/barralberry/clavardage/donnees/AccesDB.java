@@ -1,5 +1,7 @@
 package gei.barralberry.clavardage.donnees;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Stack;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -17,35 +18,41 @@ import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.Texte;
 
 public class AccesDB {
+
+	private final static String DB_DRIVER = "jdbc:sqlite:";
+	private final static File DB_PATH = new File(System.getProperty("user.home")+"/.config/clavardage/clavardage.db");
 	
-	private final static String DB_ACCES = "jdbc:h2:~/.config/clavardage/clavardage";
-	private final static String DB_OPTIONS = ";AUTO_SERVER=TRUE";
-	
-	private final static String CREATE_TABLE_UTILISATEUR = "CREATE TABLE IF NOT EXISTS UTILISATEUR(ID UUID PRIMARY KEY)";
-	private final static String CREATE_TABLE_MESSAGE = "CREATE TABLE MESSAGE("
-			+ "ID INT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,"
+	private final static String CREATE_TABLE_UTILISATEUR = "CREATE TABLE IF NOT EXISTS UTILISATEUR(ID UUID UNIQUE PRIMARY KEY)";
+	private final static String CREATE_TABLE_MESSAGE = "CREATE TABLE IF NOT EXISTS MESSAGE("
+			+ "ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
 			+ "CONTENU TEXT,"
 			+ "DATE TIMESTAMP,"
 			+ "FICHIER BOOLEAN,"
 			+ "RECU BOOLEAN,"
 			+ "UTILISATEUR UUID REFERENCES UTILISATEUR(ID) ON DELETE CASCADE)";
 	private final static String CREATE_UTILISATEUR = "INSERT INTO UTILISATEUR VALUES(?)";
-	private final static String ADD_MESSAGE = "INSERT INTO MESSAGE(CONTENU, DATE, FICHIER, RECU, UTILISATEUR) VALUES (?,?,?,?,?)";
+	private final static String ADD_MESSAGE = "INSERT INTO MESSAGE(CONTENU,DATE,FICHIER,RECU,UTILISATEUR) VALUES (?,?,?,?,?)";
 	
 	private final static String GET_UTILISATEUR = "SELECT * FROM UTILISATEUR WHERE ID=?";
-	private final static String GET_DERNIERS_MESSAGES = "SELECT (CONTENU, DATE, FICHIER, RECU) FROM MESSAGE WHERE UTILISATEUR=? ORDER BY DESC ID LIMIT ?";
+	private final static String GET_DERNIERS_MESSAGES = "SELECT ID, CONTENU, DATE, FICHIER, RECU FROM MESSAGE WHERE UTILISATEUR=? ORDER BY ID DESC LIMIT ?";
 	
 	
 	private Connection conn;
 	private UUID destinataire;
 	private UUID local;
 	
-	public AccesDB(UUID destinataire, UUID local) throws SQLException {
+	public AccesDB(UUID destinataire, UUID local) throws SQLException, IOException, ClassNotFoundException {
 		this.destinataire = destinataire;
-		this.conn = DriverManager.getConnection(DB_ACCES+DB_OPTIONS);
+		Class.forName("org.sqlite.JDBC");
 		
-		Statement stm = conn.createStatement();
-		if (stm.executeUpdate(CREATE_TABLE_UTILISATEUR) > 0) {
+		DB_PATH.getParentFile().mkdirs();
+		boolean nouveau = DB_PATH.createNewFile();
+		
+		this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+		
+		if (nouveau) {
+			Statement stm = conn.createStatement();
+			stm.executeUpdate(CREATE_TABLE_UTILISATEUR);
 			stm.executeUpdate(CREATE_TABLE_MESSAGE);
 		}
 		
@@ -60,7 +67,7 @@ public class AccesDB {
 	}
 	
 	public List<MessageAffiche> getDerniersMessages(int max) throws SQLException {
-		Stack<MessageAffiche> list = new Stack<>();
+		List<MessageAffiche> list = new Vector<>();
 		
 		PreparedStatement ps = conn.prepareStatement(GET_DERNIERS_MESSAGES);
 		ps.setString(1, this.destinataire.toString());
@@ -80,7 +87,7 @@ public class AccesDB {
 			} else {
 				contenu = rs.getString("CONTENU");
 			}
-			list.push(new Texte(auteur, contenu, rs.getTimestamp("DATE")));
+			list.add(new Texte(auteur, contenu, rs.getTimestamp("DATE")));
 		}
 		
 		return list;
