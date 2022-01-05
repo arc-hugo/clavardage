@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-import gei.barralberry.clavardage.App;
 import gei.barralberry.clavardage.concurrent.ExecuteurReseau;
 import gei.barralberry.clavardage.reseau.AccesUDP;
 import gei.barralberry.clavardage.reseau.taches.TacheParseUDP;
+import gei.barralberry.clavardage.utils.Configuration;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -28,7 +28,7 @@ public class ServiceReceptionUDP extends Service<Void> {
 			protected Void call() throws Exception {
 				try {
 					@SuppressWarnings("resource")
-					DatagramSocket sock = new DatagramSocket(App.UDP_PORT_RECEPTION);
+					DatagramSocket sock = new DatagramSocket(Configuration.UDP_PORT_RECEPTION);
 					byte[] buffer = new byte[200];
 					DatagramPacket paquet = new DatagramPacket(buffer, buffer.length);
 

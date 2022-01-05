@@ -9,7 +9,7 @@
 		<app.name>clavardage</app.name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yy.ww.WWkkmm</maven.build.timestamp.format>
-		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<javafx.version>17.0.1</javafx.version>
         <windows.upgrade.uuid>f220c213-e525-46b5-98bc-0f2ce2d62677</windows.upgrade.uuid>

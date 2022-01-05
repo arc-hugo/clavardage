@@ -7,10 +7,9 @@ import javafx.scene.control.ToolBar;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
+import gei.barralberry.clavardage.utils.Configuration;
 import gei.barralberry.clavardage.utils.Decoration;
 
 /**
@@ -18,12 +17,7 @@ import gei.barralberry.clavardage.utils.Decoration;
  */
 public class App extends Application {
 
-	private static Scene scene;
-
-	public static int UDP_PORT_ENVOI = 22540;
-	public static int UDP_PORT_RECEPTION = 22540;
-	public static int TCP_PORT_ENVOI = 30861;
-	public static int TCP_PORT_RECEPTION = 30861;
+	private static Scene scene;	
 	
 	@Override
 	public void start(Stage stage) throws IOException {
@@ -53,16 +47,16 @@ public class App extends Application {
 					int port = Integer.parseInt(args[i+1]);
 					switch (args[i]) {
 					case "--tcp-envoi":
-						App.TCP_PORT_ENVOI = port;
+						Configuration.TCP_PORT_ENVOI = port;
 						break;
 					case "--tcp-reception":
-						App.TCP_PORT_RECEPTION = port;
+						Configuration.TCP_PORT_RECEPTION = port;
 						break;
 					case "--udp-envoi":
-						App.UDP_PORT_ENVOI = port;
+						Configuration.UDP_PORT_ENVOI = port;
 						break;
 					case "--udp-reception":
-						App.UDP_PORT_RECEPTION = port;
+						Configuration.UDP_PORT_RECEPTION = port;
 						break;
 					default:
 						break;

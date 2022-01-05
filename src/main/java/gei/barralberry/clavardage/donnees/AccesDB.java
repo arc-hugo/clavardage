@@ -16,11 +16,12 @@ import java.util.Vector;
 import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.Texte;
+import gei.barralberry.clavardage.utils.Configuration;
 
 public class AccesDB {
 
 	private final static String DB_DRIVER = "jdbc:sqlite:";
-	private final static File DB_PATH = new File(System.getProperty("user.home")+"/.config/clavardage/clavardage.db");
+	private final static File DB_PATH = new File(Configuration.DOSSIER_CACHE+"/clavardage.db");
 	
 	private final static String CREATE_TABLE_UTILISATEUR = "CREATE TABLE IF NOT EXISTS UTILISATEUR(ID UUID UNIQUE PRIMARY KEY)";
 	private final static String CREATE_TABLE_MESSAGE = "CREATE TABLE IF NOT EXISTS MESSAGE("
