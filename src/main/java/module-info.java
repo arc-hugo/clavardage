@@ -18,4 +18,5 @@ module clavardage {
     exports gei.barralberry.clavardage.reseau.messages;
     exports gei.barralberry.clavardage.reseau.services;
     exports gei.barralberry.clavardage.utils;
+    exports gei.barralberry.clavardage.reseau.taches;
 }

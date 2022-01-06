@@ -1,5 +1,5 @@
 .list-cell:session{
-<<<<<<< HEAD:src/main/resources/gei/clavardage/listViewParameters.css
+
     -fx-text-fill: red;
     -fx-background-color: #bbbbbb;
 
@@ -8,24 +8,8 @@
     -fx-text-fill: white;    
     -fx-background-color: #bbbbbb;
 }
+
 .list-cell:inactive{
     -fx-text-fill: black;    
     -fx-background-color: #bbbbbb;
-=======
-    -fx-text-fill: #ac0000;
-    background-color: #888888;
-    -fx-background-color: #888888;
-
-}
-.list-cell{
-    -fx-text-fill: white;
-    background-color: #888888;
-    -fx-background-color: #888888;
-}
-.list-cell:inactive{
-    -fx-text-fill: black;
-    background-color: #888888;  
-    -fx-background-color: #888888;
->>>>>>> 18c9b02509f90f65b2182f77fafd5e584cdaa61e:src/main/resources/gei/barralberry/clavardage/listViewParameters.css
-
 }
