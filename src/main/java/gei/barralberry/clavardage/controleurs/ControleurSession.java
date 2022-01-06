@@ -20,7 +20,7 @@ import gei.barralberry.clavardage.reseau.messages.OK;
 import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
-import gei.barralberry.clavardage.utils.Alerte;
+import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

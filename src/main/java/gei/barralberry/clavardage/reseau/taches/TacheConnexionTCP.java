@@ -6,12 +6,12 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import gei.barralberry.clavardage.utils.Configuration;
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.AccesTCP;
-import gei.barralberry.clavardage.utils.Alerte;
+import gei.barralberry.clavardage.util.Alerte;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.concurrent.Task;
 
 public class TacheConnexionTCP extends Task<Void> {

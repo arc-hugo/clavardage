@@ -16,7 +16,7 @@ import java.util.Vector;
 import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.Texte;
-import gei.barralberry.clavardage.utils.Configuration;
+import gei.barralberry.clavardage.util.Configuration;
 
 public class AccesDB {
 

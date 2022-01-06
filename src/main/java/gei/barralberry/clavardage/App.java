@@ -9,8 +9,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
-import gei.barralberry.clavardage.utils.Configuration;
-import gei.barralberry.clavardage.utils.Decoration;
+import gei.barralberry.clavardage.util.Configuration;
+import gei.barralberry.clavardage.util.Decoration;
 
 /**
  * JavaFX App

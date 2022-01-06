@@ -7,7 +7,7 @@ import java.net.DatagramSocket;
 import gei.barralberry.clavardage.concurrent.ExecuteurReseau;
 import gei.barralberry.clavardage.reseau.AccesUDP;
 import gei.barralberry.clavardage.reseau.taches.TacheParseUDP;
-import gei.barralberry.clavardage.utils.Configuration;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 

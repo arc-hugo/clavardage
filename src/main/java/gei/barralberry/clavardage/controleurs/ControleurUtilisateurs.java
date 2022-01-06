@@ -15,7 +15,7 @@ import gei.barralberry.clavardage.reseau.AccesTCP;
 import gei.barralberry.clavardage.reseau.AccesUDP;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.OK;
-import gei.barralberry.clavardage.utils.Alerte;
+import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;

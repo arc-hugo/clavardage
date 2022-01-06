@@ -1,4 +1,4 @@
-package gei.barralberry.clavardage.utils;
+package gei.barralberry.clavardage.util;
 
 import java.io.File;
 

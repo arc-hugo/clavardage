@@ -7,7 +7,7 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
-import gei.barralberry.clavardage.utils.Configuration;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.concurrent.Task;
 
 public class TacheEnvoiUDP extends Task<Void> {
