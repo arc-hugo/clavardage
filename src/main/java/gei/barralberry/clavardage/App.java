@@ -1,13 +1,9 @@
 package gei.barralberry.clavardage;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ToolBar;
-import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -15,8 +11,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
-import gei.barralberry.clavardage.utils.Configuration;
-import gei.barralberry.clavardage.utils.Decoration;
+import gei.barralberry.clavardage.util.Configuration;
+import gei.barralberry.clavardage.util.Decoration;
 
 /**
  * JavaFX App
@@ -25,9 +21,9 @@ public class App extends Application {
 
 	private static Scene scene;
 	private Boolean resizebottom = false;
-  private double dx;
-  private double dy;
-  private double xOffset;
+	private double dx;
+	private double dy;
+	private double xOffset;
   private double yOffset;
 	
 	@Override
@@ -128,5 +124,4 @@ public class App extends Application {
 		}
 		launch();
 	}
-
 }

@@ -15,7 +15,7 @@ import gei.barralberry.clavardage.reseau.AccesTCP;
 import gei.barralberry.clavardage.reseau.AccesUDP;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.OK;
-import gei.barralberry.clavardage.utils.Alerte;
+import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -25,7 +25,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -34,9 +33,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -106,8 +103,17 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 
-	private void creationSession(Utilisateur util, Socket sock) throws IOException, SQLException, ClassNotFoundException {
-		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
+	private void creationSession(Utilisateur util, Socket sock)
+			throws IOException, SQLException, ClassNotFoundException {
+		if (util.getEtat() == EtatUtilisateur.EN_SESSION) {
+			Tab tab = chercherSession(util.getIdentifiant());
+			if (tab != null) {
+				this.tabs.getTabs().remove(tab);
+			}
+		} else {
+			this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
+		}
+
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
@@ -126,32 +132,53 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public void lancementSession(Utilisateur destinataire) {
 		if (destinataire.getEtat() == EtatUtilisateur.CONNECTE) {
-				destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
-				tcp.demandeConnexion(destinataire);
+			destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
+			tcp.demandeConnexion(destinataire);
 		} else if (destinataire.getEtat() == EtatUtilisateur.DECONNECTE) {
-			Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
-			refus.show();
+			Alerte deco = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
+			deco.show();
 		}
 	}
 
-	public void lancementAccepte(Socket sock) throws IOException {
+	public void lancementAccepte(Socket sock) {
+		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (util != null) {
+						creationSession(util, sock);
+					} else {
+						sock.close();
+					}
+				} catch (IOException | SQLException | ClassNotFoundException e) {
+					Alerte ex = Alerte.exceptionLevee(e);
+					ex.showAndWait();
+				}
+			}
+		});
+	}
+
+	public void lancementRefuse(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		if (util != null) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
+					Alerte refus = Alerte.refusConnexion(util.getPseudo());
+					refus.show();
+					modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
 					try {
-						creationSession(util, sock);
-					} catch (IOException | SQLException | ClassNotFoundException e) {
-						e.printStackTrace();
+						sock.close();
+					} catch (IOException e) {
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 				}
 			});
-		} else {
-			sock.close();
 		}
 	}
-	
+
 	public void deconnexion() {
 		Alerte deco = Alerte.confirmationDeconnexion();
 
@@ -163,10 +190,11 @@ public class ControleurUtilisateurs implements Initializable {
 			System.exit(0);
 		}
 	}
-	
-	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException, SQLException, ClassNotFoundException {
+
+	private void accepterConnexion(Utilisateur util, Socket sock)
+			throws IOException, SQLException, ClassNotFoundException {
 		Alerte confirm = Alerte.accepterConnexion(util.getPseudo());
-		
+
 		Optional<ButtonType> result = confirm.showAndWait();
 		if (result.get() == ButtonType.OK) {
 			OK ok = new OK(getIdentifiantLocal());
@@ -188,8 +216,8 @@ public class ControleurUtilisateurs implements Initializable {
 					try {
 						accepterConnexion(util, sock);
 					} catch (IOException | SQLException | ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 				}
 			});
@@ -208,19 +236,27 @@ public class ControleurUtilisateurs implements Initializable {
 		});
 	}
 
+	private Tab chercherSession(UUID identifiant) {
+		String pseudo = this.modele.getPseudo(identifiant);
+		for (Tab tab : this.tabs.getTabs()) {
+			if (tab.getText().equals(pseudo)) {
+				return tab;
+			}
+		}
+		return null;
+	}
+
 	public void deconnexionDistante(UUID identifiant) {
 		if (this.modele.getEtat(identifiant) == EtatUtilisateur.EN_SESSION) {
-			String pseudo = this.modele.getPseudo(identifiant);
-			for (Tab tab : this.tabs.getTabs()) {
-				if (tab.getText().equals(pseudo)) {
-					ControleurSession session = (ControleurSession) tab.getUserData();
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							session.fermetureDistante();
-						}
-					});
-				}
+			Tab tab = chercherSession(identifiant);
+			if (tab != null) {
+				ControleurSession session = (ControleurSession) tab.getUserData();
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						session.fermetureDistante();
+					}
+				});
 			}
 		}
 		this.modele.setEtat(identifiant, EtatUtilisateur.DECONNECTE);
@@ -238,13 +274,13 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 		return false;
 	}
-	
-	@FXML 
+
+	@FXML
 	private void ferme() {
 		deconnexion();
 	}
-	
-	@FXML 
+
+	@FXML
 	private void diminue() {
 		Stage st;
 		st = (Stage)this.tabs.getScene().getWindow();
@@ -373,7 +409,7 @@ public class ControleurUtilisateurs implements Initializable {
 			});
 			return cell;
 		});
-		
+
 		// Fermeture possible de l'onglet selectionné
 		this.tabs.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 

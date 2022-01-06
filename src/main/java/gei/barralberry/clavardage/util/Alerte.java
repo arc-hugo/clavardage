@@ -1,4 +1,7 @@
-package gei.barralberry.clavardage.utils;
+package gei.barralberry.clavardage.util;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import gei.barralberry.clavardage.App;
 import gei.barralberry.clavardage.controleurs.ControleurPseudo;
@@ -9,6 +12,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -69,6 +73,7 @@ public class Alerte extends Alert {
 	public static Alerte utilisateurDeconnecte(String pseudo) {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Deconnecté");
+		alert.setHeaderText(null);
 		alert.setContentText("L'utilisateur " + pseudo + " est deconnecté");
 		return alert;
 	}
@@ -76,6 +81,7 @@ public class Alerte extends Alert {
 	public static Alerte refusConnexion(String pseudo) {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Refus");
+		alert.setHeaderText(null);
 		alert.setContentText("L'utilisateur "+pseudo+" à refusé la demande de discussion");
 		return alert;
 	}
@@ -83,7 +89,27 @@ public class Alerte extends Alert {
 	public static Alerte fermetureSession(String pseudo) {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Fin de discussion");
+		alert.setHeaderText(null);
 		alert.setContentText("L'utilisateur "+ pseudo +" vient de fermer la discussion.");
+		return alert;
+	}
+	
+	public static Alerte exceptionLevee(Exception e) {
+		Alerte alert = new Alerte(AlertType.ERROR);
+		alert.setTitle("Une exception a été levée !");
+		alert.setHeaderText(e.getMessage());
+		
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String text = sw.toString();
+		
+		TextArea ta = new TextArea(text);
+		ta.setEditable(false);
+		ta.setWrapText(true);
+		
+		alert.getDialogPane().setExpandableContent(ta);
+		
 		return alert;
 	}
 	

@@ -20,7 +20,7 @@ import gei.barralberry.clavardage.reseau.messages.OK;
 import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
-import gei.barralberry.clavardage.utils.Alerte;
+import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -95,8 +95,8 @@ public class ControleurSession implements Initializable {
 				this.messages.getChildren().add(oldMsg.affichage());
 			}
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Alerte ex = Alerte.exceptionLevee(e1);
+			ex.showAndWait();
 		}
 	}
 
@@ -127,16 +127,13 @@ public class ControleurSession implements Initializable {
 	public void fermetureLocale() {
 		Fin msg = new Fin(getIdentifiantLocal());
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, msg);
-		envoi.setOnSucceeded(e -> {
-			try {
-				db.close();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			fermeture();
-		});
 		this.executeur.ajoutTache(envoi);
+		try {
+			db.close();
+		} catch (SQLException e1) {
+			Alerte ex = Alerte.exceptionLevee(e1);
+			ex.showAndWait();
+		}
 	}
 	
 	public void confirmerFermeture() {
@@ -147,7 +144,7 @@ public class ControleurSession implements Initializable {
 		// TODO passage en mode lecture d'historique
 		this.mode = SessionMode.FIN;
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
-		ferme.showAndWait();
+		ferme.show();
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, new FinOK(getIdentifiantLocal()));
 		envoi.setOnSucceeded(e -> {
 			fermeture();
@@ -164,8 +161,8 @@ public class ControleurSession implements Initializable {
 					try {
 						db.ajoutMessage(msg);
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 					messages.getChildren().add(noeud);
 				}
@@ -190,8 +187,8 @@ public class ControleurSession implements Initializable {
 					try {
 						db.ajoutMessage(msg);
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 					messages.getChildren().add(msg.affichage());
 				}
