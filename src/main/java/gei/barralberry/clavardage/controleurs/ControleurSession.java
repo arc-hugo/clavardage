@@ -95,8 +95,8 @@ public class ControleurSession implements Initializable {
 				this.messages.getChildren().add(oldMsg.affichage());
 			}
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Alerte ex = Alerte.exceptionLevee(e1);
+			ex.showAndWait();
 		}
 	}
 
@@ -131,8 +131,8 @@ public class ControleurSession implements Initializable {
 		try {
 			db.close();
 		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Alerte ex = Alerte.exceptionLevee(e1);
+			ex.showAndWait();
 		}
 	}
 	
@@ -161,8 +161,8 @@ public class ControleurSession implements Initializable {
 					try {
 						db.ajoutMessage(msg);
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 					messages.getChildren().add(noeud);
 				}
@@ -187,8 +187,8 @@ public class ControleurSession implements Initializable {
 					try {
 						db.ajoutMessage(msg);
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 					messages.getChildren().add(msg.affichage());
 				}

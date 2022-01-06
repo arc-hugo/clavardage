@@ -2,13 +2,11 @@ package gei.barralberry.clavardage.util;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.PrimitiveIterator;
 
 import gei.barralberry.clavardage.App;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.text.Text;
 
 public class Alerte extends Alert {
 

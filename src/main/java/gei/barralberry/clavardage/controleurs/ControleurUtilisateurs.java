@@ -35,10 +35,14 @@ import javafx.stage.StageStyle;
 
 public class ControleurUtilisateurs implements Initializable {
 
-	@FXML private TabPane tabs;
-	@FXML private ListView<Utilisateur> list;
-	@FXML private MenuItem deconnexion;
-	@FXML private MenuItem changerPseudo;
+	@FXML
+	private TabPane tabs;
+	@FXML
+	private ListView<Utilisateur> list;
+	@FXML
+	private MenuItem deconnexion;
+	@FXML
+	private MenuItem changerPseudo;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
@@ -82,7 +86,8 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 
-	private void creationSession(Utilisateur util, Socket sock) throws IOException, SQLException, ClassNotFoundException {
+	private void creationSession(Utilisateur util, Socket sock)
+			throws IOException, SQLException, ClassNotFoundException {
 		if (util.getEtat() == EtatUtilisateur.EN_SESSION) {
 			Tab tab = chercherSession(util.getIdentifiant());
 			if (tab != null) {
@@ -91,7 +96,7 @@ public class ControleurUtilisateurs implements Initializable {
 		} else {
 			this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
 		}
-		
+
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
@@ -110,8 +115,8 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public void lancementSession(Utilisateur destinataire) {
 		if (destinataire.getEtat() == EtatUtilisateur.CONNECTE) {
-				destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
-				tcp.demandeConnexion(destinataire);
+			destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
+			tcp.demandeConnexion(destinataire);
 		} else if (destinataire.getEtat() == EtatUtilisateur.DECONNECTE) {
 			Alerte deco = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
 			deco.show();
@@ -120,27 +125,23 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public void lancementAccepte(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
-		if (util != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					if (util != null) {
 						creationSession(util, sock);
-					} catch (IOException | SQLException | ClassNotFoundException e) {
-						e.printStackTrace();
+					} else {
+						sock.close();
 					}
+				} catch (IOException | SQLException | ClassNotFoundException e) {
+					Alerte ex = Alerte.exceptionLevee(e);
+					ex.showAndWait();
 				}
-			});
-		} else {
-			try {
-				sock.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-		}
+		});
 	}
-	
+
 	public void lancementRefuse(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		if (util != null) {
@@ -153,14 +154,14 @@ public class ControleurUtilisateurs implements Initializable {
 					try {
 						sock.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 				}
 			});
 		}
 	}
-	
+
 	public void deconnexion() {
 		Alerte deco = Alerte.confirmationDeconnexion();
 
@@ -172,10 +173,11 @@ public class ControleurUtilisateurs implements Initializable {
 			System.exit(0);
 		}
 	}
-	
-	private void accepterConnexion(Utilisateur util, Socket sock) throws IOException, SQLException, ClassNotFoundException {
+
+	private void accepterConnexion(Utilisateur util, Socket sock)
+			throws IOException, SQLException, ClassNotFoundException {
 		Alerte confirm = Alerte.accepterConnexion(util.getPseudo());
-		
+
 		Optional<ButtonType> result = confirm.showAndWait();
 		if (result.get() == ButtonType.OK) {
 			OK ok = new OK(getIdentifiantLocal());
@@ -197,8 +199,8 @@ public class ControleurUtilisateurs implements Initializable {
 					try {
 						accepterConnexion(util, sock);
 					} catch (IOException | SQLException | ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.showAndWait();
 					}
 				}
 			});
@@ -216,7 +218,7 @@ public class ControleurUtilisateurs implements Initializable {
 			}
 		});
 	}
-	
+
 	private Tab chercherSession(UUID identifiant) {
 		String pseudo = this.modele.getPseudo(identifiant);
 		for (Tab tab : this.tabs.getTabs()) {
@@ -231,15 +233,15 @@ public class ControleurUtilisateurs implements Initializable {
 		if (this.modele.getEtat(identifiant) == EtatUtilisateur.EN_SESSION) {
 			Tab tab = chercherSession(identifiant);
 			if (tab != null) {
-					ControleurSession session = (ControleurSession) tab.getUserData();
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							session.fermetureDistante();
-						}
-					});
-				}
+				ControleurSession session = (ControleurSession) tab.getUserData();
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						session.fermetureDistante();
+					}
+				});
 			}
+		}
 		this.modele.setEtat(identifiant, EtatUtilisateur.DECONNECTE);
 	}
 
@@ -255,24 +257,23 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 		return false;
 	}
-	
-	@FXML 
+
+	@FXML
 	private void ferme() {
 		deconnexion();
 	}
-	
-	@FXML 
+
+	@FXML
 	private void diminue() {
 		Stage st;
-		st = (Stage)this.tabs.getScene().getWindow();
+		st = (Stage) this.tabs.getScene().getWindow();
 		st.setFullScreen(false);
 	}
-	
-	
-	@FXML 
+
+	@FXML
 	private void augmente() {
 		Stage st;
-		st = (Stage)this.tabs.getScene().getWindow();
+		st = (Stage) this.tabs.getScene().getWindow();
 		st.setFullScreen(true);
 	}
 
@@ -319,7 +320,7 @@ public class ControleurUtilisateurs implements Initializable {
 			});
 			return cell;
 		});
-		
+
 		// Fermeture possible de l'onglet selectionné
 		this.tabs.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 

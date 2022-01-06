@@ -30,7 +30,7 @@ public class AccesTCP {
 		this.executeur.ajoutTache(new TacheConnexionTCP(this, destinataire));
 	}
 	
-	public void connexionAccepte(Socket sock) throws IOException {
+	public void connexionAccepte(Socket sock) {
 		this.ctrlUtilisateurs.lancementAccepte(sock);
 	}
 	

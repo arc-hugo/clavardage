@@ -17,13 +17,13 @@ public class TacheConnexionTCP extends Task<Void> {
 	private AccesTCP tcp;
 	private Utilisateur destinataire;
 	private ExecuteurSession executeur;
-	
+
 	public TacheConnexionTCP(AccesTCP tcp, Utilisateur destinataire) {
 		this.tcp = tcp;
 		this.executeur = ExecuteurSession.getInstance();
 		this.destinataire = destinataire;
 	}
-	
+
 	@Override
 	protected Void call() throws Exception {
 		try {
@@ -33,12 +33,7 @@ public class TacheConnexionTCP extends Task<Void> {
 				this.executeur.ajoutTache(new Runnable() {
 					@Override
 					public void run() {
-						try {
-							tcp.connexionAccepte(sock);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						tcp.connexionAccepte(sock);
 					}
 				});
 			} else {

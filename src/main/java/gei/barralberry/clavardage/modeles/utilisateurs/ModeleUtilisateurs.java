@@ -7,6 +7,7 @@ import java.util.prefs.Preferences;
 import java.util.stream.IntStream;
 
 import gei.barralberry.clavardage.App;
+import gei.barralberry.clavardage.util.Alerte;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -34,8 +35,8 @@ public class ModeleUtilisateurs {
 				this.utilisateurLocal = new Utilisateur(UUID.fromString(uuid), InetAddress.getAllByName("localhost")[0], builder.toString(), EtatUtilisateur.CONNECTE);
 			}
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Alerte ex = Alerte.exceptionLevee(e);
+			ex.showAndWait();
 		}
 		this.utilisateurs = FXCollections.observableArrayList(Utilisateur.extractor());
 	}
