@@ -128,6 +128,16 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
+	public void lancementRefuse(Socket sock) throws IOException {
+		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
+		if (util != null) {
+			Alerte refus = Alerte.refusConnexion(util.getPseudo());
+			refus.show();
+			sock.close();
+			this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
+		}
+	}
+	
 	public void deconnexion() {
 		Alerte deco = Alerte.confirmationDeconnexion();
 
@@ -149,7 +159,6 @@ public class ControleurUtilisateurs implements Initializable {
 			ok.envoie(sock);
 			creationSession(util, sock);
 		} else {
-			System.out.println("Refus de connexion envoye");
 			Fin fin = new Fin(getIdentifiantLocal());
 			fin.envoie(sock);
 			sock.close();

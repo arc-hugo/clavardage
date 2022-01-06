@@ -31,10 +31,14 @@ public class AccesTCP {
 	}
 	
 	public void connexionAccepte(Socket sock) throws IOException {
-		ctrlUtilisateurs.lancementAccepte(sock);
+		this.ctrlUtilisateurs.lancementAccepte(sock);
 	}
-
+	
+	public void connexionRefuse(Socket sock) throws IOException {
+		this.ctrlUtilisateurs.lancementRefuse(sock);
+	}
+	
 	public void utilisateurDeconnecte(Utilisateur destinatiare) {
-		ctrlUtilisateurs.deconnexionDistante(destinatiare.getIdentifiant());
+		this.ctrlUtilisateurs.deconnexionDistante(destinatiare.getIdentifiant());
 	}
 }

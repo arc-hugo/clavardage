@@ -37,15 +37,23 @@ public class TacheConnexionTCP extends Task<Void> {
 						try {
 							tcp.connexionAccepte(sock);
 						} catch (IOException e) {
+							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
 				});
 			} else {
-				System.out.println("Refus de connexion recu");
-				Alerte refus = Alerte.refusConnexion(destinataire.getPseudo());
-				refus.show();
-				destinataire.setEtat(EtatUtilisateur.CONNECTE);
+				this.executeur.ajoutTache(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							tcp.connexionRefuse(sock);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				});
 			}
 		} catch (UnknownHostException e) {
 			Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
