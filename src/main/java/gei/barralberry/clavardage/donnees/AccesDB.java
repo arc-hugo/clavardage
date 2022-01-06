@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -68,7 +69,7 @@ public class AccesDB {
 	}
 	
 	public List<MessageAffiche> getDerniersMessages(int max) throws SQLException {
-		List<MessageAffiche> list = new Vector<>();
+		Stack<MessageAffiche> pile = new Stack<>();
 		
 		PreparedStatement ps = conn.prepareStatement(GET_DERNIERS_MESSAGES);
 		ps.setString(1, this.destinataire.toString());
@@ -88,10 +89,10 @@ public class AccesDB {
 			} else {
 				contenu = rs.getString("CONTENU");
 			}
-			list.add(new Texte(auteur, contenu, rs.getTimestamp("DATE")));
+			pile.push(new Texte(auteur, contenu, rs.getTimestamp("DATE")));
 		}
 		
-		return list;
+		return pile;
 	}
 	
 	
