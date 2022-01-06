@@ -127,12 +127,9 @@ public class ControleurSession implements Initializable {
 	public void fermetureLocale() {
 		Fin msg = new Fin(getIdentifiantLocal());
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, msg);
-		envoi.setOnSucceeded(e -> {
-			fermeture();
-		});
+		fermeture();
 		this.executeur.ajoutTache(envoi);
 		try {
-			System.out.println("Fermeture db");
 			db.close();
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -149,11 +146,7 @@ public class ControleurSession implements Initializable {
 		this.mode = SessionMode.FIN;
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.showAndWait();
-		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, new FinOK(getIdentifiantLocal()));
-		envoi.setOnSucceeded(e -> {
-			fermeture();
-		});
-		this.executeur.ajoutTache(envoi);
+		fermeture();
 	}
 
 	public void receptionMessage(MessageAffiche msg) {
