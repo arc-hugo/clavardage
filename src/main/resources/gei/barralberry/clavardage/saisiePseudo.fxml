@@ -15,7 +15,7 @@
    <root>
       <VBox fx:id="vb" alignment="CENTER" style="-fx-background-color: #f9f9f9; -fx-background-radius: 20; -fx-border-radius: 20;" styleClass="menu">
          <children>
-            <ButtonBar fx:id="buttonbar" buttonMinWidth="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="2.0" minWidth="5.0" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="30.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-border-radius: 20;">
+            <ButtonBar fx:id="buttonbar" buttonMinWidth="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="2.0" minWidth="5.0" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="30.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-background-color: #f9f9f9; -fx-border-radius: 20;">
               <buttons>
                   <Button minWidth="40.0" mnemonicParsing="false" onMouseClicked="#change" prefHeight="26.0" stylesheets="@bouton.css" text="O" textFill="#fc4444">
                      <font>
@@ -39,7 +39,7 @@
                   <Insets left="15.0" />
                </padding>
             </ButtonBar>
-            <SplitPane prefHeight="14.0" />
+            <SplitPane prefHeight="14.0" style="-fx-background-color: #f9f9f9;" />
             <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Veuillez entrer un pseudo : " textFill="RED">
                <font>
                   <Font name="Calibri Bold" size="16.0" />

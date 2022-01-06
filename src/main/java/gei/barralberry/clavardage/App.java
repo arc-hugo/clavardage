@@ -1,6 +1,8 @@
 package gei.barralberry.clavardage;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -26,6 +28,11 @@ public class App extends Application {
 	public static int UDP_PORT_RECEPTION = 22540;
 	public static int TCP_PORT_ENVOI = 30861;
 	public static int TCP_PORT_RECEPTION = 30861;
+	private Boolean resizebottom = false;
+    private double dx;
+    private double dy;
+    private double xOffset;
+    private double yOffset;
 	
 	@Override
 	public void start(Stage stage) throws IOException {
@@ -37,7 +44,49 @@ public class App extends Application {
 		scene.setFill(Color.TRANSPARENT);
 		stage.setTitle("Logiciel de clavardage");
 		stage.initStyle(StageStyle.TRANSPARENT);
+		stage.setResizable(true);
 		stage.setScene(scene);
+		/*scene.setOnMouseExited(e -> {
+			if (e.getX() <= (stage.getWidth() - 10) 
+					&& e.getX() >= (stage.getWidth() + 10) 
+					&& e.getY() >= (stage.getHeight() - 10) 
+					&& e.getY() <= stage.getHeight() + 10 ) {
+				scene.setCursor(Cursor.DEFAULT);
+			}
+		});
+		scene.setOnMouseEntered(e -> {
+			if (e.getX() <= (stage.getWidth() - 10) 
+					&& e.getX() >= (stage.getWidth() + 10) 
+					&& e.getY() >= (stage.getHeight() - 10) 
+					&& e.getY() <= stage.getHeight() + 10 ) {
+				scene.setCursor(Cursor.N_RESIZE);
+			}
+		});
+		
+		scene.setOnMousePressed(e -> {
+		  	if (e.getX() > stage.getWidth() - 50
+	                && e.getX() < stage.getWidth() + 50
+	                && e.getY() > stage.getHeight() - 50
+	                && e.getY() < stage.getHeight() + 50) {
+	            resizebottom = true;
+	            dx = stage.getWidth() - e.getX();
+	            dy = stage.getHeight() - e.getY();
+	        } else {
+	            resizebottom = false;
+	            xOffset = e.getSceneX();
+	            yOffset = e.getSceneY();
+	        } 
+	    });
+
+	  scene.setOnMouseDragged(e -> {
+	        if (resizebottom == false) {
+	            stage.setX(e.getScreenX() - xOffset);
+	            stage.setY(e.getScreenY() - yOffset);
+	        } else {
+	            stage.setWidth(e.getX() + dx);
+	            stage.setHeight(e.getY() + dy);
+	        }
+	    });*/
 
 		ToolBar toolBar = new ToolBar();
 		toolBar.getItems().add(new Decoration());
@@ -47,8 +96,12 @@ public class App extends Application {
 			e.consume();
 		});
 		
+		
+		
 		stage.show();
 	}
+
+	
 
 	public static void main(String[] args) {
 		if (args.length > 0) {

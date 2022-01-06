@@ -21,6 +21,7 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -33,6 +34,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -49,6 +52,7 @@ public class ControleurUtilisateurs implements Initializable {
 	@FXML private ButtonBar buttonbar;
 	@FXML private MenuButton name;
 	@FXML private VBox vb;
+	@FXML private BorderPane pane;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
@@ -56,6 +60,11 @@ public class ControleurUtilisateurs implements Initializable {
 
 	private int x = 0;
     private int y = 0;
+    private Boolean resizebottom = false;
+    private double dx;
+    private double dy;
+    private double xOffset;
+    private double yOffset;
 
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
@@ -255,19 +264,70 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
+	@FXML 
+	private void enter(MouseEvent event) {
+		Scene scene = pane.getScene();
+		Stage stage = (Stage) pane.getScene().getWindow();
+		if (event.getX() > stage.getWidth() - 50
+		 && event.getX() < stage.getWidth() + 5 ) {
+			scene.setCursor(Cursor.E_RESIZE);
+		} else {
+			scene.setCursor(Cursor.DEFAULT);
+		}
+	}
+	/*@FXML 
+	private void exit(MouseEvent event) {
+		Scene scene = pane.getScene();
+		Stage stage = (Stage) pane.getScene().getWindow();
+		if (!(event.getX() > stage.getWidth() - 5
+		 && event.getX() < stage.getWidth() + 5 )) {
+			scene.setCursor(Cursor.DEFAULT);
+		}
+	}*/
+	
 	@FXML
-	private void dragged(MouseEvent event) {
+	private void dragged1(MouseEvent event) {
 	    Stage stage = (Stage) buttonbar.getScene().getWindow();
-	    stage.setY(event.getScreenY() - y);
-	    stage.setX(event.getScreenX() - x);
-	}      
-
+        stage.setX(event.getScreenX() - x);
+        stage.setY(event.getScreenY() - y);  
+	}     
+	
+	@FXML 
+	private void dragged2 (MouseEvent event) {
+	    Stage stage = (Stage) pane.getScene().getWindow();
+	    if (resizebottom == true) {
+            stage.setWidth(event.getX() + dx);
+            stage.setHeight(event.getY() + dy);
+        }
+	}
+	
 	@FXML
-	private void pressed(MouseEvent event) {
+	private void pressed1(MouseEvent event) {
 	    x = (int) event.getSceneX();
 	    y = (int) event.getSceneY();
 	}
-
+	
+	@FXML
+	private void pressed2(MouseEvent event) {
+	    Stage stage = (Stage) pane.getScene().getWindow();
+	    Scene scene = pane.getScene();
+		if (event.getX() > stage.getWidth() - 50
+         && event.getX() < stage.getWidth() + 50 ) {
+			resizebottom = true;
+            dx = stage.getWidth() - event.getX();
+            scene.setCursor(Cursor.E_RESIZE);
+			
+		} else if (event.getY() > stage.getHeight() - 50
+                && event.getY() < stage.getHeight() + 50) {
+            resizebottom = true;
+            dy = stage.getHeight() - event.getY();
+            scene.setCursor(Cursor.N_RESIZE);
+	    }
+	}
+	
+	
+	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Lie la vue de la liste à la liste d'utilisateurs du modèle
