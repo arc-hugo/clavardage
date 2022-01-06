@@ -42,6 +42,7 @@ public class TacheConnexionTCP extends Task<Void> {
 					}
 				});
 			} else {
+				System.out.println("Refus de connexion recu");
 				Alerte refus = Alerte.refusConnexion(destinataire.getPseudo());
 				refus.show();
 				destinataire.setEtat(EtatUtilisateur.CONNECTE);

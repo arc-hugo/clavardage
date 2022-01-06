@@ -105,8 +105,8 @@ public class ControleurUtilisateurs implements Initializable {
 				destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
 				tcp.demandeConnexion(destinataire);
 		} else if (destinataire.getEtat() == EtatUtilisateur.DECONNECTE) {
-			Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
-			refus.show();
+			Alerte deco = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
+			deco.show();
 		}
 	}
 
@@ -149,6 +149,7 @@ public class ControleurUtilisateurs implements Initializable {
 			ok.envoie(sock);
 			creationSession(util, sock);
 		} else {
+			System.out.println("Refus de connexion envoye");
 			Fin fin = new Fin(getIdentifiantLocal());
 			fin.envoie(sock);
 			sock.close();
