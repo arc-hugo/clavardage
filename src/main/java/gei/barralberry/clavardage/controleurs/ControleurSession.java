@@ -128,15 +128,16 @@ public class ControleurSession implements Initializable {
 		Fin msg = new Fin(getIdentifiantLocal());
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, msg);
 		envoi.setOnSucceeded(e -> {
-			try {
-				db.close();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			fermeture();
 		});
 		this.executeur.ajoutTache(envoi);
+		try {
+			System.out.println("Fermeture db");
+			db.close();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 	public void confirmerFermeture() {

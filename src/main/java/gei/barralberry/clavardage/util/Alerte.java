@@ -35,6 +35,7 @@ public class Alerte extends Alert {
 	public static Alerte utilisateurDeconnecte(String pseudo) {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Deconnecté");
+		alert.setHeaderText(null);
 		alert.setContentText("L'utilisateur " + pseudo + " est deconnecté");
 		return alert;
 	}
@@ -42,6 +43,7 @@ public class Alerte extends Alert {
 	public static Alerte refusConnexion(String pseudo) {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Refus");
+		alert.setHeaderText(null);
 		alert.setContentText("L'utilisateur "+pseudo+" à refusé la demande de discussion");
 		return alert;
 	}
@@ -49,6 +51,7 @@ public class Alerte extends Alert {
 	public static Alerte fermetureSession(String pseudo) {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Fin de discussion");
+		alert.setHeaderText(null);
 		alert.setContentText("L'utilisateur "+ pseudo +" vient de fermer la discussion.");
 		return alert;
 	}

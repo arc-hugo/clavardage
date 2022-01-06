@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
-import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.AccesTCP;
 import gei.barralberry.clavardage.util.Alerte;
