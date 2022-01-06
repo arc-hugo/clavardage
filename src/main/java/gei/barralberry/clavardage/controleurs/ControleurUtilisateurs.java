@@ -83,7 +83,15 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	private void creationSession(Utilisateur util, Socket sock) throws IOException, SQLException, ClassNotFoundException {
-		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
+		if (util.getEtat() == EtatUtilisateur.EN_SESSION) {
+			Tab tab = chercherSession(util.getIdentifiant());
+			if (tab != null) {
+				this.tabs.getTabs().remove(tab);
+			}
+		} else {
+			this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
+		}
+		
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
@@ -208,12 +216,21 @@ public class ControleurUtilisateurs implements Initializable {
 			}
 		});
 	}
+	
+	private Tab chercherSession(UUID identifiant) {
+		String pseudo = this.modele.getPseudo(identifiant);
+		for (Tab tab : this.tabs.getTabs()) {
+			if (tab.getText().equals(pseudo)) {
+				return tab;
+			}
+		}
+		return null;
+	}
 
 	public void deconnexionDistante(UUID identifiant) {
 		if (this.modele.getEtat(identifiant) == EtatUtilisateur.EN_SESSION) {
-			String pseudo = this.modele.getPseudo(identifiant);
-			for (Tab tab : this.tabs.getTabs()) {
-				if (tab.getText().equals(pseudo)) {
+			Tab tab = chercherSession(identifiant);
+			if (tab != null) {
 					ControleurSession session = (ControleurSession) tab.getUserData();
 					Platform.runLater(new Runnable() {
 						@Override
@@ -223,7 +240,6 @@ public class ControleurUtilisateurs implements Initializable {
 					});
 				}
 			}
-		}
 		this.modele.setEtat(identifiant, EtatUtilisateur.DECONNECTE);
 	}
 
