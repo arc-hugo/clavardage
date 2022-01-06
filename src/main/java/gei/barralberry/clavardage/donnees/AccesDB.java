@@ -12,8 +12,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
-import java.util.Vector;
-
 import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.Texte;
@@ -36,7 +34,7 @@ public class AccesDB {
 	private final static String ADD_MESSAGE = "INSERT INTO MESSAGE(CONTENU,DATE,FICHIER,RECU,UTILISATEUR) VALUES (?,?,?,?,?)";
 	
 	private final static String GET_UTILISATEUR = "SELECT * FROM UTILISATEUR WHERE ID=?";
-	private final static String GET_DERNIERS_MESSAGES = "SELECT ID, CONTENU, DATE, FICHIER, RECU FROM MESSAGE WHERE UTILISATEUR=? ORDER BY ID DESC LIMIT ?";
+	private final static String GET_DERNIERS_MESSAGES = "SELECT ID, CONTENU, DATE, FICHIER, RECU FROM MESSAGE WHERE UTILISATEUR=? LIMIT ?";
 	
 	
 	private Connection conn;
