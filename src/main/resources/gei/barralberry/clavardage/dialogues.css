@@ -1,18 +1,22 @@
-.dialogues{
-    -fx-background-color: #888888;
+.dialogues {
+    -fx-background-color: #f9f9f9;
 }
+
 .dialogues .button {
-    -fx-background-color: #999999;
-    -fx-text-fill: #ac0000;
+    -fx-background-color:  #cccccc;
+    -fx-text-fill: red;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: red;
 }
 
 .dialogues:header .header-panel {
-    -fx-background-color: #888888;
+    -fx-background-color:#f9f9f9;
 }
 
 
 .dialogues .label {
-    -fx-text-fill: #ac0000;
+    -fx-text-fill: red;
     font: 16 calibri;
     -fx-font: 16 calibri;
     font-style: normal bold;
