@@ -110,7 +110,7 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 
-	public void lancementAccepte(Socket sock) throws IOException {
+	public void lancementAccepte(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		if (util != null) {
 			Platform.runLater(new Runnable() {
@@ -124,17 +124,32 @@ public class ControleurUtilisateurs implements Initializable {
 				}
 			});
 		} else {
-			sock.close();
+			try {
+				sock.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	public void lancementRefuse(Socket sock) throws IOException {
+	public void lancementRefuse(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		if (util != null) {
-			Alerte refus = Alerte.refusConnexion(util.getPseudo());
-			refus.show();
-			sock.close();
-			this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					Alerte refus = Alerte.refusConnexion(util.getPseudo());
+					refus.show();
+					modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
+					try {
+						sock.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
 		}
 	}
 	

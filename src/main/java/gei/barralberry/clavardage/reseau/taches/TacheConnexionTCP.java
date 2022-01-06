@@ -46,12 +46,7 @@ public class TacheConnexionTCP extends Task<Void> {
 				this.executeur.ajoutTache(new Runnable() {
 					@Override
 					public void run() {
-						try {
-							tcp.connexionRefuse(sock);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						tcp.connexionRefuse(sock);
 					}
 				});
 			}

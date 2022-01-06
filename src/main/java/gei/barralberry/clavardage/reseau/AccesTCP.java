@@ -34,7 +34,7 @@ public class AccesTCP {
 		this.ctrlUtilisateurs.lancementAccepte(sock);
 	}
 	
-	public void connexionRefuse(Socket sock) throws IOException {
+	public void connexionRefuse(Socket sock) {
 		this.ctrlUtilisateurs.lancementRefuse(sock);
 	}
 	
