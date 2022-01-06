@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import gei.barralberry.clavardage.App;
+import gei.barralberry.clavardage.utils.Configuration;
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
@@ -28,7 +28,7 @@ public class TacheConnexionTCP extends Task<Void> {
 	@Override
 	protected Void call() throws Exception {
 		try {
-			Socket sock = new Socket(destinataire.getAdresse(), App.TCP_PORT_ENVOI);
+			Socket sock = new Socket(destinataire.getAdresse(), Configuration.TCP_PORT_ENVOI);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 			if (reader.readLine().equals("OK")) {
 				this.executeur.ajoutTache(new Runnable() {

@@ -47,14 +47,13 @@ public class ControleurSession implements Initializable {
 	private ExecuteurSession executeur;
 	private Socket sock;
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws IOException, SQLException {
+	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws IOException, SQLException, ClassNotFoundException {
 		this.mode = SessionMode.HISTORIQUE;
 		this.modele = new ModeleSession(local, destinataire);
 		this.db = new AccesDB(destinataire.getIdentifiant(), local.getIdentifiant());
-		this.executeur = ExecuteurSession.getInstance();
 	} 
 	
-	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException, SQLException {
+	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException, SQLException, ClassNotFoundException {
 		this.mode = SessionMode.CONNECTE;
 		this.modele = new ModeleSession(local, destinataire);
 		this.db = new AccesDB(destinataire.getIdentifiant(), local.getIdentifiant());
@@ -69,25 +68,31 @@ public class ControleurSession implements Initializable {
 		Utilisateur destinataire = this.modele.getDestinataire();
 		this.name.textProperty().bind(destinataire.getPseudoPropery());
 		
-		this.envoyer.setOnAction(e ->  {
-			envoiTexte();
-		});
-		
-		this.texte.setOnKeyPressed(e -> {
-			if (e.getCode() == KeyCode.ENTER && e.isControlDown()) {
-				texte.setText(texte.getText()+"\n");
-			} else if (e.getCode() == KeyCode.ENTER) {
+		if (this.mode == SessionMode.CONNECTE) {
+			this.envoyer.setOnAction(e ->  {
 				envoiTexte();
-			}
+			});
 			
-		});
+			this.texte.setOnKeyPressed(e -> {
+				if (e.getCode() == KeyCode.ENTER && e.isControlDown()) {
+					texte.setText(texte.getText()+"\n");
+				} else if (e.getCode() == KeyCode.ENTER) {
+					envoiTexte();
+				}
+				
+			});
+			
+			this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiantLocal())));
+		} else {
+			this.envoyer.setDisable(true);
+			this.texte.setDisable(true);
+		}
 		
-		this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiantLocal())));
 		
 		try {
 			List<MessageAffiche> hist = this.db.getDerniersMessages(HIST_SIZE);
 			for (MessageAffiche oldMsg : hist) {
-				
+				this.messages.getChildren().add(oldMsg.affichage());
 			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
@@ -156,6 +161,12 @@ public class ControleurSession implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
+					try {
+						db.ajoutMessage(msg);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					messages.getChildren().add(noeud);
 				}
 			});
