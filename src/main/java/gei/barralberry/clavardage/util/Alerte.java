@@ -1,8 +1,14 @@
 package gei.barralberry.clavardage.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.PrimitiveIterator;
+
 import gei.barralberry.clavardage.App;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
 
 public class Alerte extends Alert {
 
@@ -53,6 +59,25 @@ public class Alerte extends Alert {
 		alert.setTitle("Fin de discussion");
 		alert.setHeaderText(null);
 		alert.setContentText("L'utilisateur "+ pseudo +" vient de fermer la discussion.");
+		return alert;
+	}
+	
+	public static Alerte exceptionLevee(Exception e) {
+		Alerte alert = new Alerte(AlertType.ERROR);
+		alert.setTitle("Une exception a été levée !");
+		alert.setHeaderText(e.getMessage());
+		
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String text = sw.toString();
+		
+		TextArea ta = new TextArea(text);
+		ta.setEditable(false);
+		ta.setWrapText(true);
+		
+		alert.getDialogPane().setExpandableContent(ta);
+		
 		return alert;
 	}
 	
