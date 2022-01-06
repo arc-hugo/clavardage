@@ -60,10 +60,7 @@ public class ControleurUtilisateurs implements Initializable {
     private Boolean resizebottom = false;
     private double dx;
     private double dy;
-    private double xOffset;
-    private double yOffset;
-
-	public ControleurUtilisateurs() {
+    public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
 		this.udp = new AccesUDP(this);
 		this.tcp = new AccesTCP(this);

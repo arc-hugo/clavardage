@@ -127,6 +127,9 @@ public class ControleurSession implements Initializable {
 	public void fermetureLocale() {
 		Fin msg = new Fin(getIdentifiantLocal());
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, msg);
+		envoi.setOnSucceeded(e -> {
+			fermeture();
+		});
 		this.executeur.ajoutTache(envoi);
 		try {
 			db.close();
@@ -145,11 +148,7 @@ public class ControleurSession implements Initializable {
 		this.mode = SessionMode.FIN;
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.show();
-		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, new FinOK(getIdentifiantLocal()));
-		envoi.setOnSucceeded(e -> {
-			fermeture();
-		});
-		this.executeur.ajoutTache(envoi);
+		fermeture();
 	}
 
 	public void receptionMessage(MessageAffiche msg) {

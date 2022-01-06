@@ -20,12 +20,6 @@ import gei.barralberry.clavardage.util.Decoration;
 public class App extends Application {
 
 	private static Scene scene;
-	private Boolean resizebottom = false;
-	private double dx;
-	private double dy;
-	private double xOffset;
-  private double yOffset;
-	
 	@Override
 	public void start(Stage stage) throws IOException {
 		ControleurUtilisateurs controleur = new ControleurUtilisateurs();

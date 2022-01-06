@@ -4,23 +4,16 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import gei.barralberry.clavardage.App;
-import gei.barralberry.clavardage.controleurs.ControleurPseudo;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Alerte extends Alert {
 
 	private static String CSS = App.class.getResource("dialogues.css").toExternalForm();
-	private static String label = App.class.getResource("bouton.css").toExternalForm();
+	private static String LABEL = App.class.getResource("bouton.css").toExternalForm();
 	private static String CLASS = "dialogues";
 	
 	private Alerte(AlertType alertType) {
