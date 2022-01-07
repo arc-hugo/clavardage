@@ -14,7 +14,6 @@ import gei.barralberry.clavardage.modeles.session.ModeleSession;
 import gei.barralberry.clavardage.modeles.session.SessionMode;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.messages.Fin;
-import gei.barralberry.clavardage.reseau.messages.FinOK;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.OK;
 import gei.barralberry.clavardage.reseau.messages.Texte;
@@ -109,6 +108,7 @@ public class ControleurSession implements Initializable {
 	}
 	
 	private void fermeture() {
+		System.out.println("OK fermeture");
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -131,8 +131,10 @@ public class ControleurSession implements Initializable {
 			fermeture();
 		});
 		this.executeur.ajoutTache(envoi);
+		System.out.println("OK envoi");
 		try {
 			db.close();
+			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
@@ -148,6 +150,13 @@ public class ControleurSession implements Initializable {
 		this.mode = SessionMode.FIN;
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.show();
+		try {
+			db.close();
+			System.out.println("OK db");
+		} catch (SQLException e1) {
+			Alerte ex = Alerte.exceptionLevee(e1);
+			ex.showAndWait();
+		}
 		fermeture();
 	}
 
