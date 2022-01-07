@@ -75,7 +75,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void saisiePseudo() {
-		if (!ControleurPseudo.isActif()) {
+		if (!ControleurPseudo.estActif()) {
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 			loader.setController(new ControleurPseudo());
 			Stage stage = new Stage();

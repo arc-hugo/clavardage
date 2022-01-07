@@ -32,8 +32,6 @@ import javafx.scene.layout.VBox;
 
 public class ControleurSession implements Initializable {
 	
-	private final static int HIST_SIZE = 30;
-
 	@FXML private Label name;
 	@FXML private Button envoyer;
 	@FXML private TextField texte;
@@ -89,7 +87,7 @@ public class ControleurSession implements Initializable {
 		
 		
 		try {
-			List<MessageAffiche> hist = this.db.getDerniersMessages(HIST_SIZE);
+			List<MessageAffiche> hist = this.db.getDerniersMessages();
 			for (MessageAffiche oldMsg : hist) {
 				this.messages.getChildren().add(oldMsg.affichage());
 			}

@@ -106,4 +106,6 @@ public class Alerte extends Alert {
 		return alert;
 	}
 	
+	// TODO alerte erreur au démarrage
+	
 }

@@ -9,10 +9,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
-import java.net.ServerSocket;
 
 import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
+import gei.barralberry.clavardage.donnees.AccesDB;
+import gei.barralberry.clavardage.reseau.AccesTCP;
+import gei.barralberry.clavardage.reseau.AccesUDP;
 import gei.barralberry.clavardage.util.Configuration;
 import gei.barralberry.clavardage.util.Decoration;
 
@@ -124,17 +125,21 @@ public class App extends Application {
 			}
 		}
 		
-		try {
-			ServerSocket testTCP = new ServerSocket(Configuration.TCP_PORT_RECEPTION);
-			testTCP.close();
-			
-			DatagramSocket testUDP = new DatagramSocket(Configuration.UDP_PORT_RECEPTION);
-			testUDP.close();
-		} catch (IOException e) {
-			System.err.println("Port(s) TCP/UDP déjà utilisé(s) par une instance ou une autre application");
+		if (!AccesUDP.estUDPUtilise()) {
+			if (!AccesTCP.estTCPUtilise()) {
+				if (!AccesDB.estBloque()) {
+					launch();
+				} else {
+					System.err.println("Base de donnée SQLite est déjà bloqué par un autre porgramme");
+					System.exit(5);
+				}
+			} else {
+				System.err.println("Port TCP déjà utilisé par une instance ou une autre application");
+				System.exit(3);
+			}
+		} else {
+			System.err.println("Port UDP déjà utilisé par une instance ou une autre application");
 			System.exit(3);
 		}
-		
-		launch();
 	}
 }

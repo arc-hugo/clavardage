@@ -34,12 +34,26 @@ public class AccesDB {
 	private final static String ADD_MESSAGE = "INSERT INTO MESSAGE(CONTENU,DATE,FICHIER,RECU,UTILISATEUR) VALUES (?,?,?,?,?)";
 	
 	private final static String GET_UTILISATEUR = "SELECT * FROM UTILISATEUR WHERE ID=?";
-	private final static String GET_DERNIERS_MESSAGES = "SELECT ID, CONTENU, DATE, FICHIER, RECU FROM MESSAGE WHERE UTILISATEUR=? LIMIT ?";
+	private final static String GET_DERNIERS_MESSAGES = "SELECT ID, CONTENU, DATE, FICHIER, RECU FROM MESSAGE WHERE UTILISATEUR=?";
 	
 	
 	private Connection conn;
 	private UUID destinataire;
 	private UUID local;
+	
+	public static boolean estBloque() {
+		if (DB_PATH.exists()) {
+			try {
+				Class.forName("org.sqlite.JDBC");
+				Connection testConn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+				testConn.close();
+			} catch (SQLException | ClassNotFoundException e) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	public AccesDB(UUID destinataire, UUID local) throws SQLException, IOException, ClassNotFoundException {
 		this.destinataire = destinataire;
@@ -66,12 +80,15 @@ public class AccesDB {
 		}
 	}
 	
-	public List<MessageAffiche> getDerniersMessages(int max) throws SQLException {
+	public List<MessageAffiche> getDerniersMessages() throws SQLException {
+		if (this.conn.isClosed()) {
+			this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+		}
+		
 		Stack<MessageAffiche> pile = new Stack<>();
 		
 		PreparedStatement ps = conn.prepareStatement(GET_DERNIERS_MESSAGES);
 		ps.setString(1, this.destinataire.toString());
-		ps.setInt(2, max);
 		
 		ResultSet rs = ps.executeQuery();
 		while (rs.next()) {
@@ -95,6 +112,10 @@ public class AccesDB {
 	
 	
 	public int ajoutMessage(MessageAffiche msg) throws SQLException {
+		if (this.conn.isClosed()) {
+			this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+		}
+		
 		PreparedStatement ps = this.conn.prepareStatement(ADD_MESSAGE);
 		ps.setString(1, msg.description());
 		ps.setTimestamp(2, new Timestamp(msg.getDate().getTime()));
