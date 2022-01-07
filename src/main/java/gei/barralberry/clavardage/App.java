@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 
 import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
 import gei.barralberry.clavardage.util.Configuration;
@@ -94,28 +96,45 @@ public class App extends Application {
 			for (int i = 0; i < args.length; i += 2) {
 				if (i + 1 < args.length) {
 					int port = Integer.parseInt(args[i+1]);
-					switch (args[i]) {
-					case "--tcp-envoi":
-						Configuration.TCP_PORT_ENVOI = port;
-						break;
-					case "--tcp-reception":
-						Configuration.TCP_PORT_RECEPTION = port;
-						break;
-					case "--udp-envoi":
-						Configuration.UDP_PORT_ENVOI = port;
-						break;
-					case "--udp-reception":
-						Configuration.UDP_PORT_RECEPTION = port;
-						break;
-					default:
-						break;
+					if (port >= 1024 || port <= 65535) {
+						switch (args[i]) {
+						case "--tcp-envoi":
+							Configuration.TCP_PORT_ENVOI = port;
+							break;
+						case "--tcp-reception":
+							Configuration.TCP_PORT_RECEPTION = port;
+							break;
+						case "--udp-envoi":
+							Configuration.UDP_PORT_ENVOI = port;
+							break;
+						case "--udp-reception":
+							Configuration.UDP_PORT_RECEPTION = port;
+							break;
+						default:
+							break;
+						}
+					} else {
+						System.err.println("Erreur dans le numéro de port : "+port);
+						System.exit(1);
 					}
 				} else {
 					System.err.println("Erreur dans le nombre de paramètres");
-					System.exit(1);
+					System.exit(2);
 				}
 			}
 		}
+		
+		try {
+			ServerSocket testTCP = new ServerSocket(Configuration.TCP_PORT_RECEPTION);
+			testTCP.close();
+			
+			DatagramSocket testUDP = new DatagramSocket(Configuration.UDP_PORT_RECEPTION);
+			testUDP.close();
+		} catch (IOException e) {
+			System.err.println("Port(s) TCP/UDP déjà utilisé(s) par une instance ou une autre application");
+			System.exit(3);
+		}
+		
 		launch();
 	}
 }
