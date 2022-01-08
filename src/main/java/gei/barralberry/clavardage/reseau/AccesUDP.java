@@ -64,7 +64,6 @@ public class AccesUDP {
 	}
 	
 	public void validationUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
-		System.out.println(pseudo);
 		if (! ctrlUtilisateurs.validationDistante(uuid, pseudo)) {
 			pseudoInvalide(adresse);
 		}

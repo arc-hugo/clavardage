@@ -107,7 +107,6 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void fermeture() {
-		System.out.println("OK fermeture");
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -130,10 +129,8 @@ public class ControleurSession implements Initializable {
 			fermeture();
 		});
 		this.executeur.ajoutTache(envoi);
-		System.out.println("OK envoi");
 		try {
 			this.modele.fermeture();
-			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
@@ -151,7 +148,6 @@ public class ControleurSession implements Initializable {
 		ferme.show();
 		try {
 			this.modele.fermeture();
-			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
