@@ -15,7 +15,9 @@ import java.util.UUID;
 import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.Texte;
+import gei.barralberry.clavardage.util.Alerte;
 import gei.barralberry.clavardage.util.Configuration;
+import javafx.application.Platform;
 
 public class AccesDB {
 
@@ -36,7 +38,6 @@ public class AccesDB {
 	private final static String GET_UTILISATEUR = "SELECT * FROM UTILISATEUR WHERE ID=?";
 	private final static String GET_DERNIERS_MESSAGES = "SELECT ID, CONTENU, DATE, FICHIER, RECU FROM MESSAGE WHERE UTILISATEUR=?";
 	
-	
 	private Connection conn;
 	private UUID destinataire;
 	private UUID local;
@@ -51,11 +52,10 @@ public class AccesDB {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
-	public AccesDB(UUID destinataire, UUID local) throws SQLException, IOException, ClassNotFoundException {
+	public AccesDB(UUID local, UUID destinataire) throws SQLException, IOException, ClassNotFoundException {
 		this.destinataire = destinataire;
 		Class.forName("org.sqlite.JDBC");
 		
@@ -111,19 +111,29 @@ public class AccesDB {
 	}
 	
 	
-	public int ajoutMessage(MessageAffiche msg) throws SQLException {
-		if (this.conn.isClosed()) {
-			this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+	public int ajoutMessage(MessageAffiche msg) {
+		try {
+			if (this.conn.isClosed()) {
+				this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+			}
+			PreparedStatement ps = this.conn.prepareStatement(ADD_MESSAGE);
+			ps.setString(1, msg.description());
+			ps.setTimestamp(2, new Timestamp(msg.getDate().getTime()));
+			// TODO image
+			ps.setBoolean(3, msg instanceof Fichier);
+			ps.setBoolean(4, msg.getAuteur().equals(this.destinataire));
+			ps.setObject(5, this.destinataire);
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					Alerte exeception = Alerte.exceptionLevee(e);
+					exeception.show();
+				}
+			});
 		}
-		
-		PreparedStatement ps = this.conn.prepareStatement(ADD_MESSAGE);
-		ps.setString(1, msg.description());
-		ps.setTimestamp(2, new Timestamp(msg.getDate().getTime()));
-		// TODO image
-		ps.setBoolean(3, msg instanceof Fichier);
-		ps.setBoolean(4, msg.getAuteur().equals(this.destinataire));
-		ps.setObject(5, this.destinataire);
-		return ps.executeUpdate();
+		return 0;
 	}
 
 	public void close() throws SQLException {

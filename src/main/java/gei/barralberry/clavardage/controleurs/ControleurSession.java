@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
-import gei.barralberry.clavardage.donnees.AccesDB;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
 import gei.barralberry.clavardage.modeles.session.SessionMode;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
@@ -31,29 +30,32 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
 public class ControleurSession implements Initializable {
-	
-	@FXML private Label name;
-	@FXML private Button envoyer;
-	@FXML private TextField texte;
-	@FXML private VBox messages;
-	
+
+	@FXML
+	private Label name;
+	@FXML
+	private Button envoyer;
+	@FXML
+	private TextField texte;
+	@FXML
+	private VBox messages;
+
 	private SessionMode mode;
 	private ModeleSession modele;
-	private AccesDB db;
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
 	private Socket sock;
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws IOException, SQLException, ClassNotFoundException {
+	public ControleurSession(Utilisateur local, Utilisateur destinataire)
+			throws IOException, SQLException, ClassNotFoundException {
 		this.mode = SessionMode.HISTORIQUE;
 		this.modele = new ModeleSession(local, destinataire);
-		this.db = new AccesDB(destinataire.getIdentifiant(), local.getIdentifiant());
-	} 
-	
-	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException, SQLException, ClassNotFoundException {
+	}
+
+	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock)
+			throws IOException, SQLException, ClassNotFoundException {
 		this.mode = SessionMode.CONNECTE;
 		this.modele = new ModeleSession(local, destinataire);
-		this.db = new AccesDB(destinataire.getIdentifiant(), local.getIdentifiant());
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
 		this.reception.start();
@@ -64,30 +66,29 @@ public class ControleurSession implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		Utilisateur destinataire = this.modele.getDestinataire();
 		this.name.textProperty().bind(destinataire.getPseudoPropery());
-		
+
 		if (this.mode == SessionMode.CONNECTE) {
-			this.envoyer.setOnAction(e ->  {
+			this.envoyer.setOnAction(e -> {
 				envoiTexte();
 			});
-			
+
 			this.texte.setOnKeyPressed(e -> {
 				if (e.getCode() == KeyCode.ENTER && e.isControlDown()) {
-					texte.setText(texte.getText()+"\n");
+					texte.setText(texte.getText() + "\n");
 				} else if (e.getCode() == KeyCode.ENTER) {
 					envoiTexte();
 				}
-				
+
 			});
-			
+
 			this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiantLocal())));
 		} else {
 			this.envoyer.setDisable(true);
 			this.texte.setDisable(true);
 		}
-		
-		
+
 		try {
-			List<MessageAffiche> hist = this.db.getDerniersMessages();
+			List<MessageAffiche> hist = this.modele.getDerniersMessages();
 			for (MessageAffiche oldMsg : hist) {
 				this.messages.getChildren().add(oldMsg.affichage());
 			}
@@ -104,7 +105,7 @@ public class ControleurSession implements Initializable {
 			texte.clear();
 		}
 	}
-	
+
 	private void fermeture() {
 		System.out.println("OK fermeture");
 		Platform.runLater(new Runnable() {
@@ -131,14 +132,14 @@ public class ControleurSession implements Initializable {
 		this.executeur.ajoutTache(envoi);
 		System.out.println("OK envoi");
 		try {
-			db.close();
+			this.modele.fermeture();
 			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
 		}
 	}
-	
+
 	public void confirmerFermeture() {
 		fermeture();
 	}
@@ -149,7 +150,7 @@ public class ControleurSession implements Initializable {
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.show();
 		try {
-			db.close();
+			this.modele.fermeture();
 			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
@@ -160,12 +161,12 @@ public class ControleurSession implements Initializable {
 
 	public void receptionMessage(MessageAffiche msg) {
 		Node noeud = msg.affichage();
-		if (noeud != null) {	
+		if (noeud != null) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						db.ajoutMessage(msg);
+						modele.enregistrerReception(msg);
 					} catch (SQLException e) {
 						Alerte ex = Alerte.exceptionLevee(e);
 						ex.showAndWait();
@@ -179,26 +180,18 @@ public class ControleurSession implements Initializable {
 	public UUID getIdentifiantLocal() {
 		return this.modele.getIdentifiantLocal();
 	}
-	
+
 	public Utilisateur getDestinataire() {
 		return this.modele.getDestinataire();
 	}
 
 	public void envoiRecu() {
-		MessageAffiche msg = this.modele.envoiTermine();
-		if (msg != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						db.ajoutMessage(msg);
-					} catch (SQLException e) {
-						Alerte ex = Alerte.exceptionLevee(e);
-						ex.showAndWait();
-					}
-					messages.getChildren().add(msg.affichage());
-				}
-			});
-		}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				MessageAffiche msg = modele.envoiTermine();
+				messages.getChildren().add(msg.affichage());
+			}
+		});
 	}
 }
