@@ -14,9 +14,10 @@ import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public class ServiceReceptionTCP extends ScheduledService<Void> {
+public class ServiceReceptionTCP extends Service<Void> {
 
 	private ControleurSession session;
 	private Socket sock;

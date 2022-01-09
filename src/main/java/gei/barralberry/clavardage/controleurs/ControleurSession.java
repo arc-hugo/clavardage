@@ -51,9 +51,6 @@ public class ControleurSession implements Initializable {
 		this.modele = new ModeleSession(local, destinataire, sock);
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
-		this.reception.setOnCancelled(e -> {
-			System.out.println("OK cancel");
-		});
 		this.reception.start();
 		
 	}
@@ -107,6 +104,7 @@ public class ControleurSession implements Initializable {
 			@Override
 			public void run() {
 				reception.cancel();
+				System.out.println("OK cancel");
 			}
 		});
 		System.out.println("-----------------------------------------");
