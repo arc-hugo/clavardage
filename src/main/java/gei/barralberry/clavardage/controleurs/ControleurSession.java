@@ -103,9 +103,9 @@ public class ControleurSession implements Initializable {
 			@Override
 			public void run() {
 				reception.cancel();
+				System.out.println("OK cancel");
 			}
 		});
-		System.out.println("OK cancel");
 		System.out.println("-----------------------------------------");
 	}
 
