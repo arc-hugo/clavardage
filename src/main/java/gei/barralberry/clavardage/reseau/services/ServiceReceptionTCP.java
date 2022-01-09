@@ -13,7 +13,6 @@ import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
-import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -23,7 +22,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 	private Socket sock;
 	private BufferedReader reader;
 	private ExecuteurSession executeur;
-	
+
 	public ServiceReceptionTCP(ControleurSession session, Socket sock) throws IOException {
 		this.session = session;
 		this.sock = sock;
@@ -35,26 +34,26 @@ public class ServiceReceptionTCP extends Service<Void> {
 	protected void cancelled() {
 		super.cancelled();
 		try {
-			this.reader.close();
+			this.sock.close();
 		} catch (IOException e) {
 			Alerte ex = Alerte.exceptionLevee(e);
 			ex.showAndWait();
 		}
 	}
-	
+
 	@Override
 	protected Task<Void> createTask() {
 		return new Task<Void>() {
 			private void texte() throws IOException {
 				String txt = "";
 				char cha = (char) reader.read();
-				while(cha != Message.END_MSG) {
+				while (cha != Message.END_MSG) {
 					txt += cha;
 					cha = (char) reader.read();
 				}
 				Texte msg = new Texte(session.getDestinataire().getIdentifiant(), txt);
-				
-				executeur.ajoutTache(new Runnable() {	
+
+				executeur.ajoutTache(new Runnable() {
 					@Override
 					public void run() {
 						session.receptionMessage(msg);
@@ -62,7 +61,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 				});
 				executeur.ajoutTache(new TacheEnvoiTCP(sock, new MessageOK(session.getIdentifiantLocal())));
 			}
-			
+
 			private void messageok() {
 				Platform.runLater(new Runnable() {
 					@Override
@@ -71,7 +70,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-			
+
 			private void fin() {
 				executeur.ajoutTache(new Runnable() {
 					@Override
@@ -80,7 +79,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-			
+
 			private void finok() {
 				executeur.ajoutTache(new Runnable() {
 					@Override
@@ -89,10 +88,11 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-			
+
 			@Override
 			protected Void call() throws IOException {
-				String type = "";
+				while (true) {
+					String type = "";
 					char cha = (char) reader.read();
 					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
 						type += cha;
@@ -119,8 +119,8 @@ public class ServiceReceptionTCP extends Service<Void> {
 						}
 						type = "";
 					}
-					return null;
 				}
+			}
 		};
 	}
 

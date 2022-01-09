@@ -52,7 +52,6 @@ public class ControleurSession implements Initializable {
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
 		this.reception.start();
-		
 	}
 
 	@Override
@@ -105,9 +104,9 @@ public class ControleurSession implements Initializable {
 			public void run() {
 				reception.cancel();
 				System.out.println("OK cancel");
+				System.out.println("-----------------------------------------");
 			}
 		});
-		System.out.println("-----------------------------------------");
 	}
 
 	private void envoiMessage(MessageAffiche msg) {
