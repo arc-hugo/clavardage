@@ -99,12 +99,14 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void fermeture() {
+		System.out.println("OK cancel");
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				reception.cancel();
 			}
 		});
+		System.out.println("-----------------------------------------");
 	}
 
 	private void envoiMessage(MessageAffiche msg) {
