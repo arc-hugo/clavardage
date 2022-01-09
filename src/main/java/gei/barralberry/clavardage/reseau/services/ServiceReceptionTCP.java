@@ -72,7 +72,7 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 			}
 			
 			private void fin() {
-				Platform.runLater(new Runnable() {
+				executeur.ajoutTache(new Runnable() {
 					@Override
 					public void run() {
 						session.fermetureDistante();

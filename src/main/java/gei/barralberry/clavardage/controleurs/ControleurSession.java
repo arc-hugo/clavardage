@@ -99,13 +99,8 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void fermeture() {
+		reception.cancel();
 		System.out.println("OK cancel");
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				reception.cancel();
-			}
-		});
 		System.out.println("-----------------------------------------");
 	}
 
@@ -140,8 +135,13 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureDistante() {
 		// TODO passage en mode fin de session
-		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
-		ferme.show();
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
+				ferme.show();
+			}
+		});
 		this.modele.fermetureDistante();
 		System.out.println("OK modele");
 		try {
@@ -181,10 +181,10 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void envoiRecu() {
+		MessageAffiche msg = modele.envoiTermine();
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				MessageAffiche msg = modele.envoiTermine();
 				messages.getChildren().add(msg.affichage());
 			}
 		});

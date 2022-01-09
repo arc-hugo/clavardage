@@ -248,12 +248,7 @@ public class ControleurUtilisateurs implements Initializable {
 			Tab tab = chercherSession(identifiant);
 			if (tab != null) {
 				ControleurSession session = (ControleurSession) tab.getUserData();
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						session.fermetureDistante();
-					}
-				});
+				session.fermetureDistante();
 			}
 		}
 		this.modele.setEtat(identifiant, EtatUtilisateur.DECONNECTE);
