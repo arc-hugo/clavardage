@@ -10,11 +10,9 @@ import java.util.UUID;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurDB;
 import gei.barralberry.clavardage.donnees.AccesDB;
-import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class ModeleSession {

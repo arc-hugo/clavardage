@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
-import gei.barralberry.clavardage.modeles.session.SessionMode;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
@@ -78,9 +77,6 @@ public class ControleurSession implements Initializable {
 		
 		if (this.modele.estConnecte()) {
 			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), new OK(getIdentifiantLocal())));
-		} else {
-			this.envoyer.setDisable(true);
-			this.texte.setDisable(true);
 		}
 
 		try {
@@ -119,14 +115,17 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void fermetureLocale() {
+		System.out.println("OK fermeture");
 		Fin msg = new Fin(getIdentifiantLocal());
 		TacheEnvoiTCP envoi = new TacheEnvoiTCP(this.modele.getSocket(), msg);
 		envoi.setOnSucceeded(e -> {
 			fermeture();
 		});
 		this.executeur.ajoutTache(envoi);
+		System.out.println("OK envoi");
 		try {
 			this.modele.fermetureDB();
+			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
@@ -139,11 +138,13 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureDistante() {
 		// TODO passage en mode fin de session
-		this.modele.fermetureDistante();
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.show();
+		this.modele.fermetureDistante();
+		System.out.println("OK modele");
 		try {
 			this.modele.fermetureDB();
+			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
