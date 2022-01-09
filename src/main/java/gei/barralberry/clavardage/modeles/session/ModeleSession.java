@@ -1,6 +1,7 @@
 package gei.barralberry.clavardage.modeles.session;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.List;
@@ -9,23 +10,39 @@ import java.util.UUID;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurDB;
 import gei.barralberry.clavardage.donnees.AccesDB;
+import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 public class ModeleSession {
 
+
+	private BooleanProperty connecte;
 	private Utilisateur utilisateurLocal;
 	private Utilisateur destinataire;
+	private Socket sock;
 	private Queue<MessageAffiche> queueEnvoi;
 	private AccesDB accesDB;
 	private ExecuteurDB ecriture;
 	
-	public ModeleSession(Utilisateur local, Utilisateur destinataire) throws ClassNotFoundException, SQLException, IOException {
+	public ModeleSession(Utilisateur local, Utilisateur destinataire) {
 		this.utilisateurLocal = local;
 		this.destinataire = destinataire;
-		this.queueEnvoi = new ArrayDeque<>();
-		this.accesDB = new AccesDB(local.getIdentifiant(), destinataire.getIdentifiant());
-		this.ecriture = ExecuteurDB.getInstance();
+		this.connecte = new SimpleBooleanProperty(false);
+	}
+	
+	public ModeleSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws ClassNotFoundException, SQLException, IOException {
+		this(local, destinataire);
+		if (sock != null) {
+			this.sock = sock;
+			this.connecte.set(true);
+			this.queueEnvoi = new ArrayDeque<>();
+			this.accesDB = new AccesDB(local.getIdentifiant(), destinataire.getIdentifiant());
+			this.ecriture = ExecuteurDB.getInstance();
+		}
 	}
 	
 	public UUID getIdentifiantLocal() {
@@ -34,6 +51,18 @@ public class ModeleSession {
 	
 	public Utilisateur getDestinataire() {
 		return this.destinataire;
+	}
+	
+	public Socket getSocket() {
+		return this.sock;
+	}
+	
+	public BooleanProperty getConnecteProperty() {
+		return this.connecte;
+	}
+	
+	public boolean estConnecte() {
+		return this.connecte.get();
 	}
 	
 	public List<MessageAffiche> getDerniersMessages() throws SQLException {
@@ -64,8 +93,12 @@ public class ModeleSession {
 		});
 	}
 	
-	public void fermeture() throws SQLException {
+	public void fermetureDB() throws SQLException {
 		this.accesDB.close();
+	}
+
+	public void fermetureDistante() {
+		this.connecte.set(false);
 	}
 	
 }

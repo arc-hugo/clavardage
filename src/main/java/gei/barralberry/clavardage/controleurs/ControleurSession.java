@@ -40,26 +40,19 @@ public class ControleurSession implements Initializable {
 	@FXML
 	private VBox messages;
 
-	private SessionMode mode;
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
-	private Socket sock;
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire)
-			throws IOException, SQLException, ClassNotFoundException {
-		this.mode = SessionMode.HISTORIQUE;
+	public ControleurSession(Utilisateur local, Utilisateur destinataire) {
 		this.modele = new ModeleSession(local, destinataire);
 	}
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock)
-			throws IOException, SQLException, ClassNotFoundException {
-		this.mode = SessionMode.CONNECTE;
-		this.modele = new ModeleSession(local, destinataire);
+	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException, SQLException, ClassNotFoundException {
+		this.modele = new ModeleSession(local, destinataire, sock);
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
 		this.reception.start();
-		this.sock = sock;
 	}
 
 	@Override
@@ -67,21 +60,24 @@ public class ControleurSession implements Initializable {
 		Utilisateur destinataire = this.modele.getDestinataire();
 		this.name.textProperty().bind(destinataire.getPseudoPropery());
 
-		if (this.mode == SessionMode.CONNECTE) {
-			this.envoyer.setOnAction(e -> {
+		this.envoyer.setOnAction(e -> {
+			envoiTexte();
+		});
+		
+		this.texte.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.ENTER && e.isControlDown()) {
+				texte.setText(texte.getText() + "\n");
+			} else if (e.getCode() == KeyCode.ENTER) {
 				envoiTexte();
-			});
+			}
 
-			this.texte.setOnKeyPressed(e -> {
-				if (e.getCode() == KeyCode.ENTER && e.isControlDown()) {
-					texte.setText(texte.getText() + "\n");
-				} else if (e.getCode() == KeyCode.ENTER) {
-					envoiTexte();
-				}
-
-			});
-
-			this.executeur.ajoutTache(new TacheEnvoiTCP(sock, new OK(getIdentifiantLocal())));
+		});
+		
+		this.envoyer.disableProperty().bind(this.modele.getConnecteProperty());
+		this.texte.disableProperty().bind(this.modele.getConnecteProperty());
+		
+		if (this.modele.estConnecte()) {
+			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), new OK(getIdentifiantLocal())));
 		} else {
 			this.envoyer.setDisable(true);
 			this.texte.setDisable(true);
@@ -116,21 +112,21 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void envoiMessage(MessageAffiche msg) {
-		if (this.mode == SessionMode.CONNECTE) {
+		if (this.modele.estConnecte()) {
 			this.modele.ajoutEnvoi(msg);
-			this.executeur.ajoutTache(new TacheEnvoiTCP(sock, msg));
+			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), msg));
 		}
 	}
 
 	public void fermetureLocale() {
 		Fin msg = new Fin(getIdentifiantLocal());
-		TacheEnvoiTCP envoi = new TacheEnvoiTCP(sock, msg);
+		TacheEnvoiTCP envoi = new TacheEnvoiTCP(this.modele.getSocket(), msg);
 		envoi.setOnSucceeded(e -> {
 			fermeture();
 		});
 		this.executeur.ajoutTache(envoi);
 		try {
-			this.modele.fermeture();
+			this.modele.fermetureDB();
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
@@ -142,12 +138,12 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void fermetureDistante() {
-		// TODO passage en mode lecture d'historique
-		this.mode = SessionMode.FIN;
+		// TODO passage en mode fin de session
+		this.modele.fermetureDistante();
 		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 		ferme.show();
 		try {
-			this.modele.fermeture();
+			this.modele.fermetureDB();
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
