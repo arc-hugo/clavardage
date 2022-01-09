@@ -73,8 +73,8 @@ public class ControleurSession implements Initializable {
 
 		});
 		
-		this.envoyer.disableProperty().bind(this.modele.getConnecteProperty());
-		this.texte.disableProperty().bind(this.modele.getConnecteProperty());
+		this.envoyer.disableProperty().bind(this.modele.getConnecteProperty().not());
+		this.texte.disableProperty().bind(this.modele.getConnecteProperty().not());
 		
 		if (this.modele.estConnecte()) {
 			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), new OK(getIdentifiantLocal())));
