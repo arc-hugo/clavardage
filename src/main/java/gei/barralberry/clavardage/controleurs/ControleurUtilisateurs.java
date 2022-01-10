@@ -125,7 +125,7 @@ public class ControleurUtilisateurs implements Initializable {
 		this.tabs.getTabs().add(tab);
 	}
 	
-	private void afficherHistorique(Utilisateur util) throws IOException {
+	private void afficherHistorique(Utilisateur util) throws IOException, ClassNotFoundException, SQLException {
 		if (util.getEtat() != EtatUtilisateur.EN_SESSION && util.getEtat() != EtatUtilisateur.EN_ATTENTE) {
 			ControleurSession historique = new ControleurSession(this.modele.getUtilisateurLocal(), util);
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
@@ -418,7 +418,7 @@ public class ControleurUtilisateurs implements Initializable {
 							public void run() {
 								try {
 									afficherHistorique(cell.getItem());
-								} catch (IOException e1) {
+								} catch (IOException | ClassNotFoundException | SQLException e1) {
 									Alerte exe = Alerte.exceptionLevee(e1);
 									exe.show();
 								}

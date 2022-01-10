@@ -26,10 +26,11 @@ public class ModeleSession {
 	private AccesDB accesDB;
 	private ExecuteurDB ecriture;
 	
-	public ModeleSession(Utilisateur local, Utilisateur destinataire) {
+	public ModeleSession(Utilisateur local, Utilisateur destinataire) throws ClassNotFoundException, SQLException, IOException {
 		this.utilisateurLocal = local;
 		this.destinataire = destinataire;
 		this.connecte = new SimpleBooleanProperty(false);
+		this.accesDB = new AccesDB(local.getIdentifiant(), destinataire.getIdentifiant());
 	}
 	
 	public ModeleSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws ClassNotFoundException, SQLException, IOException {
@@ -38,7 +39,6 @@ public class ModeleSession {
 			this.sock = sock;
 			this.connecte.set(true);
 			this.queueEnvoi = new ArrayDeque<>();
-			this.accesDB = new AccesDB(local.getIdentifiant(), destinataire.getIdentifiant());
 			this.ecriture = ExecuteurDB.getInstance();
 		}
 	}

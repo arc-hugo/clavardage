@@ -43,7 +43,7 @@ public class ControleurSession implements Initializable {
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire) {
+	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws ClassNotFoundException, SQLException, IOException {
 		this.modele = new ModeleSession(local, destinataire);
 	}
 
