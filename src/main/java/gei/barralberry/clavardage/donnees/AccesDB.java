@@ -37,8 +37,8 @@ public class AccesDB {
 	
 	private final static String GET_UTILISATEUR = "SELECT * FROM UTILISATEUR WHERE ID=?";
 	private final static String GET_DERNIERS_MESSAGES = "SELECT ID, CONTENU, DATE, FICHIER, RECU FROM MESSAGE WHERE UTILISATEUR=?";
-	
-	private Connection conn;
+		
+	private static Connection conn;
 	private UUID destinataire;
 	private UUID local;
 	
@@ -56,13 +56,16 @@ public class AccesDB {
 	}
 	
 	public AccesDB(UUID local, UUID destinataire) throws SQLException, IOException, ClassNotFoundException {
+		this.local = local;
 		this.destinataire = destinataire;
-		Class.forName("org.sqlite.JDBC");
-		
+
 		DB_PATH.getParentFile().mkdirs();
 		boolean nouveau = DB_PATH.createNewFile();
 		
-		this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+		if (AccesDB.conn == null || AccesDB.conn.isClosed()) {
+			Class.forName("org.sqlite.JDBC");
+			AccesDB.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+		}
 		
 		if (nouveau) {
 			Statement stm = conn.createStatement();
@@ -81,8 +84,8 @@ public class AccesDB {
 	}
 	
 	public List<MessageAffiche> getDerniersMessages() throws SQLException {
-		if (this.conn.isClosed()) {
-			this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+		if (AccesDB.conn.isClosed()) {
+			AccesDB.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
 		}
 		
 		Stack<MessageAffiche> pile = new Stack<>();
@@ -111,12 +114,12 @@ public class AccesDB {
 	}
 	
 	
-	public int ajoutMessage(MessageAffiche msg) {
+	public synchronized int ajoutMessage(MessageAffiche msg) {
 		try {
-			if (this.conn.isClosed()) {
-				this.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
+			if (AccesDB.conn.isClosed()) {
+				AccesDB.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
 			}
-			PreparedStatement ps = this.conn.prepareStatement(ADD_MESSAGE);
+			PreparedStatement ps = AccesDB.conn.prepareStatement(ADD_MESSAGE);
 			ps.setString(1, msg.description());
 			ps.setTimestamp(2, new Timestamp(msg.getDate().getTime()));
 			// TODO image
@@ -137,6 +140,6 @@ public class AccesDB {
 	}
 
 	public void close() throws SQLException {
-		this.conn.close();
+		AccesDB.conn.close();
 	}
 }
