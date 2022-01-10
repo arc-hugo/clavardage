@@ -47,7 +47,8 @@ public class ControleurSession implements Initializable {
 		this.modele = new ModeleSession(local, destinataire);
 	}
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws IOException, SQLException, ClassNotFoundException {
+	public ControleurSession(Utilisateur local, Utilisateur destinataire, Socket sock)
+			throws IOException, SQLException, ClassNotFoundException {
 		this.modele = new ModeleSession(local, destinataire, sock);
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
@@ -62,7 +63,7 @@ public class ControleurSession implements Initializable {
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
 		});
-		
+
 		this.texte.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER && e.isControlDown()) {
 				texte.setText(texte.getText() + "\n");
@@ -71,10 +72,10 @@ public class ControleurSession implements Initializable {
 			}
 
 		});
-		
+
 		this.envoyer.disableProperty().bind(this.modele.getConnecteProperty().not());
 		this.texte.disableProperty().bind(this.modele.getConnecteProperty().not());
-		
+
 		if (this.modele.estConnecte()) {
 			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), new OK(getIdentifiantLocal())));
 		}
@@ -117,20 +118,22 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void fermetureLocale() {
-		System.out.println("OK fermeture");
-		Fin msg = new Fin(getIdentifiantLocal());
-		TacheEnvoiTCP envoi = new TacheEnvoiTCP(this.modele.getSocket(), msg);
-		envoi.setOnSucceeded(e -> {
-			fermeture();
-		});
-		this.executeur.ajoutTache(envoi);
-		System.out.println("OK envoi");
-		try {
-			this.modele.fermetureDB();
-			System.out.println("OK db");
-		} catch (SQLException e1) {
-			Alerte ex = Alerte.exceptionLevee(e1);
-			ex.showAndWait();
+		if (this.modele.estConnecte()) {
+			System.out.println("OK fermeture");
+			Fin msg = new Fin(getIdentifiantLocal());
+			TacheEnvoiTCP envoi = new TacheEnvoiTCP(this.modele.getSocket(), msg);
+			envoi.setOnSucceeded(e -> {
+				fermeture();
+			});
+			this.executeur.ajoutTache(envoi);
+			System.out.println("OK envoi");
+			try {
+				this.modele.fermetureDB();
+				System.out.println("OK db");
+			} catch (SQLException e1) {
+				Alerte ex = Alerte.exceptionLevee(e1);
+				ex.showAndWait();
+			}
 		}
 	}
 

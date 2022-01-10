@@ -135,6 +135,9 @@ public class ControleurUtilisateurs implements Initializable {
 			tab.textProperty().bind(util.getPseudoPropery());
 			tab.setUserData(historique);
 			this.tabs.getTabs().add(tab);
+		} else {
+			Alerte alerte = Alerte.utilisateurDejaEnSession(util.getPseudo());
+			alerte.show();
 		}
 	}
 
