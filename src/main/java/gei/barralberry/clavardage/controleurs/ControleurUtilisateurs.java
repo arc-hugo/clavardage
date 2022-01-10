@@ -404,22 +404,25 @@ public class ControleurUtilisateurs implements Initializable {
 			};
 			cell.setOnMouseClicked(e -> {
 				if (!cell.isEmpty()) {
-					lancementSession(cell.getItem());
-				}
-			});
-			cell.setOnContextMenuRequested(e -> {
-				if (!cell.isEmpty()) {
 					ContextMenu menu = new ContextMenu();
+					MenuItem lance = new MenuItem("Discussion");
+					lance.setOnAction(f -> {
+						lancementSession(cell.getItem());
+					});
 					MenuItem hist = new MenuItem("Historique");
 					hist.setOnAction(f -> {
-						try {
-							afficherHistorique(cell.getItem());
-						} catch (IOException e1) {
-							Alerte exe = Alerte.exceptionLevee(e1);
-							exe.show();
-						}
+						Platform.runLater(new Runnable() {
+							public void run() {
+								try {
+									afficherHistorique(cell.getItem());
+								} catch (IOException e1) {
+									Alerte exe = Alerte.exceptionLevee(e1);
+									exe.show();
+								}
+							}
+						});
 					});
-					menu.getItems().add(hist);
+					menu.getItems().addAll(lance,hist);
 					menu.show(cell, e.getSceneX(), e.getSceneY());
 				}
 			});
