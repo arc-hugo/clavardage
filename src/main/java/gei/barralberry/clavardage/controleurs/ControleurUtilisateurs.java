@@ -25,6 +25,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -102,20 +103,17 @@ public class ControleurUtilisateurs implements Initializable {
 
 	private void creationSession(Utilisateur util, Socket sock)
 			throws IOException, SQLException, ClassNotFoundException {
-		if (util.getEtat() == EtatUtilisateur.EN_SESSION) {
-			Tab tab = chercherSession(util.getIdentifiant());
-			if (tab != null) {
-				this.tabs.getTabs().remove(tab);
-			}
-		} else {
-			this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
+		Tab tab = chercherSession(util.getIdentifiant());
+		if (tab != null) {
+			this.tabs.getTabs().remove(tab);
 		}
+		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
 
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
 
-		Tab tab = new Tab(util.getPseudo(), loader.load());
+		tab = new Tab(util.getPseudo(), loader.load());
 		tab.textProperty().bind(util.getPseudoPropery());
 		tab.setOnClosed(e -> {
 			session.fermetureLocale();
@@ -125,6 +123,19 @@ public class ControleurUtilisateurs implements Initializable {
 		});
 		tab.setUserData(session);
 		this.tabs.getTabs().add(tab);
+	}
+	
+	private void afficherHistorique(Utilisateur util) throws IOException {
+		if (util.getEtat() != EtatUtilisateur.EN_SESSION && util.getEtat() != EtatUtilisateur.EN_ATTENTE) {
+			ControleurSession historique = new ControleurSession(this.modele.getUtilisateurLocal(), util);
+			FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
+			loader.setController(historique);
+
+			Tab tab = new Tab(util.getPseudo(), loader.load());
+			tab.textProperty().bind(util.getPseudoPropery());
+			tab.setUserData(historique);
+			this.tabs.getTabs().add(tab);
+		}
 	}
 
 	public void lancementSession(Utilisateur destinataire) {
@@ -353,9 +364,6 @@ public class ControleurUtilisateurs implements Initializable {
 	    }
 	}
 	
-	
-	
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Lie la vue de la liste à la liste d'utilisateurs du modèle
@@ -397,6 +405,22 @@ public class ControleurUtilisateurs implements Initializable {
 			cell.setOnMouseClicked(e -> {
 				if (!cell.isEmpty()) {
 					lancementSession(cell.getItem());
+				}
+			});
+			cell.setOnContextMenuRequested(e -> {
+				if (!cell.isEmpty()) {
+					ContextMenu menu = new ContextMenu();
+					MenuItem hist = new MenuItem("Historique");
+					hist.setOnAction(f -> {
+						try {
+							afficherHistorique(cell.getItem());
+						} catch (IOException e1) {
+							Alerte exe = Alerte.exceptionLevee(e1);
+							exe.show();
+						}
+					});
+					menu.getItems().add(hist);
+					menu.show(cell, e.getSceneX(), e.getSceneY());
 				}
 			});
 			return cell;
