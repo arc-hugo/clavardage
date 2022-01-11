@@ -432,10 +432,10 @@ public class ControleurUtilisateurs implements Initializable {
 		
 		//Redimensionner la fenêtre 
 		Scene scene = this.pane.getScene();
-		Stage stage = (Stage) this.pane.getScene().getWindow();
+		//Stage stage = (Stage) this.pane.getScene().getWindow();
 		scene.setOnMouseMoved(event -> {
-			if (event.getX() > stage.getWidth() - 15
-					&& event.getX() < stage.getWidth() + 15 ) {
+			if (event.getX() > scene.getWidth() - 15
+					&& event.getX() < scene.getWidth() + 15 ) {
 				scene.setCursor(Cursor.E_RESIZE);
 			} else {
 				scene.setCursor(Cursor.DEFAULT);
