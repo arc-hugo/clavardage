@@ -55,22 +55,17 @@ public class ControleurPseudo implements Initializable {
 
 	@FXML
 	private void ferme() {
-		Stage st;
-		st = (Stage) this.pseudo.getScene().getWindow();
-		st.close();
+		((Stage) this.pseudo.getScene().getWindow()).close();
 	}
 
 	@FXML
 	private void diminue() {
-		Stage st;
-		st = (Stage) this.pseudo.getScene().getWindow();
-		st.setIconified(true);
+		((Stage) this.pseudo.getScene().getWindow()).setIconified(true);
 	}
 
 	@FXML
 	private void change() {
-		Stage st;
-		st = (Stage) this.pseudo.getScene().getWindow();
+		Stage st = (Stage) this.pseudo.getScene().getWindow();
 		if (st.isFullScreen()) {
 			st.setFullScreen(false);
 		} else {

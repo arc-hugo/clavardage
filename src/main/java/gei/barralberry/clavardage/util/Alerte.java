@@ -4,6 +4,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import gei.barralberry.clavardage.App;
+import javafx.application.Platform;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextArea;
@@ -22,6 +24,7 @@ public class Alerte extends Alert {
 		DialogPane dialogPane = this.getDialogPane();
 		dialogPane.getStylesheets().add(CSS);
 		dialogPane.getStyleClass().add(CLASS);
+		
 	/*}
 	private void customisation(DialogPane dialogPane) {
 		ButtonBar buttonbar = new ButtonBar();
@@ -39,10 +42,7 @@ public class Alerte extends Alert {
 		buttons.setSpacing( 10 );
 		buttons.getChildren().addAll(r,o,v);*/
 		
-		Stage stage = new Stage();
-		stage.initStyle(StageStyle.UNDECORATED);
-		stage.show();
-		
+		this.initStyle(StageStyle.UNDECORATED);
 		
 	}
 	public static Alerte confirmationDeconnexion() {

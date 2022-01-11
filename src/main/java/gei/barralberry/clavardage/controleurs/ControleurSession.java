@@ -135,14 +135,22 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureDistante() {
 		// TODO passage en mode fin de session
-		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
-		ferme.show();
+		Platform.runLater(new Runnable() {
+			public void run() {
+				Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
+				ferme.show();
+			}
+		});
 		this.modele.fermetureDistante();
 		try {
 			this.modele.fermetureDB();
 		} catch (SQLException e1) {
-			Alerte ex = Alerte.exceptionLevee(e1);
-			ex.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte ex = Alerte.exceptionLevee(e1);
+					ex.show();
+				}
+			});
 		}
 		fermeture();
 	}

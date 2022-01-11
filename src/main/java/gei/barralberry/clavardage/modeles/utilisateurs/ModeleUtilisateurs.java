@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 import gei.barralberry.clavardage.App;
 import gei.barralberry.clavardage.util.Alerte;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -41,8 +42,12 @@ public class ModeleUtilisateurs {
 						pseudo, EtatUtilisateur.CONNECTE);
 			}
 		} catch (UnknownHostException e) {
-			Alerte ex = Alerte.exceptionLevee(e);
-			ex.showAndWait();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte ex = Alerte.exceptionLevee(e);
+					ex.show();
+				}
+			});
 		}
 		this.utilisateurs = FXCollections.observableArrayList(Utilisateur.extractor());
 	}

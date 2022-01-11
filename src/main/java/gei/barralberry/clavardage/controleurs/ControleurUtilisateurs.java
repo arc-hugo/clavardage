@@ -103,8 +103,12 @@ public class ControleurUtilisateurs implements Initializable {
 				udp.broadcastValidation(getIdentifiantLocal(), login);
 				modele.setPseudoLocal(login);
 			} catch (IOException e) {
-				Alerte alert = Alerte.exceptionLevee(e);
-				alert.show();
+				Platform.runLater(new Runnable() {
+					public void run() {
+						Alerte alert = Alerte.exceptionLevee(e);
+						alert.show();
+					}
+				});
 			}
 		}
 	}
@@ -166,8 +170,12 @@ public class ControleurUtilisateurs implements Initializable {
 			destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
 			tcp.demandeConnexion(destinataire);
 		} else if (destinataire.getEtat() == EtatUtilisateur.DECONNECTE) {
-			Alerte deco = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
-			deco.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte deco = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
+					deco.show();
+				}
+			});
 		}
 	}
 
@@ -180,16 +188,24 @@ public class ControleurUtilisateurs implements Initializable {
 				sock.close();
 			}
 		} catch (IOException | SQLException | ClassNotFoundException e) {
-			Alerte ex = Alerte.exceptionLevee(e);
-			ex.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte ex = Alerte.exceptionLevee(e);
+					ex.show();
+				}
+			});
 		}
 	}
 
 	public void lancementRefuse(InetAddress adresse) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(adresse);
 		if (util != null) {
-			Alerte refus = Alerte.refusConnexion(util.getPseudo());
-			refus.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte refus = Alerte.refusConnexion(util.getPseudo());
+					refus.show();
+				}
+			});
 			modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
 		}
 	}
@@ -215,8 +231,12 @@ public class ControleurUtilisateurs implements Initializable {
 				try {
 					creationSession(util, sock);
 				} catch (ClassNotFoundException | IOException | SQLException e) {
-					Alerte alert = Alerte.exceptionLevee(e);
-					alert.show();
+					Platform.runLater(new Runnable() {
+						public void run() {
+							Alerte alert = Alerte.exceptionLevee(e);
+							alert.show();
+						}
+					});
 				}
 				return true;
 			} else {
@@ -277,15 +297,12 @@ public class ControleurUtilisateurs implements Initializable {
 
 	@FXML
 	private void diminue() {
-		Stage st;
-		st = (Stage) this.tabs.getScene().getWindow();
-		st.setIconified(true);
+		((Stage) this.tabs.getScene().getWindow()).setIconified(true);
 	}
 
 	@FXML
 	private void change() {
-		Stage st;
-		st = (Stage) this.tabs.getScene().getWindow();
+		Stage st = (Stage) this.tabs.getScene().getWindow();
 		if (st.isFullScreen()) {
 			st.setFullScreen(false);
 		} else {
@@ -329,7 +346,7 @@ public class ControleurUtilisateurs implements Initializable {
 	private void dragged1(MouseEvent event) {
 	    Stage stage = (Stage) buttonbar.getScene().getWindow();
         stage.setX(event.getScreenX() - x);
-        stage.setY(event.getScreenY() - y);  
+        stage.setY(event.getScreenY() - y); 
 	}     
 	/*
 	@FXML 
@@ -432,7 +449,6 @@ public class ControleurUtilisateurs implements Initializable {
 		
 		//Redimensionner la fenêtre 
 		Scene scene = this.pane.getScene();
-		//Stage stage = (Stage) this.pane.getScene().getWindow();
 		scene.setOnMouseMoved(event -> {
 			if (event.getX() > scene.getWidth() - 15
 					&& event.getX() < scene.getWidth() + 15 ) {

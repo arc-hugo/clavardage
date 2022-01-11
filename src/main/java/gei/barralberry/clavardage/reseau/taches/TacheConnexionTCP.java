@@ -10,6 +10,7 @@ import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.AccesTCP;
 import gei.barralberry.clavardage.util.Alerte;
 import gei.barralberry.clavardage.util.Configuration;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 
 public class TacheConnexionTCP extends Task<Void> {
@@ -40,8 +41,12 @@ public class TacheConnexionTCP extends Task<Void> {
 				}
 			});
 		} catch (UnknownHostException e) {
-			Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
-			refus.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
+					refus.show();
+				}
+			});
 			this.executeur.ajoutTache(new Runnable() {
 				@Override
 				public void run() {
