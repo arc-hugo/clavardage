@@ -63,12 +63,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			}
 
 			private void messageok() {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						session.envoiRecu();
-					}
-				});
+				session.envoiRecu();
 			}
 
 			private void fin() {

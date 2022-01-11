@@ -127,13 +127,8 @@ public class AccesDB {
 			ps.setObject(5, this.destinataire);
 			return ps.executeUpdate();
 		} catch (SQLException e) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					Alerte exeception = Alerte.exceptionLevee(e);
-					exeception.show();
-				}
-			});
+			Alerte exeception = Alerte.exceptionLevee(e);
+			exeception.show();
 		}
 		return 0;
 	}

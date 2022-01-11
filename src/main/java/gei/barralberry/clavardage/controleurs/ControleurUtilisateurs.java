@@ -103,7 +103,8 @@ public class ControleurUtilisateurs implements Initializable {
 				udp.broadcastValidation(getIdentifiantLocal(), login);
 				modele.setPseudoLocal(login);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Alerte alert = Alerte.exceptionLevee(e);
+				alert.show();
 			}
 		}
 	}
@@ -241,7 +242,11 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public boolean validationDistante(UUID uuid, String pseudo) {
 		if (!(this.modele.getPseudoLocal().trim().equals(pseudo.trim()))) {
-			this.modele.setPseudo(uuid, pseudo);
+			Platform.runLater(new Runnable() {
+				public void run() {
+					modele.setPseudo(uuid, pseudo);
+				}
+			});
 			return true;
 		}
 		return false;

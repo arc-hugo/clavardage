@@ -91,5 +91,7 @@ public class ControleurPseudo implements Initializable {
 				new_pseudo();
 			}
 		});
+		
+		this.pseudo.requestFocus();
 	}
 }
