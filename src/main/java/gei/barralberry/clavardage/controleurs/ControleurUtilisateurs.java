@@ -120,16 +120,20 @@ public class ControleurUtilisateurs implements Initializable {
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
 
-		tab = new Tab(util.getPseudo(), loader.load());
-		tab.textProperty().bind(util.getPseudoPropery());
-		tab.setOnClosed(e -> {
+		Tab ntab = new Tab(util.getPseudo(), loader.load());
+		ntab.textProperty().bind(util.getPseudoPropery());
+		ntab.setOnClosed(e -> {
 			session.fermetureLocale();
 			if (this.modele.getEtat(util.getIdentifiant()) != EtatUtilisateur.DECONNECTE) {
 				this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
 			}
 		});
-		tab.setUserData(session);
-		this.tabs.getTabs().add(tab);
+		ntab.setUserData(session);
+		Platform.runLater(new Runnable() {
+			public void run() {
+				tabs.getTabs().add(ntab);
+			}
+		});
 	}
 
 	private void afficherHistorique(Utilisateur util) throws IOException, ClassNotFoundException, SQLException {
