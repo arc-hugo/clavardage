@@ -42,17 +42,18 @@ public class AccesDB {
 	private UUID destinataire;
 	private UUID local;
 	
-	public static boolean estBloque() {
-		if (DB_PATH.exists()) {
-			try {
+	public static boolean bloquerDB() {
+		try {
+			DB_PATH.getParentFile().mkdirs();
+			DB_PATH.createNewFile();
+			if (AccesDB.conn == null) {
 				Class.forName("org.sqlite.JDBC");
-				Connection testConn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
-				testConn.close();
-			} catch (SQLException | ClassNotFoundException e) {
-				return true;
+				AccesDB.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
 			}
+		} catch (SQLException | ClassNotFoundException | IOException e) {
+			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	public AccesDB(UUID local, UUID destinataire) throws SQLException, IOException, ClassNotFoundException {

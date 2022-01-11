@@ -127,7 +127,7 @@ public class App extends Application {
 		
 		if (!AccesUDP.estUDPUtilise()) {
 			if (!AccesTCP.estTCPUtilise()) {
-				if (!AccesDB.estBloque()) {
+				if (AccesDB.bloquerDB()) {
 					launch();
 				} else {
 					System.err.println("Base de donnée SQLite est déjà bloqué par un autre porgramme");
