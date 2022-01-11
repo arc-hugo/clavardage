@@ -9,6 +9,7 @@ import java.util.UUID;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 public class Texte extends MessageAffiche {
@@ -38,10 +39,19 @@ public class Texte extends MessageAffiche {
 	public Node affichage() {
 		Label msg = new Label(txt);
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
+		date.setStyle("fx-alignement: center");
 		date.setAlignment(Pos.CENTER);
 		msg.getStylesheets().add("msgrecep.css");
 		
-		return new VBox(msg,date);
+		VBox vb = new VBox(date,msg);
+		AnchorPane ap = new AnchorPane();
+		ap.setRightAnchor(vb, null);
+		ap.setLeftAnchor(vb, null);
+		ap.setTopAnchor(vb, null);
+		ap.setBottomAnchor(vb, null);
+		ap.getChildren().addAll(vb);
+		
+		return ap;
 	}
 	
 	@Override
