@@ -30,6 +30,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionModel;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
@@ -126,7 +128,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 	
 	private void afficherHistorique(Utilisateur util) throws IOException, ClassNotFoundException, SQLException {
-		if (util.getEtat() != EtatUtilisateur.EN_SESSION && util.getEtat() != EtatUtilisateur.EN_ATTENTE) {
+		if (util.getEtat() != EtatUtilisateur.EN_SESSION) {
 			ControleurSession historique = new ControleurSession(this.modele.getUtilisateurLocal(), util);
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 			loader.setController(historique);
@@ -136,8 +138,12 @@ public class ControleurUtilisateurs implements Initializable {
 			tab.setUserData(historique);
 			this.tabs.getTabs().add(tab);
 		} else {
-			Alerte alerte = Alerte.utilisateurDejaEnSession(util.getPseudo());
-			alerte.show();
+			String pseudo = util.getPseudo();
+			for (Tab tab : this.tabs.getTabs()) {
+				if (tab.getText().equals(pseudo)) {
+					this.tabs.getSelectionModel().select(tab);
+				}
+			}
 		}
 	}
 

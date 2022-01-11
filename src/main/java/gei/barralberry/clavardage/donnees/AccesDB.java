@@ -61,18 +61,16 @@ public class AccesDB {
 		this.destinataire = destinataire;
 
 		DB_PATH.getParentFile().mkdirs();
-		boolean nouveau = DB_PATH.createNewFile();
+		DB_PATH.createNewFile();
 		
 		if (AccesDB.conn == null || AccesDB.conn.isClosed()) {
 			Class.forName("org.sqlite.JDBC");
 			AccesDB.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
 		}
 		
-		if (nouveau) {
-			Statement stm = conn.createStatement();
-			stm.executeUpdate(CREATE_TABLE_UTILISATEUR);
-			stm.executeUpdate(CREATE_TABLE_MESSAGE);
-		}
+		Statement stm = conn.createStatement();
+		stm.executeUpdate(CREATE_TABLE_UTILISATEUR);
+		stm.executeUpdate(CREATE_TABLE_MESSAGE);
 		
 		PreparedStatement ps = conn.prepareStatement(GET_UTILISATEUR);
 		ps.setString(1, this.destinataire.toString());

@@ -71,14 +71,6 @@ public class Alerte extends Alert {
 		return alert;
 	}
 	
-	public static Alerte utilisateurDejaEnSession(String pseudo) {
-		Alerte alert = new Alerte(AlertType.INFORMATION);
-		alert.setTitle("En session");
-		alert.setHeaderText(null);
-		alert.setContentText("L'utilisateur " + pseudo + " est déjà en session avec vous, l'historique ne peut pas être affiché.");
-		return alert;
-	}
-	
 	public static Alerte refusConnexion(String pseudo) {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Refus");

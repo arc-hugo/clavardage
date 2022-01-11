@@ -130,7 +130,7 @@ public class App extends Application {
 				if (AccesDB.bloquerDB()) {
 					launch();
 				} else {
-					System.err.println("Base de donnée SQLite est déjà bloqué par un autre porgramme");
+					System.err.println("Base de donnée SQLite est déjà bloquée par un autre porgramme");
 					System.exit(5);
 				}
 			} else {
