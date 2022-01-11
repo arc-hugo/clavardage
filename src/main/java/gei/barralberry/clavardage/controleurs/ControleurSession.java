@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
+import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
@@ -102,7 +103,11 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void fermeture() {
-		this.reception.cancel();
+		Platform.runLater(new Runnable() {
+			public void run() {
+				reception.cancel();
+			}
+		});
 	}
 
 	private void envoiMessage(MessageAffiche msg) {
@@ -139,6 +144,9 @@ public class ControleurSession implements Initializable {
 			public void run() {
 				Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
 				ferme.show();
+				if (modele.getDestinataire().getEtat() != EtatUtilisateur.DECONNECTE) {
+					modele.getDestinataire().setEtat(EtatUtilisateur.CONNECTE);
+				}
 			}
 		});
 		this.modele.fermetureDistante();

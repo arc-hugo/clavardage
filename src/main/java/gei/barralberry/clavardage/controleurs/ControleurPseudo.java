@@ -7,7 +7,6 @@ import java.util.prefs.Preferences;
 import gei.barralberry.clavardage.App;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.scene.input.KeyCode;
