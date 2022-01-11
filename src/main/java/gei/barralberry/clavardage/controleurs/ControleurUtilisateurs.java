@@ -292,6 +292,16 @@ public class ControleurUtilisateurs implements Initializable {
 			st.setFullScreen(true);
 		}
 	}
+	/*@FXML 
+	private void moved(MouseEvent event) {
+		Scene scene = this.pane.getScene();
+		Stage stage = (Stage) this.pane.getScene().getWindow();
+		if (event.getX() > stage.getWidth() - 50
+		 && event.getX() < stage.getWidth() + 5 ) {
+      scene.setCursor(Cursor.E_RESIZE);
+		} else {
+			scene.setCursor(Cursor.DEFAULT);
+		}
 
 	@FXML
 	private void enter(MouseEvent event) {
@@ -302,36 +312,42 @@ public class ControleurUtilisateurs implements Initializable {
 		} else {
 			scene.setCursor(Cursor.DEFAULT);
 		}
-	}
-	/*
-	 * @FXML private void exit(MouseEvent event) { Scene scene = pane.getScene();
-	 * Stage stage = (Stage) pane.getScene().getWindow(); if (!(event.getX() >
-	 * stage.getWidth() - 5 && event.getX() < stage.getWidth() + 5 )) {
-	 * scene.setCursor(Cursor.DEFAULT); } }
-	 */
-
+   
+	}*/
+  
+	/*@FXML 
+	private void exit(MouseEvent event) {
+		Scene scene = pane.getScene();
+		Stage stage = (Stage) pane.getScene().getWindow();
+		if (!(event.getX() > stage.getWidth() - 5
+		 && event.getX() < stage.getWidth() + 5 )) {
+			scene.setCursor(Cursor.DEFAULT);
+		}
+	}*/
+	
 	@FXML
 	private void dragged1(MouseEvent event) {
-		Stage stage = (Stage) buttonbar.getScene().getWindow();
-		stage.setX(event.getScreenX() - x);
-		stage.setY(event.getScreenY() - y);
-	}
-
-	@FXML
-	private void dragged2(MouseEvent event) {
-		Stage stage = (Stage) pane.getScene().getWindow();
-		if (resizebottom == true) {
-			stage.setWidth(event.getX() + dx);
-			stage.setHeight(event.getY() + dy);
-		}
-	}
+	    Stage stage = (Stage) buttonbar.getScene().getWindow();
+        stage.setX(event.getScreenX() - x);
+        stage.setY(event.getScreenY() - y);  
+	}     
+	/*
+	@FXML 
+	private void dragged2 (MouseEvent event) {
+	    Stage stage = (Stage) pane.getScene().getWindow();
+	    if (resizebottom == true) {
+            stage.setWidth(event.getX() + dx);
+            stage.setHeight(event.getY() + dy);
+        }
+	}*/
 
 	@FXML
 	private void pressed1(MouseEvent event) {
 		x = (int) event.getSceneX();
 		y = (int) event.getSceneY();
 	}
-
+  
+	/*
 	@FXML
 	private void pressed2(MouseEvent event) {
 		Stage stage = (Stage) pane.getScene().getWindow();
@@ -347,7 +363,8 @@ public class ControleurUtilisateurs implements Initializable {
 			scene.setCursor(Cursor.N_RESIZE);
 		}
 	}
-
+	*/
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Lie la vue de la liste à la liste d'utilisateurs du modèle
@@ -412,7 +429,19 @@ public class ControleurUtilisateurs implements Initializable {
 			});
 			return cell;
 		});
-
+		
+		//Redimensionner la fenêtre 
+		Scene scene = this.pane.getScene();
+		Stage stage = (Stage) this.pane.getScene().getWindow();
+		scene.setOnMouseMoved(event -> {
+			if (event.getX() > stage.getWidth() - 15
+					&& event.getX() < stage.getWidth() + 15 ) {
+				scene.setCursor(Cursor.E_RESIZE);
+			} else {
+				scene.setCursor(Cursor.DEFAULT);
+			}
+		});
+		
 		// Fermeture possible de l'onglet selectionné
 		this.tabs.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 
