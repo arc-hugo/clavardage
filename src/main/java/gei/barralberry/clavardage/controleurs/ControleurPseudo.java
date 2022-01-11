@@ -34,7 +34,7 @@ public class ControleurPseudo implements Initializable {
 		return txt;
 	}
 
-	public static boolean isActif() {
+	public static boolean estActif() {
 		return ControleurPseudo.actif;
 	}
 
@@ -91,5 +91,7 @@ public class ControleurPseudo implements Initializable {
 				new_pseudo();
 			}
 		});
+		
+		this.pseudo.requestFocus();
 	}
 }

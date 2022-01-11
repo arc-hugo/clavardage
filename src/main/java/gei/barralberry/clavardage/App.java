@@ -11,6 +11,9 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
+import gei.barralberry.clavardage.donnees.AccesDB;
+import gei.barralberry.clavardage.reseau.AccesTCP;
+import gei.barralberry.clavardage.reseau.AccesUDP;
 import gei.barralberry.clavardage.util.Configuration;
 import gei.barralberry.clavardage.util.Decoration;
 
@@ -20,12 +23,6 @@ import gei.barralberry.clavardage.util.Decoration;
 public class App extends Application {
 
 	private static Scene scene;
-	private Boolean resizebottom = false;
-	private double dx;
-	private double dy;
-	private double xOffset;
-  private double yOffset;
-	
 	@Override
 	public void start(Stage stage) throws IOException {
 		ControleurUtilisateurs controleur = new ControleurUtilisateurs();
@@ -100,28 +97,49 @@ public class App extends Application {
 			for (int i = 0; i < args.length; i += 2) {
 				if (i + 1 < args.length) {
 					int port = Integer.parseInt(args[i+1]);
-					switch (args[i]) {
-					case "--tcp-envoi":
-						Configuration.TCP_PORT_ENVOI = port;
-						break;
-					case "--tcp-reception":
-						Configuration.TCP_PORT_RECEPTION = port;
-						break;
-					case "--udp-envoi":
-						Configuration.UDP_PORT_ENVOI = port;
-						break;
-					case "--udp-reception":
-						Configuration.UDP_PORT_RECEPTION = port;
-						break;
-					default:
-						break;
+					if (port >= 1024 || port <= 65535) {
+						switch (args[i]) {
+						case "--tcp-envoi":
+							Configuration.TCP_PORT_ENVOI = port;
+							break;
+						case "--tcp-reception":
+							Configuration.TCP_PORT_RECEPTION = port;
+							break;
+						case "--udp-envoi":
+							Configuration.UDP_PORT_ENVOI = port;
+							break;
+						case "--udp-reception":
+							Configuration.UDP_PORT_RECEPTION = port;
+							break;
+						default:
+							break;
+						}
+					} else {
+						System.err.println("Erreur dans le numéro de port : "+port);
+						System.exit(1);
 					}
 				} else {
 					System.err.println("Erreur dans le nombre de paramètres");
-					System.exit(1);
+					System.exit(2);
 				}
 			}
 		}
-		launch();
+		
+		if (!AccesUDP.estUDPUtilise()) {
+			if (!AccesTCP.estTCPUtilise()) {
+				if (AccesDB.bloquerDB()) {
+					launch();
+				} else {
+					System.err.println("Base de donnée SQLite est déjà bloquée par un autre porgramme");
+					System.exit(5);
+				}
+			} else {
+				System.err.println("Port TCP déjà utilisé par une instance ou une autre application");
+				System.exit(3);
+			}
+		} else {
+			System.err.println("Port UDP déjà utilisé par une instance ou une autre application");
+			System.exit(3);
+		}
 	}
 }
