@@ -16,6 +16,7 @@ public class Fin extends Message {
 		synchronized (sock.getOutputStream()) {
 			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
 			writer.println("FIN");
+			sock.close();
 		}
 	}
 

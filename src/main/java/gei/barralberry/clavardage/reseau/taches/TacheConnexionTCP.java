@@ -1,7 +1,6 @@
 package gei.barralberry.clavardage.reseau.taches;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -29,21 +28,17 @@ public class TacheConnexionTCP extends Task<Void> {
 		try {
 			Socket sock = new Socket(destinataire.getAdresse(), Configuration.TCP_PORT_ENVOI);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-			if (reader.readLine().equals("OK")) {
-				this.executeur.ajoutTache(new Runnable() {
-					@Override
-					public void run() {
+			String line = reader.readLine();
+			this.executeur.ajoutTache(new Runnable() {
+				@Override
+				public void run() {
+					if (line.equals("OK")) {
 						tcp.connexionAccepte(sock);
-					}
-				});
-			} else {
-				this.executeur.ajoutTache(new Runnable() {
-					@Override
-					public void run() {
+					} else {
 						tcp.connexionRefuse(sock);
 					}
-				});
-			}
+				}
+			});
 		} catch (UnknownHostException e) {
 			Alerte refus = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
 			refus.show();

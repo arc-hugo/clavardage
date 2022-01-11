@@ -1,5 +1,7 @@
 package gei.barralberry.clavardage.reseau;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.UUID;
@@ -9,6 +11,7 @@ import gei.barralberry.clavardage.controleurs.ControleurUtilisateurs;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.services.ServiceReceptionUDP;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiUDP;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.application.Platform;
 
 public class AccesUDP {
@@ -16,6 +19,18 @@ public class AccesUDP {
 	private ControleurUtilisateurs ctrlUtilisateurs;
 	private ServiceReceptionUDP reception;
 	private ExecuteurReseau executeur;
+	
+	public static boolean estUDPUtilise() {
+		try {
+			DatagramSocket testUDP = new DatagramSocket(Configuration.TCP_PORT_RECEPTION);
+			testUDP.close();
+			
+		} catch (IOException e) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public AccesUDP(ControleurUtilisateurs controleurUtilisateurs) {
 		this.ctrlUtilisateurs = controleurUtilisateurs;
@@ -49,7 +64,6 @@ public class AccesUDP {
 	}
 	
 	public void validationUtilisateur(UUID uuid, InetAddress adresse, String pseudo) {
-		System.out.println(pseudo);
 		if (! ctrlUtilisateurs.validationDistante(uuid, pseudo)) {
 			pseudoInvalide(adresse);
 		}

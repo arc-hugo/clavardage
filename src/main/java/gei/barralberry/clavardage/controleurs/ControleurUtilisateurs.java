@@ -13,8 +13,6 @@ import gei.barralberry.clavardage.modeles.utilisateurs.ModeleUtilisateurs;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
 import gei.barralberry.clavardage.reseau.AccesTCP;
 import gei.barralberry.clavardage.reseau.AccesUDP;
-import gei.barralberry.clavardage.reseau.messages.Fin;
-import gei.barralberry.clavardage.reseau.messages.OK;
 import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.css.PseudoClass;
@@ -25,6 +23,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -42,26 +41,32 @@ import javafx.stage.StageStyle;
 
 public class ControleurUtilisateurs implements Initializable {
 
-	@FXML private TabPane tabs;
-	@FXML private ListView<Utilisateur> list;
-	@FXML private MenuItem deconnexion;
-	@FXML private MenuItem changerPseudo;
-	@FXML private ButtonBar buttonbar;
-	@FXML private MenuButton name;
-	@FXML private VBox vb;
-	@FXML private BorderPane pane;
+	@FXML
+	private TabPane tabs;
+	@FXML
+	private ListView<Utilisateur> list;
+	@FXML
+	private MenuItem deconnexion;
+	@FXML
+	private MenuItem changerPseudo;
+	@FXML
+	private ButtonBar buttonbar;
+	@FXML
+	private MenuButton name;
+	@FXML
+	private VBox vb;
+	@FXML
+	private BorderPane pane;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
 	private AccesTCP tcp;
 
 	private int x = 0;
-    private int y = 0;
-    private Boolean resizebottom = false;
-    private double dx;
-    private double dy;
-    private double xOffset;
-    private double yOffset;
+	private int y = 0;
+	private Boolean resizebottom = false;
+	private double dx;
+	private double dy;
 
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
@@ -78,7 +83,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void saisiePseudo() {
-		if (!ControleurPseudo.isActif()) {
+		if (!ControleurPseudo.estActif()) {
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("saisiePseudo.fxml"));
 			loader.setController(new ControleurPseudo());
 			Stage stage = new Stage();
@@ -98,36 +103,62 @@ public class ControleurUtilisateurs implements Initializable {
 				udp.broadcastValidation(getIdentifiantLocal(), login);
 				modele.setPseudoLocal(login);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Alerte alert = Alerte.exceptionLevee(e);
+				alert.show();
 			}
 		}
 	}
 
 	private void creationSession(Utilisateur util, Socket sock)
 			throws IOException, SQLException, ClassNotFoundException {
-		if (util.getEtat() == EtatUtilisateur.EN_SESSION) {
-			Tab tab = chercherSession(util.getIdentifiant());
-			if (tab != null) {
-				this.tabs.getTabs().remove(tab);
-			}
-		} else {
-			this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
+		Tab tab = chercherSession(util.getIdentifiant());
+		if (tab != null) {
+			Platform.runLater(new Runnable() {
+				public void run() {
+					tabs.getTabs().remove(tab);
+				}
+			});
 		}
+		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
 
 		ControleurSession session = new ControleurSession(modele.getUtilisateurLocal(), util, sock);
 		FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 		loader.setController(session);
 
-		Tab tab = new Tab(util.getPseudo(), loader.load());
-		tab.textProperty().bind(util.getPseudoPropery());
-		tab.setOnClosed(e -> {
+		Tab ntab = new Tab(util.getPseudo(), loader.load());
+		ntab.textProperty().bind(util.getPseudoPropery());
+		ntab.setOnClosed(e -> {
 			session.fermetureLocale();
 			if (this.modele.getEtat(util.getIdentifiant()) != EtatUtilisateur.DECONNECTE) {
 				this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
 			}
 		});
-		tab.setUserData(session);
-		this.tabs.getTabs().add(tab);
+		ntab.setUserData(session);
+		Platform.runLater(new Runnable() {
+			public void run() {
+				tabs.getTabs().add(ntab);
+			}
+		});
+	}
+
+	private void afficherHistorique(Utilisateur util) throws IOException, ClassNotFoundException, SQLException {
+		if (util.getEtat() != EtatUtilisateur.EN_SESSION) {
+			ControleurSession historique = new ControleurSession(this.modele.getUtilisateurLocal(), util);
+			FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
+			loader.setController(historique);
+
+			Tab tab = new Tab(util.getPseudo(), loader.load());
+			tab.textProperty().bind(util.getPseudoPropery());
+			tab.setUserData(historique);
+			this.tabs.getTabs().add(tab);
+		} else {
+			String pseudo = util.getPseudo();
+			for (Tab tab : this.tabs.getTabs()) {
+				if (tab.getText().equals(pseudo)) {
+					this.tabs.getSelectionModel().select(tab);
+				}
+			}
+		}
 	}
 
 	public void lancementSession(Utilisateur destinataire) {
@@ -142,40 +173,24 @@ public class ControleurUtilisateurs implements Initializable {
 
 	public void lancementAccepte(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					if (util != null) {
-						creationSession(util, sock);
-					} else {
-						sock.close();
-					}
-				} catch (IOException | SQLException | ClassNotFoundException e) {
-					Alerte ex = Alerte.exceptionLevee(e);
-					ex.showAndWait();
-				}
+		try {
+			if (util != null) {
+				creationSession(util, sock);
+			} else {
+				sock.close();
 			}
-		});
+		} catch (IOException | SQLException | ClassNotFoundException e) {
+			Alerte ex = Alerte.exceptionLevee(e);
+			ex.show();
+		}
 	}
 
-	public void lancementRefuse(Socket sock) {
-		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
+	public void lancementRefuse(InetAddress adresse) {
+		Utilisateur util = this.modele.getUtilisateurWithAdresse(adresse);
 		if (util != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					Alerte refus = Alerte.refusConnexion(util.getPseudo());
-					refus.show();
-					modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
-					try {
-						sock.close();
-					} catch (IOException e) {
-						Alerte ex = Alerte.exceptionLevee(e);
-						ex.showAndWait();
-					}
-				}
-			});
+			Alerte refus = Alerte.refusConnexion(util.getPseudo());
+			refus.show();
+			modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
 		}
 	}
 
@@ -191,49 +206,58 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 
-	private void accepterConnexion(Utilisateur util, Socket sock)
-			throws IOException, SQLException, ClassNotFoundException {
-		Alerte confirm = Alerte.accepterConnexion(util.getPseudo());
-
-		Optional<ButtonType> result = confirm.showAndWait();
-		if (result.get() == ButtonType.OK) {
-			OK ok = new OK(getIdentifiantLocal());
-			ok.envoie(sock);
-			creationSession(util, sock);
-		} else {
-			Fin fin = new Fin(getIdentifiantLocal());
-			fin.envoie(sock);
-			sock.close();
-		}
-	}
-
-	public void demandeSession(Socket sock) throws IOException {
+	public boolean demandeSession(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		if (util != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						accepterConnexion(util, sock);
-					} catch (IOException | SQLException | ClassNotFoundException e) {
-						Alerte ex = Alerte.exceptionLevee(e);
-						ex.showAndWait();
-					}
+			Alerte confirm = Alerte.accepterConnexion(util.getPseudo());
+			Optional<ButtonType> result = confirm.showAndWait();
+			if (result.get() == ButtonType.OK) {
+				try {
+					creationSession(util, sock);
+				} catch (ClassNotFoundException | IOException | SQLException e) {
+					Alerte alert = Alerte.exceptionLevee(e);
+					alert.show();
 				}
-			});
+				return true;
+			} else {
+				return false;
+				
+			}
 		} else {
 			// TODO if util == null -> demande TCP de renvoi utilisateur
-			sock.close();
 		}
+		return false;
 	}
 
 	public void receptionUtilisateur(UUID identifiant, InetAddress adresse, String pseudo) {
 		Platform.runLater(new Runnable() {
-			@Override
 			public void run() {
 				modele.connexion(identifiant, adresse, pseudo);
 			}
 		});
+	}
+	
+	public void deconnexionDistante(UUID identifiant) {
+		if (this.modele.getEtat(identifiant) == EtatUtilisateur.EN_SESSION) {
+			Tab tab = chercherSession(identifiant);
+			if (tab != null) {
+				ControleurSession session = (ControleurSession) tab.getUserData();
+				session.fermetureDistante();
+			}
+		}
+		this.modele.setEtat(identifiant, EtatUtilisateur.DECONNECTE);
+	}
+
+	public boolean validationDistante(UUID uuid, String pseudo) {
+		if (!(this.modele.getPseudoLocal().trim().equals(pseudo.trim()))) {
+			Platform.runLater(new Runnable() {
+				public void run() {
+					modele.setPseudo(uuid, pseudo);
+				}
+			});
+			return true;
+		}
+		return false;
 	}
 
 	private Tab chercherSession(UUID identifiant) {
@@ -246,35 +270,6 @@ public class ControleurUtilisateurs implements Initializable {
 		return null;
 	}
 
-	public void deconnexionDistante(UUID identifiant) {
-		if (this.modele.getEtat(identifiant) == EtatUtilisateur.EN_SESSION) {
-			Tab tab = chercherSession(identifiant);
-			if (tab != null) {
-				ControleurSession session = (ControleurSession) tab.getUserData();
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						session.fermetureDistante();
-					}
-				});
-			}
-		}
-		this.modele.setEtat(identifiant, EtatUtilisateur.DECONNECTE);
-	}
-
-	public boolean validationDistante(UUID uuid, String pseudo) {
-		if (!(this.modele.getPseudoLocal().trim().equals(pseudo.trim()))) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					modele.setPseudo(uuid, pseudo);
-				}
-			});
-			return true;
-		}
-		return false;
-	}
-
 	@FXML
 	private void ferme() {
 		deconnexion();
@@ -283,34 +278,43 @@ public class ControleurUtilisateurs implements Initializable {
 	@FXML
 	private void diminue() {
 		Stage st;
-		st = (Stage)this.tabs.getScene().getWindow();
+		st = (Stage) this.tabs.getScene().getWindow();
 		st.setIconified(true);
 	}
-	
-	
-	@FXML 
+
+	@FXML
 	private void change() {
 		Stage st;
-		st = (Stage)this.tabs.getScene().getWindow();
+		st = (Stage) this.tabs.getScene().getWindow();
 		if (st.isFullScreen()) {
 			st.setFullScreen(false);
-		}
-		else {
+		} else {
 			st.setFullScreen(true);
 		}
 	}
-	
 	/*@FXML 
 	private void moved(MouseEvent event) {
 		Scene scene = this.pane.getScene();
 		Stage stage = (Stage) this.pane.getScene().getWindow();
 		if (event.getX() > stage.getWidth() - 50
 		 && event.getX() < stage.getWidth() + 5 ) {
+      scene.setCursor(Cursor.E_RESIZE);
+		} else {
+			scene.setCursor(Cursor.DEFAULT);
+		}
+
+	@FXML
+	private void enter(MouseEvent event) {
+		Scene scene = pane.getScene();
+		Stage stage = (Stage) pane.getScene().getWindow();
+		if (event.getX() > stage.getWidth() - 50 && event.getX() < stage.getWidth() + 5) {
 			scene.setCursor(Cursor.E_RESIZE);
 		} else {
 			scene.setCursor(Cursor.DEFAULT);
 		}
+   
 	}*/
+  
 	/*@FXML 
 	private void exit(MouseEvent event) {
 		Scene scene = pane.getScene();
@@ -336,39 +340,36 @@ public class ControleurUtilisateurs implements Initializable {
             stage.setHeight(event.getY() + dy);
         }
 	}*/
-	
+
 	@FXML
 	private void pressed1(MouseEvent event) {
-	    x = (int) event.getSceneX();
-	    y = (int) event.getSceneY();
+		x = (int) event.getSceneX();
+		y = (int) event.getSceneY();
 	}
+  
 	/*
 	@FXML
 	private void pressed2(MouseEvent event) {
-	    Stage stage = (Stage) pane.getScene().getWindow();
-	    Scene scene = pane.getScene();
-		if (event.getX() > stage.getWidth() - 50
-         && event.getX() < stage.getWidth() + 50 ) {
+		Stage stage = (Stage) pane.getScene().getWindow();
+		Scene scene = pane.getScene();
+		if (event.getX() > stage.getWidth() - 50 && event.getX() < stage.getWidth() + 50) {
 			resizebottom = true;
-            dx = stage.getWidth() - event.getX();
-            scene.setCursor(Cursor.E_RESIZE);
-			
-		} else if (event.getY() > stage.getHeight() - 50
-                && event.getY() < stage.getHeight() + 50) {
-            resizebottom = true;
-            dy = stage.getHeight() - event.getY();
-            scene.setCursor(Cursor.N_RESIZE);
-	    }
+			dx = stage.getWidth() - event.getX();
+			scene.setCursor(Cursor.E_RESIZE);
+
+		} else if (event.getY() > stage.getHeight() - 50 && event.getY() < stage.getHeight() + 50) {
+			resizebottom = true;
+			dy = stage.getHeight() - event.getY();
+			scene.setCursor(Cursor.N_RESIZE);
+		}
 	}
 	*/
-	
-	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Lie la vue de la liste à la liste d'utilisateurs du modèle
 		this.list.setItems(this.modele.getUtilisateurs());
-		
+
 		this.name.textProperty().bind(this.modele.getUtilisateurLocal().getPseudoPropery());
 
 		// Change l'apparence des pseudos dans la liste des utilisateurs
@@ -404,7 +405,26 @@ public class ControleurUtilisateurs implements Initializable {
 			};
 			cell.setOnMouseClicked(e -> {
 				if (!cell.isEmpty()) {
-					lancementSession(cell.getItem());
+					ContextMenu menu = new ContextMenu();
+					MenuItem lance = new MenuItem("Discussion");
+					lance.setOnAction(f -> {
+						lancementSession(cell.getItem());
+					});
+					MenuItem hist = new MenuItem("Historique");
+					hist.setOnAction(f -> {
+						Platform.runLater(new Runnable() {
+							public void run() {
+								try {
+									afficherHistorique(cell.getItem());
+								} catch (IOException | ClassNotFoundException | SQLException e1) {
+									Alerte exe = Alerte.exceptionLevee(e1);
+									exe.show();
+								}
+							}
+						});
+					});
+					menu.getItems().addAll(lance, hist);
+					menu.show(cell, e.getSceneX(), e.getSceneY());
 				}
 			});
 			return cell;
