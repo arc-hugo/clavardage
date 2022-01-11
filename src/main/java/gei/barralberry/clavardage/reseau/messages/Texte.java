@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.UUID;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -37,6 +38,9 @@ public class Texte extends MessageAffiche {
 	public Node affichage() {
 		Label msg = new Label(txt);
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
+		date.setAlignment(Pos.CENTER);
+		msg.getStylesheets().add("msgrecep.css");
+		
 		return new VBox(msg,date);
 	}
 	
