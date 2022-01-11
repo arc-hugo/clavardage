@@ -89,6 +89,8 @@ public class ControleurSession implements Initializable {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
 		}
+		
+		this.texte.requestFocus();
 	}
 
 	private void envoiTexte() {
