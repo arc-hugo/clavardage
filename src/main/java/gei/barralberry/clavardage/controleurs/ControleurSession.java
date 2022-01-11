@@ -104,8 +104,6 @@ public class ControleurSession implements Initializable {
 			@Override
 			public void run() {
 				reception.cancel();
-				System.out.println("OK cancel");
-				System.out.println("-----------------------------------------");
 			}
 		});
 	}
@@ -119,17 +117,14 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureLocale() {
 		if (this.modele.estConnecte()) {
-			System.out.println("OK fermeture");
 			Fin msg = new Fin(getIdentifiantLocal());
 			TacheEnvoiTCP envoi = new TacheEnvoiTCP(this.modele.getSocket(), msg);
 			envoi.setOnSucceeded(e -> {
 				fermeture();
 			});
 			this.executeur.ajoutTache(envoi);
-			System.out.println("OK envoi");
 			try {
 				this.modele.fermetureDB();
-				System.out.println("OK db");
 			} catch (SQLException e1) {
 				Alerte ex = Alerte.exceptionLevee(e1);
 				ex.showAndWait();
@@ -151,10 +146,8 @@ public class ControleurSession implements Initializable {
 			}
 		});
 		this.modele.fermetureDistante();
-		System.out.println("OK modele");
 		try {
 			this.modele.fermetureDB();
-			System.out.println("OK db");
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
