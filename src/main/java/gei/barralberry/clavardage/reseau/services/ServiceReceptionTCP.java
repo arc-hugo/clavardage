@@ -37,7 +37,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 			this.sock.close();
 		} catch (IOException e) {
 			Alerte ex = Alerte.exceptionLevee(e);
-			ex.showAndWait();
+			ex.show();
 		}
 	}
 

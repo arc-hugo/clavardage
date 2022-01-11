@@ -225,12 +225,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public void receptionUtilisateur(UUID identifiant, InetAddress adresse, String pseudo) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				modele.connexion(identifiant, adresse, pseudo);
-			}
-		});
+		modele.connexion(identifiant, adresse, pseudo);
 	}
 	
 	public void deconnexionDistante(UUID identifiant) {

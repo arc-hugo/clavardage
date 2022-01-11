@@ -100,12 +100,7 @@ public class ControleurSession implements Initializable {
 	}
 
 	private void fermeture() {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				reception.cancel();
-			}
-		});
+		this.reception.cancel();
 	}
 
 	private void envoiMessage(MessageAffiche msg) {
@@ -127,7 +122,7 @@ public class ControleurSession implements Initializable {
 				this.modele.fermetureDB();
 			} catch (SQLException e1) {
 				Alerte ex = Alerte.exceptionLevee(e1);
-				ex.showAndWait();
+				ex.show();
 			}
 		}
 	}
@@ -138,19 +133,14 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureDistante() {
 		// TODO passage en mode fin de session
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
-				ferme.show();
-			}
-		});
+		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
+		ferme.show();
 		this.modele.fermetureDistante();
 		try {
 			this.modele.fermetureDB();
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
-			ex.showAndWait();
+			ex.show();
 		}
 		fermeture();
 	}
@@ -158,18 +148,18 @@ public class ControleurSession implements Initializable {
 	public void receptionMessage(MessageAffiche msg) {
 		Node noeud = msg.affichage();
 		if (noeud != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						modele.enregistrerReception(msg);
-					} catch (SQLException e) {
-						Alerte ex = Alerte.exceptionLevee(e);
-						ex.showAndWait();
+			try {
+				modele.enregistrerReception(msg);
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						messages.getChildren().add(noeud);
 					}
-					messages.getChildren().add(noeud);
-				}
-			});
+				});
+			} catch (SQLException e) {
+				Alerte ex = Alerte.exceptionLevee(e);
+				ex.show();
+			}
 		}
 	}
 
