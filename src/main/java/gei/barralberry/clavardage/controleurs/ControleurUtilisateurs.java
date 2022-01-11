@@ -146,22 +146,18 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	private void afficherHistorique(Utilisateur util) throws IOException, ClassNotFoundException, SQLException {
-		if (util.getEtat() != EtatUtilisateur.EN_SESSION) {
+		Tab tab = chercherSession(util.getIdentifiant());
+		if (util.getEtat() != EtatUtilisateur.EN_SESSION && tab == null) {
 			ControleurSession historique = new ControleurSession(this.modele.getUtilisateurLocal(), util);
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 			loader.setController(historique);
 
-			Tab tab = new Tab(util.getPseudo(), loader.load());
-			tab.textProperty().bind(util.getPseudoPropery());
-			tab.setUserData(historique);
-			this.tabs.getTabs().add(tab);
+			Tab ntab = new Tab(util.getPseudo(), loader.load());
+			ntab.textProperty().bind(util.getPseudoPropery());
+			ntab.setUserData(historique);
+			this.tabs.getTabs().add(ntab);
 		} else {
-			String pseudo = util.getPseudo();
-			for (Tab tab : this.tabs.getTabs()) {
-				if (tab.getText().equals(pseudo)) {
-					this.tabs.getSelectionModel().select(tab);
-				}
-			}
+			this.tabs.getSelectionModel().select(tab);
 		}
 	}
 
