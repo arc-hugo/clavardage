@@ -16,26 +16,23 @@ public class TacheParseUDP extends Task<Void> {
 	private String pseudo;
 	private InetAddress adresse;
 	private ExecuteurFond executeur;
-	
+
 	public TacheParseUDP(AccesUDP udp, String message, InetAddress adresse) {
 		this.udp = udp;
 		this.executeur = ExecuteurFond.getInstance();
-		
+
 		String[] split = message.split(" ");
 		this.type = split[0];
 		this.uuid = UUID.fromString(split[1]);
 		this.pseudo = split[2];
 		for (int i = 3; i < split.length; i++) {
-			this.pseudo = this.pseudo+" "+split[i];
+			this.pseudo = this.pseudo + " " + split[i];
 		}
 		this.adresse = adresse;
-		
-		System.out.println(this.type + " " 
-				+ this.uuid + " "
-				+ this.pseudo + " "
-				+ this.adresse);
+
+		System.out.println(this.type + " " + this.uuid + " " + this.pseudo + " " + this.adresse);
 	}
-	
+
 	private void deconnexion() {
 		this.executeur.ajoutTache(new Runnable() {
 			@Override
@@ -71,7 +68,7 @@ public class TacheParseUDP extends Task<Void> {
 			}
 		});
 	}
-	
+
 	@Override
 	protected Void call() throws Exception {
 		if (NetworkInterface.getByInetAddress(adresse) == null) {

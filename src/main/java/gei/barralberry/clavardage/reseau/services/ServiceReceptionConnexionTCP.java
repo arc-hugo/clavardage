@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import gei.barralberry.clavardage.App;
 import gei.barralberry.clavardage.concurrent.ExecuteurReseau;
 import gei.barralberry.clavardage.reseau.AccesTCP;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -26,7 +26,7 @@ public class ServiceReceptionConnexionTCP extends Service<Void> {
 			@Override
 			protected Void call() throws Exception {
 				@SuppressWarnings("resource")
-				ServerSocket sock = new ServerSocket(App.TCP_PORT_RECEPTION);
+				ServerSocket sock = new ServerSocket(Configuration.TCP_PORT_RECEPTION);
 				while (true) {
 					Socket link = sock.accept();
 					executeur.ajoutTache(new Runnable() {

@@ -1,5 +1,4 @@
-.menu
-{   
+.menu {   
     -fx-background-color: red;
     /*-fx-text-fill: #888888;
     -fx-background-radius: 10;
@@ -15,4 +14,3 @@
 	-fx-border-radius: 20;
 	-fx-text-fill: red;
 }
-

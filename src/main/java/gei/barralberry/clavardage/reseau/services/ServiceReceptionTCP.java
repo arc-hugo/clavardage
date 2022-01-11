@@ -11,6 +11,7 @@ import gei.barralberry.clavardage.reseau.messages.Message;
 import gei.barralberry.clavardage.reseau.messages.MessageOK;
 import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
+import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
@@ -35,8 +36,8 @@ public class ServiceReceptionTCP extends ScheduledService<Void> {
 		try {
 			this.reader.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Alerte ex = Alerte.exceptionLevee(e);
+			ex.showAndWait();
 		}
 	}
 	

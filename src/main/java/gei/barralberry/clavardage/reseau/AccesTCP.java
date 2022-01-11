@@ -30,11 +30,15 @@ public class AccesTCP {
 		this.executeur.ajoutTache(new TacheConnexionTCP(this, destinataire));
 	}
 	
-	public void connexionAccepte(Socket sock) throws IOException {
-		ctrlUtilisateurs.lancementAccepte(sock);
+	public void connexionAccepte(Socket sock) {
+		this.ctrlUtilisateurs.lancementAccepte(sock);
 	}
-
+	
+	public void connexionRefuse(Socket sock) {
+		this.ctrlUtilisateurs.lancementRefuse(sock);
+	}
+	
 	public void utilisateurDeconnecte(Utilisateur destinatiare) {
-		ctrlUtilisateurs.deconnexionDistante(destinatiare.getIdentifiant());
+		this.ctrlUtilisateurs.deconnexionDistante(destinatiare.getIdentifiant());
 	}
 }
