@@ -113,7 +113,11 @@ public class ControleurUtilisateurs implements Initializable {
 			throws IOException, SQLException, ClassNotFoundException {
 		Tab tab = chercherSession(util.getIdentifiant());
 		if (tab != null) {
-			this.tabs.getTabs().remove(tab);
+			Platform.runLater(new Runnable() {
+				public void run() {
+					tabs.getTabs().remove(tab);
+				}
+			});
 		}
 		this.modele.setEtat(util.getIdentifiant(), EtatUtilisateur.EN_SESSION);
 
