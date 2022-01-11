@@ -264,17 +264,17 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	
-	@FXML 
-	private void enter(MouseEvent event) {
-		Scene scene = pane.getScene();
-		Stage stage = (Stage) pane.getScene().getWindow();
+	/*@FXML 
+	private void moved(MouseEvent event) {
+		Scene scene = this.pane.getScene();
+		Stage stage = (Stage) this.pane.getScene().getWindow();
 		if (event.getX() > stage.getWidth() - 50
 		 && event.getX() < stage.getWidth() + 5 ) {
 			scene.setCursor(Cursor.E_RESIZE);
 		} else {
 			scene.setCursor(Cursor.DEFAULT);
 		}
-	}
+	}*/
 	/*@FXML 
 	private void exit(MouseEvent event) {
 		Scene scene = pane.getScene();
@@ -291,7 +291,7 @@ public class ControleurUtilisateurs implements Initializable {
         stage.setX(event.getScreenX() - x);
         stage.setY(event.getScreenY() - y);  
 	}     
-	
+	/*
 	@FXML 
 	private void dragged2 (MouseEvent event) {
 	    Stage stage = (Stage) pane.getScene().getWindow();
@@ -299,14 +299,14 @@ public class ControleurUtilisateurs implements Initializable {
             stage.setWidth(event.getX() + dx);
             stage.setHeight(event.getY() + dy);
         }
-	}
+	}*/
 	
 	@FXML
 	private void pressed1(MouseEvent event) {
 	    x = (int) event.getSceneX();
 	    y = (int) event.getSceneY();
 	}
-	
+	/*
 	@FXML
 	private void pressed2(MouseEvent event) {
 	    Stage stage = (Stage) pane.getScene().getWindow();
@@ -324,7 +324,7 @@ public class ControleurUtilisateurs implements Initializable {
             scene.setCursor(Cursor.N_RESIZE);
 	    }
 	}
-	
+	*/
 	
 	
 	
@@ -372,6 +372,18 @@ public class ControleurUtilisateurs implements Initializable {
 				}
 			});
 			return cell;
+		});
+		
+		//Redimensionner la fenêtre 
+		Scene scene = this.pane.getScene();
+		Stage stage = (Stage) this.pane.getScene().getWindow();
+		scene.setOnMouseMoved(event -> {
+			if (event.getX() > stage.getWidth() - 15
+					&& event.getX() < stage.getWidth() + 15 ) {
+				scene.setCursor(Cursor.E_RESIZE);
+			} else {
+				scene.setCursor(Cursor.DEFAULT);
+			}
 		});
 		
 		// Fermeture possible de l'onglet selectionné
