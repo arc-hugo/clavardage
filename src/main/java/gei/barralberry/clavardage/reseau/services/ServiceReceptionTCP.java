@@ -118,7 +118,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 				while (cha != Message.END_MSG && total < max) {
 					System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
 					ecriture.write(cha);
-					total ++;
+					total++;
 				}
 				ecriture.flush();
 				ecriture.close();

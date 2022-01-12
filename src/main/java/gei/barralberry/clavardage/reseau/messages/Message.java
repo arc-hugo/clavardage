@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public abstract class Message {
 
-	public static char END_MSG = '\uFFFD';
+	public static char END_MSG = '\uFFFF';
 	public static DateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 
 	private Date date;
