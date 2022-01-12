@@ -1,9 +1,14 @@
 package gei.barralberry.clavardage.reseau.services;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.controleurs.ControleurSession;
@@ -12,6 +17,7 @@ import gei.barralberry.clavardage.reseau.messages.MessageOK;
 import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import gei.barralberry.clavardage.util.Alerte;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -22,12 +28,15 @@ public class ServiceReceptionTCP extends Service<Void> {
 	private Socket sock;
 	private BufferedReader reader;
 	private ExecuteurSession executeur;
+	private File dossierSession;
 
 	public ServiceReceptionTCP(ControleurSession session, Socket sock) throws IOException {
 		this.session = session;
 		this.sock = sock;
 		this.reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		this.executeur = ExecuteurSession.getInstance();
+		this.dossierSession = new File(Configuration.DOSSIER_CACHE+"/"+session.getDestinataire().getIdentifiant().toString());
+		this.dossierSession.mkdirs();
 	}
 
 	@Override
@@ -66,6 +75,47 @@ public class ServiceReceptionTCP extends Service<Void> {
 				executeur.ajoutTache(new TacheEnvoiTCP(sock, new MessageOK(session.getIdentifiantLocal())));
 			}
 
+			private void fichier() throws IOException {
+				// Récupère le nom et crée le fichier approprié
+				String nom = "";
+				char cha = (char) reader.read();
+				while (cha != Message.END_MSG) {
+					nom += cha;
+					cha = (char) reader.read();
+				}
+				
+				// Récupération de l'extension du fichier
+				int extPos = nom.lastIndexOf('.');
+				String extension;
+				if (extPos != -1) {
+					extension = nom.substring(extPos);
+					nom = nom.substring(0,extPos);
+				} else {
+					extension = "";
+				}
+				
+				// Création du fichier de réception
+				File fichier = new File(dossierSession + nom + extension);
+				int i = 1;
+				while (fichier.exists()) {
+					nom = String.format("{0}({1})", nom, i);
+					i++;
+					fichier = new File(dossierSession + nom + extension);
+				}
+				
+				// Récupération de la taille du fichier
+				String taille = "";
+				cha = (char) reader.read();
+				while (cha != ' ') {
+					taille += cha;
+					cha = (char) reader.read();
+				}
+				long max = Long.parseLong(taille);
+				
+				
+				
+			}
+			
 			private void messageok() {
 				session.envoiRecu();
 			}
@@ -93,7 +143,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 				while (true) {
 					String type = "";
 					char cha = (char) reader.read();
-					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
+					while (cha >= 0 && cha != ' ' && cha != '\n') {
 						type += cha;
 						cha = (char) reader.read();
 					}
@@ -106,6 +156,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 							messageok();
 							break;
 						case "FICHIER":
+							fichier();
 							break;
 						case "FIN":
 							fin();
