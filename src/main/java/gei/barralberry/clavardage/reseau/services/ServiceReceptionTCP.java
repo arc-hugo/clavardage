@@ -1,8 +1,11 @@
 package gei.barralberry.clavardage.reseau.services;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -98,9 +101,8 @@ public class ServiceReceptionTCP extends Service<Void> {
 				File fichier = new File(dossierSession + nom + extension);
 				int i = 1;
 				while (fichier.exists()) {
-					nom = String.format("{0}({1})", nom, i);
+					fichier = new File(dossierSession + String.format("{0}({1})", nom, i) + extension);
 					i++;
-					fichier = new File(dossierSession + nom + extension);
 				}
 				
 				// Récupération de la taille du fichier
@@ -111,6 +113,17 @@ public class ServiceReceptionTCP extends Service<Void> {
 					cha = (char) reader.read();
 				}
 				long max = Long.parseLong(taille);
+				
+				InputStream in = sock.getInputStream();
+				BufferedOutputStream ecriture = new BufferedOutputStream(new FileOutputStream(fichier));
+				byte buffer[] = new byte[1024];
+				int recu = 0;
+				long total = 0;
+				while ((recu = in.read(buffer)) != -1 && total < max) {
+					total += recu;
+					ecriture.write(buffer, 0, recu);
+				}
+				ecriture.close();
 				
 				
 				
