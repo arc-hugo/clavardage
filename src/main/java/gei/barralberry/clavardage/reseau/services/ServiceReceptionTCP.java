@@ -100,6 +100,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					fichier = new File(dossierSession + "/" + String.format("%s(%d)", nom, i) + extension);
 					i++;
 				}
+				fichier.createNewFile();
 				
 				// Récupération de la taille du fichier
 				String taille = "";
