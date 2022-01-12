@@ -83,7 +83,21 @@ public class ControleurSession implements Initializable {
 		try {
 			List<MessageAffiche> hist = this.modele.getDerniersMessages();
 			for (MessageAffiche oldMsg : hist) {
-				this.messages.getChildren().add(oldMsg.affichage());
+				VBox noeud = oldMsg.affichage();
+				if (oldMsg.getAuteur().equals(this.modele.getIdentifiantLocal())) {
+					String menvoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-text-alignment: right;";
+					Label msg = (Label) noeud.getChildren().get(1);
+					msg.setStyle(menvoi);
+				} else {
+					String mrecep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
+					Label msg = (Label) noeud.getChildren().get(1);
+					Label date = (Label) noeud.getChildren().get(0);
+					msg.setStyle(mrecep);
+				}
+				String denvoi = "-fx-text-font: 8";
+				Label date = (Label) noeud.getChildren().get(0);
+				date.setStyle(denvoi);
+				this.messages.getChildren().add(noeud);
 			}
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
@@ -157,6 +171,7 @@ public class ControleurSession implements Initializable {
 					public void run() {
 						messages.getChildren().add(noeud);
 					}
+				
 				});
 			} catch (SQLException e) {
 				Alerte ex = Alerte.exceptionLevee(e);

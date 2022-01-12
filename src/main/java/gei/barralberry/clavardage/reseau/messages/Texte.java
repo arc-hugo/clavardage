@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 
 public class Texte extends MessageAffiche {
 
@@ -41,12 +42,12 @@ public class Texte extends MessageAffiche {
 	private TabPane tabs;
 
 	@Override
-	public Node affichage() {
+	public VBox affichage() {
 		
-		double x;
 		Label msg = new Label(txt);
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
-		msg.setAlignment(Pos.CENTER_LEFT);
+		//msg.setAlignment(Pos.CENTER_RIGHT);
+		
 		VBox vb = new VBox(date,msg);
 		/*AnchorPane ap = new AnchorPane();
 		ap.setRightAnchor(vb, null);
@@ -54,7 +55,13 @@ public class Texte extends MessageAffiche {
 		ap.setTopAnchor(vb, null);
 		ap.setBottomAnchor(vb, null);
 		x = tabs.getHeight();
-		ap.setPrefHeight(x);*/
+		ap.setPrefHeight(x);
+		String recep = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 5; -fx-border-radius: 5;";
+		noeud.setStyle(recep);
+		String envoi = "-fx-background-color: #f9f9f9; -fx-text-fill: red; -fx-background-radius: 5; -fx-border-radius: 5;";
+		Node noeud = msg.affichage();
+		noeud.setStyle(envoi);
+		*/
 		
 		return vb;
 	}

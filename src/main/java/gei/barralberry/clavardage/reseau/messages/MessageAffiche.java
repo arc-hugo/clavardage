@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import javafx.scene.Node;
+import javafx.scene.layout.VBox;
 
 public abstract class MessageAffiche extends Message {
 
@@ -15,6 +16,6 @@ public abstract class MessageAffiche extends Message {
 		super(author, date);
 	}
 	
-	public abstract Node affichage();
+	public abstract VBox affichage();
 	public abstract String description();
 }
