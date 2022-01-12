@@ -123,6 +123,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					cha = (char) reader.read();
 					total++;
 				}
+				print.flush();
 				System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
 				ecriture.flush();
 				ecriture.close();
@@ -140,7 +141,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-
+			
 			private void finok() {
 				executeur.ajoutTache(new Runnable() {
 					@Override
@@ -149,7 +150,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-
+			
 			@Override
 			protected Void call() throws IOException {
 				while (true) {
