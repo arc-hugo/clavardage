@@ -25,6 +25,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -42,7 +43,7 @@ public class ControleurSession implements Initializable {
 	@FXML
 	private VBox messages;
 	@FXML
-	private TabPane tabs;
+	private ScrollPane scroll;
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
@@ -92,7 +93,7 @@ public class ControleurSession implements Initializable {
 				Label msg = (Label) noeud.getChildren().get(1);
 				if (oldMsg.getAuteur().equals(this.modele.getIdentifiantLocal())) {
 					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
-					//msg.setTextAlignment(TextAlignment.RIGHT);
+					msg.setTextAlignment(TextAlignment.RIGHT);
 					msg.setStyle(envoi);
 				} else {
 					String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
@@ -102,8 +103,8 @@ public class ControleurSession implements Initializable {
 				Label date = (Label) noeud.getChildren().get(0);
 				date.setStyle(denvoi);
 				this.messages.getChildren().add(noeud);
-				/*noeud.prefWidthProperty().bind(tabs.widthProperty());
-				noeud.prefHeightProperty().bind(tabs.heightProperty());*/
+				noeud.prefWidthProperty().bind(scroll.widthProperty());
+				noeud.prefHeightProperty().bind(scroll.heightProperty());
 			}
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
