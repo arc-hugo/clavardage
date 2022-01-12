@@ -3,6 +3,7 @@ package gei.barralberry.clavardage.reseau.services;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,15 +113,13 @@ public class ServiceReceptionTCP extends Service<Void> {
 				long max = Long.parseLong(taille);
 				System.out.println("Taille : "+max);
 				
-				InputStream in = sock.getInputStream();
 				FileOutputStream ecriture = new FileOutputStream(fichier);
-				byte buffer[] = new byte[1024];
-				int recu = 0;
 				long total = 0;
-				while ((recu = in.read(buffer)) != -1 && total < max) {
-					total += recu;
+				cha = (char) reader.read();
+				while (cha != Message.END_MSG && total < max) {
 					System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
-					ecriture.write(buffer, (int)total, recu);
+					ecriture.write(cha);
+					total ++;
 				}
 				ecriture.flush();
 				ecriture.close();

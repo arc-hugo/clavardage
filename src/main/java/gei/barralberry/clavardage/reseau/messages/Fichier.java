@@ -29,7 +29,7 @@ public class Fichier extends MessageAffiche {
 	@Override
 	public void envoie(Socket sock) throws IOException {
 		synchronized (sock.getOutputStream()) {
-			BufferedInputStream reader = new BufferedInputStream(new FileInputStream(this.file));
+			FileInputStream reader = new FileInputStream(this.file);
 			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
 			writer.print("FICHIER "+file.getName()+Message.END_MSG+file.length()+" ");
 			
