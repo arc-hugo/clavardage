@@ -156,6 +156,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 						type += cha;
 						cha = (char) reader.read();
 					}
+					System.out.println(type);
 					if (cha >= 0) {
 						switch (type) {
 						case "TXT":
@@ -165,6 +166,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 							messageok();
 							break;
 						case "FICHIER":
+							
 							fichier();
 							break;
 						case "FIN":
