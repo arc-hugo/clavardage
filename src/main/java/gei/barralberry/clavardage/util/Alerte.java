@@ -80,7 +80,7 @@ public class Alerte extends Alert {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Fin de discussion");
 		alert.setHeaderText(null);
-		alert.setContentText("L'utilisateur "+ pseudo +" vient de fermer la discussion.");
+		alert.setContentText("Disscussion avec "+ pseudo +" fermée.");
 		return alert;
 	}
 	

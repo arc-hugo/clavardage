@@ -94,14 +94,12 @@ public class ServiceReceptionTCP extends Service<Void> {
 				}
 				
 				// Création du fichier de réception
-				File fichier = new File(dossierSession + nom + extension);
+				File fichier = new File(dossierSession + "/" + nom + extension);
 				int i = 1;
 				while (fichier.exists()) {
-					fichier = new File(dossierSession + String.format("{0}({1})", nom, i) + extension);
+					fichier = new File(dossierSession + "/" + String.format("%s(%d)", nom, i) + extension);
 					i++;
 				}
-				System.out.println("Nom du fichier : "+nom);
-				System.out.println("Extension : "+extension);
 				
 				// Récupération de la taille du fichier
 				String taille = "";
@@ -114,18 +112,17 @@ public class ServiceReceptionTCP extends Service<Void> {
 				System.out.println("Taille : "+max);
 				
 				InputStream in = sock.getInputStream();
-				BufferedOutputStream ecriture = new BufferedOutputStream(new FileOutputStream(fichier));
+				FileOutputStream ecriture = new FileOutputStream(fichier);
 				byte buffer[] = new byte[1024];
 				int recu = 0;
 				long total = 0;
 				while ((recu = in.read(buffer)) != -1 && total < max) {
 					total += recu;
-					ecriture.write(buffer, 0, recu);
+					System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
+					ecriture.write(buffer, (int)total, recu);
 				}
+				ecriture.flush();
 				ecriture.close();
-				
-				System.out.println("Pourcentage du fichier reçu : "+((int)(total/max)*100)+"%");
-				
 			}
 			
 			private void messageok() {
@@ -160,7 +157,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 						cha = (char) reader.read();
 					}
 					if (cha >= 0) {
-						System.out.println(type);
 						switch (type) {
 						case "TXT":
 							texte();
@@ -169,7 +165,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 							messageok();
 							break;
 						case "FICHIER":
-							System.out.println("ok FICHIER");
 							fichier();
 							break;
 						case "FIN":
