@@ -117,6 +117,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 				cha = (char) reader.read();
 				while (cha != Message.END_MSG && total < max) {
 					ecriture.write(cha);
+					System.out.print(cha);
 					cha = (char) reader.read();
 					total++;
 				}
