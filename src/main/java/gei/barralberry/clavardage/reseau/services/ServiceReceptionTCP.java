@@ -116,10 +116,11 @@ public class ServiceReceptionTCP extends Service<Void> {
 				long total = 0;
 				cha = (char) reader.read();
 				while (cha != Message.END_MSG && total < max) {
-					System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
 					ecriture.write(cha);
+					cha = (char) reader.read();
 					total++;
 				}
+				System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
 				ecriture.flush();
 				ecriture.close();
 			}
