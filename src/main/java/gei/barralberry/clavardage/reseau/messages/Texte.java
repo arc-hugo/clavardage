@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.UUID;
 
+import gei.barralberry.clavardage.Main;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -42,22 +43,20 @@ public class Texte extends MessageAffiche {
 	@Override
 	public Node affichage() {
 		
-		
+		double x;
 		Label msg = new Label(txt);
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
-		date.setStyle("fx-alignement: center");
-		date.setAlignment(Pos.CENTER);
-		msg.getStylesheets().add("msgrecep.css");
-		
+		msg.setAlignment(Pos.CENTER_LEFT);
 		VBox vb = new VBox(date,msg);
-		AnchorPane ap = new AnchorPane(tabs);
+		/*AnchorPane ap = new AnchorPane();
 		ap.setRightAnchor(vb, null);
 		ap.setLeftAnchor(vb, null);
 		ap.setTopAnchor(vb, null);
 		ap.setBottomAnchor(vb, null);
-		ap.getChildren().addAll(vb);
+		x = tabs.getHeight();
+		ap.setPrefHeight(x);*/
 		
-		return ap;
+		return vb;
 	}
 	
 	@Override
