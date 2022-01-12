@@ -168,6 +168,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 							messageok();
 							break;
 						case "FICHIER":
+							System.out.println("ok FICHIER");
 							fichier();
 							break;
 						case "FIN":
