@@ -155,11 +155,12 @@ public class ServiceReceptionTCP extends Service<Void> {
 				while (true) {
 					String type = "";
 					char cha = (char) reader.read();
-					while (cha >= 0 && cha != ' ' && cha != '\n') {
+					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != Message.END_MSG) {
 						type += cha;
 						cha = (char) reader.read();
 					}
 					if (cha >= 0) {
+						System.out.println(type);
 						switch (type) {
 						case "TXT":
 							texte();
