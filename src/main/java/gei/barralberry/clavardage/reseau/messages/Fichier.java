@@ -33,6 +33,7 @@ public class Fichier extends MessageAffiche {
 			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
 			writer.print("FICHIER "+file.getName()+Message.END_MSG+file.length()+" ");
 			
+			
 			System.out.println("Fichier "+file.getName()+" en cours d'envoi");
 			
 			OutputStream out = sock.getOutputStream();
@@ -42,6 +43,7 @@ public class Fichier extends MessageAffiche {
 		        out.write(buffer, 0, bytesRead);
 		    }
 			out.write(Message.END_MSG);
+			writer.flush();
 			out.flush();
 
 			System.out.println("Fichier "+file.getName()+" envoyé");
