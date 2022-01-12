@@ -25,6 +25,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -40,6 +41,8 @@ public class ControleurSession implements Initializable {
 	private TextField texte;
 	@FXML
 	private VBox messages;
+	@FXML
+	private TabPane tabs;
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
@@ -99,6 +102,8 @@ public class ControleurSession implements Initializable {
 				Label date = (Label) noeud.getChildren().get(0);
 				date.setStyle(denvoi);
 				this.messages.getChildren().add(noeud);
+				/*noeud.prefWidthProperty().bind(tabs.widthProperty());
+				noeud.prefHeightProperty().bind(tabs.heightProperty());*/
 			}
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
