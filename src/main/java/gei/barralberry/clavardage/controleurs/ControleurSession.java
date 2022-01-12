@@ -21,12 +21,14 @@ import gei.barralberry.clavardage.util.Alerte;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 
 public class ControleurSession implements Initializable {
 
@@ -84,17 +86,16 @@ public class ControleurSession implements Initializable {
 			List<MessageAffiche> hist = this.modele.getDerniersMessages();
 			for (MessageAffiche oldMsg : hist) {
 				VBox noeud = oldMsg.affichage();
+				Label msg = (Label) noeud.getChildren().get(1);
 				if (oldMsg.getAuteur().equals(this.modele.getIdentifiantLocal())) {
-					String menvoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-text-alignment: right;";
-					Label msg = (Label) noeud.getChildren().get(1);
-					msg.setStyle(menvoi);
+					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
+					//msg.setTextAlignment(TextAlignment.RIGHT);
+					msg.setStyle(envoi);
 				} else {
-					String mrecep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
-					Label msg = (Label) noeud.getChildren().get(1);
-					Label date = (Label) noeud.getChildren().get(0);
-					msg.setStyle(mrecep);
+					String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
+					msg.setStyle(recep);
 				}
-				String denvoi = "-fx-text-font: 8";
+				String denvoi = "-fx-font-size: 16";
 				Label date = (Label) noeud.getChildren().get(0);
 				date.setStyle(denvoi);
 				this.messages.getChildren().add(noeud);

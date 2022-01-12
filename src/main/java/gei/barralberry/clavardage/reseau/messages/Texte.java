@@ -38,8 +38,6 @@ public class Texte extends MessageAffiche {
 			writer.flush();
 		}
 	}
-	@FXML 
-	private TabPane tabs;
 
 	@Override
 	public VBox affichage() {
@@ -47,8 +45,9 @@ public class Texte extends MessageAffiche {
 		Label msg = new Label(txt);
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
 		//msg.setAlignment(Pos.CENTER_RIGHT);
-		
 		VBox vb = new VBox(date,msg);
+		//vb.prefWidthProperty().bind(tabs.widthProperty());
+		//vb.prefHeightProperty().bind(tabs.heightProperty());
 		/*AnchorPane ap = new AnchorPane();
 		ap.setRightAnchor(vb, null);
 		ap.setLeftAnchor(vb, null);
@@ -62,7 +61,6 @@ public class Texte extends MessageAffiche {
 		Node noeud = msg.affichage();
 		noeud.setStyle(envoi);
 		*/
-		
 		return vb;
 	}
 	
