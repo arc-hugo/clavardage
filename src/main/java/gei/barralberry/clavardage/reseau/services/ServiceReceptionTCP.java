@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
@@ -113,11 +114,12 @@ public class ServiceReceptionTCP extends Service<Void> {
 				System.out.println("Taille : "+max);
 				
 				FileOutputStream ecriture = new FileOutputStream(fichier);
+				PrintWriter print = new PrintWriter(System.out,true);
 				long total = 0;
 				cha = (char) reader.read();
 				while (cha != Message.END_MSG && total < max) {
 					ecriture.write(cha);
-					System.out.print(cha);
+					print.print(cha);
 					cha = (char) reader.read();
 					total++;
 				}
