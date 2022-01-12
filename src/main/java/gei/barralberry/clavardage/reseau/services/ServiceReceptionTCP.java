@@ -8,10 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.controleurs.ControleurSession;
@@ -104,6 +100,8 @@ public class ServiceReceptionTCP extends Service<Void> {
 					fichier = new File(dossierSession + String.format("{0}({1})", nom, i) + extension);
 					i++;
 				}
+				System.out.println("Nom du fichier : "+nom);
+				System.out.println("Extension : "+extension);
 				
 				// Récupération de la taille du fichier
 				String taille = "";
@@ -113,6 +111,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					cha = (char) reader.read();
 				}
 				long max = Long.parseLong(taille);
+				System.out.println("Taille : "+max);
 				
 				InputStream in = sock.getInputStream();
 				BufferedOutputStream ecriture = new BufferedOutputStream(new FileOutputStream(fichier));
@@ -125,7 +124,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 				}
 				ecriture.close();
 				
-				
+				System.out.println("Pourcentage du fichier reçu : "+((int)(total/max)*100)+"%");
 				
 			}
 			

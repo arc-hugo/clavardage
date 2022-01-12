@@ -64,9 +64,6 @@ public class ControleurUtilisateurs implements Initializable {
 
 	private int x = 0;
 	private int y = 0;
-	private Boolean resizebottom = false;
-	private double dx;
-	private double dy;
 
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();

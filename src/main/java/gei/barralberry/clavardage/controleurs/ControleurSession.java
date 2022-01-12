@@ -1,5 +1,6 @@
 package gei.barralberry.clavardage.controleurs;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
@@ -12,6 +13,7 @@ import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
 import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
+import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.OK;
@@ -28,17 +30,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 public class ControleurSession implements Initializable {
 
-	@FXML
-	private Label name;
-	@FXML
-	private Button envoyer;
-	@FXML
-	private TextField texte;
-	@FXML
-	private VBox messages;
+	@FXML private Label name;
+	@FXML private Button envoyer;
+	@FXML private Button fichier;
+	@FXML private TextField texte;
+	@FXML private VBox messages;
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
@@ -58,8 +58,7 @@ public class ControleurSession implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		Utilisateur destinataire = this.modele.getDestinataire();
-		this.name.textProperty().bind(destinataire.getPseudoPropery());
+		this.name.textProperty().bind(this.modele.getDestinataire().getPseudoPropery());
 
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
@@ -71,12 +70,23 @@ public class ControleurSession implements Initializable {
 			} else if (e.getCode() == KeyCode.ENTER) {
 				envoiTexte();
 			}
-
+		});
+		
+		this.fichier.setOnAction(e -> {
+			FileChooser choix = new FileChooser();
+			choix.setTitle("Séléction d'un fichier à envoyer");
+			File fichier = choix.showOpenDialog(this.texte.getScene().getWindow());
+			if (fichier != null) {
+				envoiFichier(fichier);	
+			}
 		});
 
 		this.envoyer.disableProperty().bind(this.modele.getConnecteProperty().not());
 		this.texte.disableProperty().bind(this.modele.getConnecteProperty().not());
+		this.fichier.disableProperty().bind(this.modele.getConnecteProperty().not());
 
+		this.texte.requestFocus();
+		
 		if (this.modele.estConnecte()) {
 			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), new OK(getIdentifiantLocal())));
 		}
@@ -90,8 +100,6 @@ public class ControleurSession implements Initializable {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
 		}
-		
-		this.texte.requestFocus();
 	}
 
 	private void envoiTexte() {
@@ -100,6 +108,10 @@ public class ControleurSession implements Initializable {
 			envoiMessage(new Texte(modele.getIdentifiantLocal(), txt));
 			texte.clear();
 		}
+	}
+	
+	private void envoiFichier(File fichier) {
+		envoiMessage(new Fichier(getIdentifiantLocal(), fichier));
 	}
 
 	private void fermeture() {
@@ -190,12 +202,15 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void envoiRecu() {
-		MessageAffiche msg = modele.envoiTermine();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				messages.getChildren().add(msg.affichage());
-			}
-		});
+		MessageAffiche msg = this.modele.envoiTermine();
+		if (msg != null) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					Node aff = msg.affichage();
+					messages.getChildren().add(aff);
+				}
+			});
+		}
 	}
 }
