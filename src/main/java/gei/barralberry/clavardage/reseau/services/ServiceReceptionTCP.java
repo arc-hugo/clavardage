@@ -122,16 +122,13 @@ public class ServiceReceptionTCP extends Service<Void> {
 				System.out.println("Taille : "+max);
 				
 				FileOutputStream ecriture = new FileOutputStream(fichier);
-				PrintWriter print = new PrintWriter(System.out,true);
 				long total = 0;
 				cha = (char) reader.read();
-				while (cha != Message.END_MSG && total < max) {
+				while (cha != -1 && total < max) {
 					ecriture.write(cha);
-					print.print(cha);
 					cha = (char) reader.read();
 					total++;
 				}
-				print.flush();
 				System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
 				ecriture.flush();
 				ecriture.close();
