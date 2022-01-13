@@ -41,22 +41,14 @@ import javafx.stage.StageStyle;
 
 public class ControleurUtilisateurs implements Initializable {
 
-	@FXML
-	private TabPane tabs;
-	@FXML
-	private ListView<Utilisateur> list;
-	@FXML
-	private MenuItem deconnexion;
-	@FXML
-	private MenuItem changerPseudo;
-	@FXML
-	private ButtonBar buttonbar;
-	@FXML
-	private MenuButton name;
-	@FXML
-	private VBox vb;
-	@FXML
-	private BorderPane pane;
+	@FXML private TabPane tabs;
+	@FXML private ListView<Utilisateur> list;
+	@FXML private MenuItem deconnexion;
+	@FXML private MenuItem changerPseudo;
+	@FXML private ButtonBar buttonbar;
+	@FXML private MenuButton name;
+	@FXML private VBox vb;
+	@FXML private BorderPane pane;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
@@ -72,11 +64,11 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public UUID getIdentifiantLocal() {
-		return modele.getUtilisateurLocal().getIdentifiant();
+		return this.modele.getUtilisateurLocal().getIdentifiant();
 	}
 
 	public String getPseudoLocal() {
-		return modele.getUtilisateurLocal().getPseudo();
+		return this.modele.getUtilisateurLocal().getPseudo();
 	}
 
 	public void saisiePseudo() {
@@ -161,7 +153,7 @@ public class ControleurUtilisateurs implements Initializable {
 	public void lancementSession(Utilisateur destinataire) {
 		if (destinataire.getEtat() == EtatUtilisateur.CONNECTE) {
 			destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
-			tcp.demandeConnexion(destinataire);
+			this.tcp.demandeConnexion(destinataire);
 		} else if (destinataire.getEtat() == EtatUtilisateur.DECONNECTE) {
 			Platform.runLater(new Runnable() {
 				public void run() {
