@@ -103,7 +103,7 @@ public class AccesDB {
 			if (rs.getBoolean("FICHIER")) {
 				File fichier = new File(dossierCache + "/" + rs.getString("CONTENU"));
 				if (fichier.exists()) {
-					pile.push(new Fichier(destinataire, fichier, rs.getTimestamp("DATE")));
+					pile.push(new Fichier(auteur, fichier, rs.getTimestamp("DATE")));
 				} else {
 					pile.push(new Texte(auteur, "transmission du fichier "+rs.getString("CONTENU"), rs.getTimestamp("DATE")));
 				}
