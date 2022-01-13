@@ -1,8 +1,11 @@
 package gei.barralberry.clavardage.controleurs;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -10,7 +13,9 @@ import java.util.UUID;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
+import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
+import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
 import gei.barralberry.clavardage.reseau.messages.OK;
@@ -18,6 +23,7 @@ import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import gei.barralberry.clavardage.util.Alerte;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,21 +33,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 public class ControleurSession implements Initializable {
 
-	@FXML
-	private Label name;
-	@FXML
-	private Button envoyer;
-	@FXML
-	private TextField texte;
-	@FXML
-	private VBox messages;
+	@FXML private Label name;
+	@FXML private Button envoyer;
+	@FXML private Button fichier;
+	@FXML private TextField texte;
+	@FXML private VBox messages;
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
+	private File dossierSession;
 
 	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws ClassNotFoundException, SQLException, IOException {
 		this.modele = new ModeleSession(local, destinataire);
@@ -52,13 +57,14 @@ public class ControleurSession implements Initializable {
 		this.modele = new ModeleSession(local, destinataire, sock);
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
+		this.dossierSession = new File(Configuration.DOSSIER_CACHE+"/"+destinataire.getIdentifiant().toString());
+		this.dossierSession.mkdirs();
 		this.reception.start();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		Utilisateur destinataire = this.modele.getDestinataire();
-		this.name.textProperty().bind(destinataire.getPseudoPropery());
+		this.name.textProperty().bind(this.modele.getDestinataire().getPseudoPropery());
 
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
@@ -70,12 +76,27 @@ public class ControleurSession implements Initializable {
 			} else if (e.getCode() == KeyCode.ENTER) {
 				envoiTexte();
 			}
-
+		});
+		
+		this.fichier.setOnAction(e -> {
+			FileChooser choix = new FileChooser();
+			choix.setTitle("Séléction d'un fichier à envoyer");
+			File fichier = choix.showOpenDialog(this.texte.getScene().getWindow());
+			if (fichier != null) {
+				this.executeur.ajoutTache(new Runnable() {
+					public void run() {
+						envoiFichier(fichier);
+					}
+				});
+			}
 		});
 
 		this.envoyer.disableProperty().bind(this.modele.getConnecteProperty().not());
 		this.texte.disableProperty().bind(this.modele.getConnecteProperty().not());
+		this.fichier.disableProperty().bind(this.modele.getConnecteProperty().not());
 
+		this.texte.requestFocus();
+		
 		if (this.modele.estConnecte()) {
 			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), new OK(getIdentifiantLocal())));
 		}
@@ -89,8 +110,6 @@ public class ControleurSession implements Initializable {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
 		}
-		
-		this.texte.requestFocus();
 	}
 
 	private void envoiTexte() {
@@ -100,9 +119,41 @@ public class ControleurSession implements Initializable {
 			texte.clear();
 		}
 	}
+	
+	private void envoiFichier(File fichier) {
+		try {
+			String nom = fichier.getName();
+			
+			// Récupération de l'extension du fichier
+			int extPos = nom.lastIndexOf('.');
+			String extension;
+			if (extPos != -1) {
+				extension = nom.substring(extPos);
+				nom = nom.substring(0,extPos);
+			} else {
+				extension = "";
+			}
+			
+			File cache = new File(this.dossierSession.getAbsolutePath() + "/" + nom + extension);
+			int i = 1;
+			while (cache.exists()) {
+				cache = new File(this.dossierSession.getAbsolutePath() + "/" + String.format("%s(%d)", nom, i) + extension);
+				i++;
+			}
+			Files.copy(new FileInputStream(fichier), cache.toPath());
+			envoiMessage(new Fichier(getIdentifiantLocal(), cache));
+		} catch (IOException e) {
+			Alerte ex = Alerte.exceptionLevee(e);
+			ex.show();
+		}
+	}
 
 	private void fermeture() {
-		this.reception.cancel();
+		Platform.runLater(new Runnable() {
+			public void run() {
+				reception.cancel();
+			}
+		});
 	}
 
 	private void envoiMessage(MessageAffiche msg) {
@@ -135,14 +186,25 @@ public class ControleurSession implements Initializable {
 
 	public void fermetureDistante() {
 		// TODO passage en mode fin de session
-		Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
-		ferme.show();
+		Platform.runLater(new Runnable() {
+			public void run() {
+				Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
+				ferme.show();
+				if (modele.getDestinataire().getEtat() != EtatUtilisateur.DECONNECTE) {
+					modele.getDestinataire().setEtat(EtatUtilisateur.CONNECTE);
+				}
+			}
+		});
 		this.modele.fermetureDistante();
 		try {
 			this.modele.fermetureDB();
 		} catch (SQLException e1) {
-			Alerte ex = Alerte.exceptionLevee(e1);
-			ex.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte ex = Alerte.exceptionLevee(e1);
+					ex.show();
+				}
+			});
 		}
 		fermeture();
 	}
@@ -172,14 +234,21 @@ public class ControleurSession implements Initializable {
 	public Utilisateur getDestinataire() {
 		return this.modele.getDestinataire();
 	}
+	
+	public File getDossierSession() {
+		return this.dossierSession;
+	}
 
 	public void envoiRecu() {
-		MessageAffiche msg = modele.envoiTermine();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				messages.getChildren().add(msg.affichage());
-			}
-		});
+		MessageAffiche msg = this.modele.envoiTermine();
+		if (msg != null) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					Node aff = msg.affichage();
+					messages.getChildren().add(aff);
+				}
+			});
+		}
 	}
 }

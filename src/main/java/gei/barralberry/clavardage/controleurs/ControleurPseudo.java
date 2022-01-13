@@ -2,7 +2,9 @@ package gei.barralberry.clavardage.controleurs;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
+import gei.barralberry.clavardage.App;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -18,6 +20,9 @@ public class ControleurPseudo implements Initializable {
 	private Button validate_button;
 	@FXML
 	private ButtonBar buttonbar;
+	
+
+	private Preferences pref;
 
 	private String txt;
 	private int x = 0;
@@ -26,6 +31,7 @@ public class ControleurPseudo implements Initializable {
 	static private boolean actif = false;
 
 	public ControleurPseudo() {
+		this.pref = Preferences.userNodeForPackage(App.class);
 		ControleurPseudo.actif = true;
 		this.txt = "";
 	}
@@ -41,28 +47,24 @@ public class ControleurPseudo implements Initializable {
 	@FXML
 	private void new_pseudo() {
 		this.txt = this.pseudo.getText();
+		this.pref.put("pseudo", txt);
 		ControleurPseudo.actif = false;
 		this.pseudo.getScene().getWindow().hide();
 	}
 
 	@FXML
 	private void ferme() {
-		Stage st;
-		st = (Stage) this.pseudo.getScene().getWindow();
-		st.close();
+		((Stage) this.pseudo.getScene().getWindow()).close();
 	}
 
 	@FXML
 	private void diminue() {
-		Stage st;
-		st = (Stage) this.pseudo.getScene().getWindow();
-		st.setIconified(true);
+		((Stage) this.pseudo.getScene().getWindow()).setIconified(true);
 	}
 
 	@FXML
 	private void change() {
-		Stage st;
-		st = (Stage) this.pseudo.getScene().getWindow();
+		Stage st = (Stage) this.pseudo.getScene().getWindow();
 		if (st.isFullScreen()) {
 			st.setFullScreen(false);
 		} else {
@@ -85,7 +87,13 @@ public class ControleurPseudo implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		String pseudo = pref.get("pseudo", null);
+		
+		if (pseudo != null) {
+			this.pseudo.setText(pseudo);
+			this.pseudo.positionCaret(pseudo.length());
+		}
+		
 		this.pseudo.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				new_pseudo();
