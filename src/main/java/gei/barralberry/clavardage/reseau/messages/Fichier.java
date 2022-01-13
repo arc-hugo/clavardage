@@ -80,8 +80,12 @@ public class Fichier extends MessageAffiche {
 				this.extension.toLowerCase().equals(".gif")) {
 				Image image = new Image(new FileInputStream(fichier));
 				msg = new ImageView(image);
-				((ImageView) msg).setFitWidth(506);
-				((ImageView) msg).setFitHeight(506);
+				if (image.getWidth() > 506) {
+					((ImageView) msg).setFitWidth(506);
+				}
+				if (image.getHeight() > 506) {
+					((ImageView) msg).setFitHeight(506);
+				}
 				((ImageView) msg).setPreserveRatio(true);
 			} else {
 				msg = new Hyperlink(fichier.getName());
