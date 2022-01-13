@@ -35,6 +35,18 @@ public class App extends Application {
 		stage.initStyle(StageStyle.TRANSPARENT);
 		stage.setResizable(true);
 		stage.setScene(scene);
+		
+		/*scene.rootProperty().addListener(new ChangeListener<Parent>(){
+	        @Override public void changed(ObservableValue<? extends Parent> arg0, Parent oldValue, Parent newValue){
+	            scene.rootProperty().removeListener(this);
+	            scene.setRoot(root);
+	            ((Region)newValue).setPrefWidth(initWidth);     //make sure is a Region!
+	            ((Region)newValue).setPrefHeight(initHeight);   //make sure is a Region!
+	            root.getChildren().clear();
+	            root.getChildren().add(newValue);
+	            scene.rootProperty().addListener(this);
+	        }
+	    });*/
 		/*scene.setOnMouseExited(e -> {
 			if (e.getX() <= (stage.getWidth() - 10) 
 					&& e.getX() >= (stage.getWidth() + 10) 

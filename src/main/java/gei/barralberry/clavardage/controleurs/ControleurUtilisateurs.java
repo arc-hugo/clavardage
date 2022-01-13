@@ -365,6 +365,7 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 	*/
 	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Lie la vue de la liste à la liste d'utilisateurs du modèle

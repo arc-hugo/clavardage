@@ -99,12 +99,14 @@ public class ControleurSession implements Initializable {
 					String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
 					msg.setStyle(recep);
 				}
-				String denvoi = "-fx-font-size: 16";
+				String denvoi = "-fx-font-size: 10";
 				Label date = (Label) noeud.getChildren().get(0);
 				date.setStyle(denvoi);
 				this.messages.getChildren().add(noeud);
 				noeud.prefWidthProperty().bind(scroll.widthProperty());
-				noeud.prefHeightProperty().bind(scroll.heightProperty());
+				//noeud.prefHeightProperty().bind(scroll.heightProperty());
+				msg.setAlignment(Pos.CENTER_RIGHT);
+				date.setAlignment(Pos.CENTER);
 			}
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
