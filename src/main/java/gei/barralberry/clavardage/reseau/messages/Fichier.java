@@ -32,8 +32,7 @@ public class Fichier extends MessageAffiche {
 		synchronized (sock.getOutputStream()) {
 			FileInputStream reader = new FileInputStream(this.file);
 			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-			System.out.println(UniversalDetector.detectCharset(this.file));
-			writer.print("FICHIER "+file.getName()+Message.END_MSG+" "+file.length()+" ");
+			writer.print("FICHIER "+file.getName()+Message.END_MSG+UniversalDetector.detectCharset(this.file)+" "+file.length()+" ");
 			
 			System.out.println("Fichier "+file.getName()+" en cours d'envoi");
 			

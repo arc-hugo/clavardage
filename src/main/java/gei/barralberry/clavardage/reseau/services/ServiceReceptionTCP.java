@@ -102,6 +102,15 @@ public class ServiceReceptionTCP extends Service<Void> {
 				fichier.createNewFile();
 				System.out.println(fichier.getPath());
 				
+				// Récupération de l'encodage
+				String encodage = "";
+				cha = (char) reader.read();
+				while (cha != ' ') {
+					encodage += cha;
+					cha = (char) reader.read();
+				}
+				System.out.println("Encodage : "+encodage);
+				
 				// Récupération de la taille du fichier
 				String taille = "";
 				cha = (char) reader.read();
