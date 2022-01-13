@@ -110,10 +110,13 @@ public class ControleurSession implements Initializable {
 			List<MessageAffiche> hist = this.modele.getDerniersMessages();
 			for (MessageAffiche oldMsg : hist) {
 				VBox noeud = oldMsg.affichage();
-				Labeled msg = (Labeled) noeud.getChildren().get(1);
+				Node msg = noeud.getChildren().get(1);
 				if (oldMsg.getAuteur().equals(this.modele.getIdentifiantLocal())) {
 					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
-					msg.setTextAlignment(TextAlignment.RIGHT);
+					if (msg instanceof Labeled) {
+						((Labeled) msg).setTextAlignment(TextAlignment.RIGHT);
+						((Labeled) msg).setAlignment(Pos.CENTER_RIGHT);
+					}
 					msg.setStyle(envoi);
 				} else {
 					String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
@@ -125,7 +128,6 @@ public class ControleurSession implements Initializable {
 				this.messages.getChildren().add(noeud);
 				noeud.prefWidthProperty().bind(scroll.widthProperty());
 				//noeud.prefHeightProperty().bind(scroll.heightProperty());
-				msg.setAlignment(Pos.CENTER_RIGHT);
 				date.setAlignment(Pos.CENTER);
 			}
 		} catch (SQLException e1) {
