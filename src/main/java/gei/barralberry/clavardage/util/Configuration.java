@@ -2,7 +2,7 @@ package gei.barralberry.clavardage.util;
 
 import java.io.File;
 
-public class Configuration {
+public abstract class Configuration {
 	
 	public static int UDP_PORT_ENVOI = 22540;
 	public static int UDP_PORT_RECEPTION = 22540;
