@@ -9,8 +9,6 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.UUID;
 
-import org.mozilla.universalchardet.UniversalDetector;
-
 import javafx.scene.Node;
 
 public class Fichier extends MessageAffiche {
@@ -32,7 +30,7 @@ public class Fichier extends MessageAffiche {
 		synchronized (sock.getOutputStream()) {
 			FileInputStream reader = new FileInputStream(this.file);
 			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-			writer.print("FICHIER "+file.getName()+Message.END_MSG+UniversalDetector.detectCharset(this.file)+" "+file.length()+" ");
+			writer.print("FICHIER "+file.getName()+Message.END_MSG+file.length()+" ");
 			
 			System.out.println("Fichier "+file.getName()+" en cours d'envoi");
 			
