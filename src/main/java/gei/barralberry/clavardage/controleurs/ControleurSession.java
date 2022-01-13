@@ -31,6 +31,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -109,7 +110,7 @@ public class ControleurSession implements Initializable {
 			List<MessageAffiche> hist = this.modele.getDerniersMessages();
 			for (MessageAffiche oldMsg : hist) {
 				VBox noeud = oldMsg.affichage();
-				Label msg = (Label) noeud.getChildren().get(1);
+				Labeled msg = (Labeled) noeud.getChildren().get(1);
 				if (oldMsg.getAuteur().equals(this.modele.getIdentifiantLocal())) {
 					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
 					msg.setTextAlignment(TextAlignment.RIGHT);
