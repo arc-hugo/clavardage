@@ -1,0 +1,6 @@
+.msgrecep{
+    -fx-background-color: #f9f9f9;
+    -fx-text-fill: red;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}

@@ -60,7 +60,7 @@
             </HBox>
          </top>
          <center>
-            <ScrollPane style="-fx-background-color: #f9f9f9;" BorderPane.alignment="CENTER">
+            <ScrollPane fx:id="scroll" style="-fx-background-color: #f9f9f9;" BorderPane.alignment="CENTER">
                <content>
                   <VBox fx:id="messages" alignment="CENTER" style="-fx-background-color: #f9f9f9;" />
                </content>

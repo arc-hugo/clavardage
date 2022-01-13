@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import javafx.scene.Node;
+import javafx.scene.layout.VBox;
 
 public class Fichier extends MessageAffiche {
 
@@ -49,7 +50,7 @@ public class Fichier extends MessageAffiche {
 	}
 
 	@Override
-	public Node affichage() {
+	public VBox affichage() {
 		
 		return null;
 	}

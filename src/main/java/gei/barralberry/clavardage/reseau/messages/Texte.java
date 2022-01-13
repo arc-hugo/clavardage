@@ -6,9 +6,15 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.UUID;
 
+import gei.barralberry.clavardage.Main;
+import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 
 public class Texte extends MessageAffiche {
 
@@ -34,10 +40,28 @@ public class Texte extends MessageAffiche {
 	}
 
 	@Override
-	public Node affichage() {
+	public VBox affichage() {
+		
 		Label msg = new Label(txt);
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
-		return new VBox(msg,date);
+		//msg.setAlignment(Pos.CENTER_RIGHT);
+		VBox vb = new VBox(date,msg);
+		//vb.prefWidthProperty().bind(tabs.widthProperty());
+		//vb.prefHeightProperty().bind(tabs.heightProperty());
+		/*AnchorPane ap = new AnchorPane();
+		ap.setRightAnchor(vb, null);
+		ap.setLeftAnchor(vb, null);
+		ap.setTopAnchor(vb, null);
+		ap.setBottomAnchor(vb, null);
+		x = tabs.getHeight();
+		ap.setPrefHeight(x);
+		String recep = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 5; -fx-border-radius: 5;";
+		noeud.setStyle(recep);
+		String envoi = "-fx-background-color: #f9f9f9; -fx-text-fill: red; -fx-background-radius: 5; -fx-border-radius: 5;";
+		Node noeud = msg.affichage();
+		noeud.setStyle(envoi);
+		*/
+		return vb;
 	}
 	
 	@Override
