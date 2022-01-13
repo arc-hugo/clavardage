@@ -3,12 +3,13 @@ package gei.barralberry.clavardage.reseau.messages;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Date;
 import java.util.UUID;
+
+import org.mozilla.universalchardet.UniversalDetector;
 
 import javafx.scene.Node;
 
@@ -30,9 +31,8 @@ public class Fichier extends MessageAffiche {
 	public void envoie(Socket sock) throws IOException {
 		synchronized (sock.getOutputStream()) {
 			FileInputStream reader = new FileInputStream(this.file);
-			InputStreamReader charset = new InputStreamReader(reader);
 			PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
-			System.out.println(charset.getEncoding());
+			System.out.println(UniversalDetector.detectCharset(this.file));
 			writer.print("FICHIER "+file.getName()+Message.END_MSG+" "+file.length()+" ");
 			
 			System.out.println("Fichier "+file.getName()+" en cours d'envoi");
