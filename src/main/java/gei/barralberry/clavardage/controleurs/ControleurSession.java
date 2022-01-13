@@ -1,9 +1,11 @@
 package gei.barralberry.clavardage.controleurs;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -21,6 +23,7 @@ import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.services.ServiceReceptionTCP;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import gei.barralberry.clavardage.util.Alerte;
+import gei.barralberry.clavardage.util.Configuration;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -43,6 +46,7 @@ public class ControleurSession implements Initializable {
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
 	private ExecuteurSession executeur;
+	private File dossierSession;
 
 	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws ClassNotFoundException, SQLException, IOException {
 		this.modele = new ModeleSession(local, destinataire);
@@ -53,6 +57,8 @@ public class ControleurSession implements Initializable {
 		this.modele = new ModeleSession(local, destinataire, sock);
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
+		this.dossierSession = new File(Configuration.DOSSIER_CACHE+"/"+destinataire.getIdentifiant().toString());
+		this.dossierSession.mkdirs();
 		this.reception.start();
 	}
 
@@ -77,7 +83,11 @@ public class ControleurSession implements Initializable {
 			choix.setTitle("Séléction d'un fichier à envoyer");
 			File fichier = choix.showOpenDialog(this.texte.getScene().getWindow());
 			if (fichier != null) {
-				envoiFichier(fichier);	
+				this.executeur.ajoutTache(new Runnable() {
+					public void run() {
+						envoiFichier(fichier);
+					}
+				});
 			}
 		});
 
@@ -111,7 +121,31 @@ public class ControleurSession implements Initializable {
 	}
 	
 	private void envoiFichier(File fichier) {
-		envoiMessage(new Fichier(getIdentifiantLocal(), fichier));
+		try {
+			String nom = fichier.getName();
+			
+			// Récupération de l'extension du fichier
+			int extPos = nom.lastIndexOf('.');
+			String extension;
+			if (extPos != -1) {
+				extension = nom.substring(extPos);
+				nom = nom.substring(0,extPos);
+			} else {
+				extension = "";
+			}
+			
+			File cache = new File(this.dossierSession.getAbsolutePath() + "/" + nom + extension);
+			int i = 1;
+			while (cache.exists()) {
+				cache = new File(this.dossierSession.getAbsolutePath() + "/" + String.format("%s(%d)", nom, i) + extension);
+				i++;
+			}
+			Files.copy(new FileInputStream(fichier), cache.toPath());
+			envoiMessage(new Fichier(getIdentifiantLocal(), cache));
+		} catch (IOException e) {
+			Alerte ex = Alerte.exceptionLevee(e);
+			ex.show();
+		}
 	}
 
 	private void fermeture() {
@@ -199,6 +233,10 @@ public class ControleurSession implements Initializable {
 
 	public Utilisateur getDestinataire() {
 		return this.modele.getDestinataire();
+	}
+	
+	public File getDossierSession() {
+		return this.dossierSession;
 	}
 
 	public void envoiRecu() {

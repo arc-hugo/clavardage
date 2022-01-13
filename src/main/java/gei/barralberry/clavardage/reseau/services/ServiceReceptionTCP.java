@@ -15,7 +15,6 @@ import gei.barralberry.clavardage.reseau.messages.MessageOK;
 import gei.barralberry.clavardage.reseau.messages.Texte;
 import gei.barralberry.clavardage.reseau.taches.TacheEnvoiTCP;
 import gei.barralberry.clavardage.util.Alerte;
-import gei.barralberry.clavardage.util.Configuration;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -26,15 +25,13 @@ public class ServiceReceptionTCP extends Service<Void> {
 	private Socket sock;
 	private BufferedReader reader;
 	private ExecuteurSession executeur;
-	private File dossierSession;
 
 	public ServiceReceptionTCP(ControleurSession session, Socket sock) throws IOException {
 		this.session = session;
 		this.sock = sock;
 		this.reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		this.executeur = ExecuteurSession.getInstance();
-		this.dossierSession = new File(Configuration.DOSSIER_CACHE+"/"+session.getDestinataire().getIdentifiant().toString());
-		this.dossierSession.mkdirs();
+		
 	}
 
 	@Override
@@ -93,10 +90,10 @@ public class ServiceReceptionTCP extends Service<Void> {
 				}
 				
 				// Création du fichier de réception
-				File fichier = new File(dossierSession + "/" + nom + extension);
+				File fichier = new File(session.getDossierSession() + "/" + nom + extension);
 				int i = 1;
 				while (fichier.exists()) {
-					fichier = new File(dossierSession + "/" + String.format("%s(%d)", nom, i) + extension);
+					fichier = new File(session.getDossierSession() + "/" + String.format("%s(%d)", nom, i) + extension);
 					i++;
 				}
 				fichier.createNewFile();
