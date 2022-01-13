@@ -5,7 +5,6 @@ module clavardage {
     requires javafx.fxml;
 	requires java.prefs;
 	requires java.sql;
-	requires com.github.albfernandez.juniversalchardet;
 
     opens gei.barralberry.clavardage to javafx.fxml;
     opens gei.barralberry.clavardage.controleurs to javafx.fxml;
