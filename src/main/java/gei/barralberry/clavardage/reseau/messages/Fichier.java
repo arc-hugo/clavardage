@@ -6,11 +6,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.UUID;
 
-import javafx.scene.Node;
+import gei.barralberry.clavardage.util.Alerte;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 public class Fichier extends MessageAffiche {
 
@@ -51,8 +56,24 @@ public class Fichier extends MessageAffiche {
 
 	@Override
 	public VBox affichage() {
+		Hyperlink msg = new Hyperlink(file.getName());
+		msg.setOnAction(e ->{
+			FileChooser choix = new FileChooser();
+			choix.setInitialFileName(msg.getText());
+			File en = choix.showOpenDialog(msg.getScene().getWindow());
+			if (en != null) {
+				try {
+					Files.copy(new FileInputStream(file), en.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e1) {
+					Alerte ex = Alerte.exceptionLevee(e1);
+					ex.show();
+				}
+			}
+		});
 		
-		return null;
+		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
+		VBox vb = new VBox(date,msg);
+		return vb;
 	}
 
 	@Override

@@ -6,15 +6,8 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.UUID;
 
-import gei.barralberry.clavardage.Main;
-import javafx.fxml.FXML;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 
 public class Texte extends MessageAffiche {
 
