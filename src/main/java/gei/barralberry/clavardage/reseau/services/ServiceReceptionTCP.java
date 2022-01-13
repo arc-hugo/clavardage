@@ -81,7 +81,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 					nom += cha;
 					cha = (char) reader.read();
 				}
-				System.out.println("Nom : "+nom);
 				
 				// Récupération de l'extension du fichier
 				int extPos = nom.lastIndexOf('.');
@@ -92,7 +91,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 				} else {
 					extension = "";
 				}
-				System.out.println("Extension : "+extension);
 				
 				// Création du fichier de réception
 				File fichier = new File(dossierSession + "/" + nom + extension);
@@ -102,6 +100,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					i++;
 				}
 				fichier.createNewFile();
+				System.out.println(fichier.getPath());
 				
 				// Récupération de la taille du fichier
 				String taille = "";
