@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -122,11 +123,12 @@ public class ServiceReceptionTCP extends Service<Void> {
 				System.out.println("Taille : "+max);
 				
 				FileOutputStream ecriture = new FileOutputStream(fichier);
+				InputStream in = sock.getInputStream();
 				long total = 0;
-				cha = (char) reader.read();
+				cha = (char) in.read();
 				while (cha != -1 && total < max) {
 					ecriture.write(cha);
-					cha = (char) reader.read();
+					cha = (char) in.read();
 					total++;
 				}
 				System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
