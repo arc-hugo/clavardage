@@ -69,7 +69,7 @@ public class ControleurSession implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.name.textProperty().bind(this.modele.getDestinataire().getPseudoPropery());
+		//this.name.textProperty().bind(this.modele.getDestinataire().getPseudoPropery());
 
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
