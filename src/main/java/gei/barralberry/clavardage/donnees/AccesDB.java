@@ -86,7 +86,7 @@ public class AccesDB {
 		if (AccesDB.conn.isClosed()) {
 			AccesDB.conn = DriverManager.getConnection(DB_DRIVER+DB_PATH.getAbsolutePath());
 		}
-		
+		File dossierCache = new File(Configuration.DOSSIER_CACHE+"/"+destinataire);
 		Stack<MessageAffiche> pile = new Stack<>();
 		
 		PreparedStatement ps = conn.prepareStatement(GET_DERNIERS_MESSAGES);
@@ -100,15 +100,17 @@ public class AccesDB {
 			} else {
 				auteur = this.local;
 			}
-			String contenu;
 			if (rs.getBoolean("FICHIER")) {
-				contenu = "transmission du fichier "+rs.getString("CONTENU");
+				File fichier = new File(dossierCache + "/" + rs.getString("CONTENU"));
+				if (fichier.exists()) {
+					pile.push(new Fichier(destinataire, fichier, rs.getTimestamp("DATE")));
+				} else {
+					pile.push(new Texte(auteur, "transmission du fichier "+rs.getString("CONTENU"), rs.getTimestamp("DATE")));
+				}
 			} else {
-				contenu = rs.getString("CONTENU");
+				pile.push(new Texte(auteur, rs.getString("CONTENU"), rs.getTimestamp("DATE")));
 			}
-			pile.push(new Texte(auteur, contenu, rs.getTimestamp("DATE")));
 		}
-		
 		return pile;
 	}
 	
