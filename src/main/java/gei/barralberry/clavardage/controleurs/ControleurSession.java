@@ -41,12 +41,12 @@ import javafx.stage.FileChooser;
 
 public class ControleurSession implements Initializable {
 
-	@FXML private Label name;
+	//@FXML private Label name;
 	@FXML private Button envoyer;
 	@FXML private Button fichier;
 	@FXML private TextField texte;
 	@FXML private VBox messages;
-  @FXML private ScrollPane scroll;
+	@FXML private ScrollPane scroll;
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;

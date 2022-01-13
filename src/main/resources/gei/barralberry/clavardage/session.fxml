@@ -35,6 +35,7 @@
             </AnchorPane>
          </bottom>
          <top>
+	 <!--
             <HBox alignment="CENTER_LEFT" style="-fx-background-color: #f9f9f9;">
                <children>
                   <VBox alignment="CENTER" style="-fx-background-color: #f9f9f9;">
@@ -57,6 +58,7 @@
                   <Insets />
                </opaqueInsets>
             </HBox>
+	 -->
          </top>
          <center>
             <ScrollPane fx:id="scroll" style="-fx-background-color: #f9f9f9;" BorderPane.alignment="CENTER">
