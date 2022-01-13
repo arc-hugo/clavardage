@@ -163,7 +163,6 @@ public class ServiceReceptionTCP extends Service<Void> {
 						type += cha;
 						cha = (char) reader.read();
 					}
-					System.out.println(type);
 					if (cha >= 0) {
 						switch (type) {
 						case "TXT":
