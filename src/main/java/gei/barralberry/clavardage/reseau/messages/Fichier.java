@@ -60,7 +60,7 @@ public class Fichier extends MessageAffiche {
 		msg.setOnAction(e ->{
 			FileChooser choix = new FileChooser();
 			choix.setInitialFileName(msg.getText());
-			File en = choix.showOpenDialog(msg.getScene().getWindow());
+			File en = choix.showSaveDialog(msg.getScene().getWindow());
 			if (en != null) {
 				try {
 					Files.copy(new FileInputStream(file), en.toPath(), StandardCopyOption.REPLACE_EXISTING);
