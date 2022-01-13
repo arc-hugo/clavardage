@@ -3,7 +3,6 @@ package gei.barralberry.clavardage.reseau.messages;
 import java.util.Date;
 import java.util.UUID;
 
-import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
 public abstract class MessageAffiche extends Message {

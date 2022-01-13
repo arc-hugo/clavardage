@@ -31,8 +31,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -41,12 +41,12 @@ import javafx.stage.FileChooser;
 
 public class ControleurSession implements Initializable {
 
-	@FXML private Label name;
+	//@FXML private Label name;
 	@FXML private Button envoyer;
 	@FXML private Button fichier;
 	@FXML private TextField texte;
 	@FXML private VBox messages;
-  @FXML private ScrollPane scroll;
+	@FXML private ScrollPane scroll;
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
@@ -69,7 +69,7 @@ public class ControleurSession implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.name.textProperty().bind(this.modele.getDestinataire().getPseudoPropery());
+		//this.name.textProperty().bind(this.modele.getDestinataire().getPseudoPropery());
 
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
@@ -110,10 +110,13 @@ public class ControleurSession implements Initializable {
 			List<MessageAffiche> hist = this.modele.getDerniersMessages();
 			for (MessageAffiche oldMsg : hist) {
 				VBox noeud = oldMsg.affichage();
-				Label msg = (Label) noeud.getChildren().get(1);
+				Node msg = noeud.getChildren().get(1);
 				if (oldMsg.getAuteur().equals(this.modele.getIdentifiantLocal())) {
 					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
-					msg.setTextAlignment(TextAlignment.RIGHT);
+					if (msg instanceof Labeled) {
+						((Labeled) msg).setTextAlignment(TextAlignment.RIGHT);
+						((Labeled) msg).setAlignment(Pos.CENTER_RIGHT);
+					}
 					msg.setStyle(envoi);
 				} else {
 					String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
@@ -125,7 +128,6 @@ public class ControleurSession implements Initializable {
 				this.messages.getChildren().add(noeud);
 				noeud.prefWidthProperty().bind(scroll.widthProperty());
 				//noeud.prefHeightProperty().bind(scroll.heightProperty());
-				msg.setAlignment(Pos.CENTER_RIGHT);
 				date.setAlignment(Pos.CENTER);
 			}
 		} catch (SQLException e1) {
