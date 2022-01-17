@@ -82,6 +82,10 @@ public class ModeleSession {
 		return msg;
 	}
 	
+	public synchronized MessageAffiche erreurEnvoi() {
+		return this.queueEnvoi.remove();
+	}
+	
 	public void enregistrerReception(MessageAffiche msg) throws SQLException {
 		this.ecriture.ajoutTache(new Runnable() {
 			@Override

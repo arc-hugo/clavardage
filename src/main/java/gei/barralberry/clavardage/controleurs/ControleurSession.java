@@ -15,6 +15,7 @@ import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.modeles.session.ModeleSession;
 import gei.barralberry.clavardage.modeles.utilisateurs.EtatUtilisateur;
 import gei.barralberry.clavardage.modeles.utilisateurs.Utilisateur;
+import gei.barralberry.clavardage.reseau.messages.AfficheErreur;
 import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.Fin;
 import gei.barralberry.clavardage.reseau.messages.MessageAffiche;
@@ -41,6 +42,11 @@ import javafx.stage.FileChooser;
 
 public class ControleurSession implements Initializable {
 
+	private static final String CSS_ENVOI = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
+	private static final String CSS_RECEPTION = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
+	private static final String CSS_ERREUR = CSS_ENVOI + "; -fx-font-weight: bold";
+	
+	
 	//@FXML private Label name;
 	@FXML private Button envoyer;
 	@FXML private Button fichier;
@@ -112,15 +118,13 @@ public class ControleurSession implements Initializable {
 				VBox noeud = oldMsg.affichage();
 				Node msg = noeud.getChildren().get(1);
 				if (oldMsg.getAuteur().equals(this.modele.getIdentifiantLocal())) {
-					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
 					if (msg instanceof Labeled) {
 						((Labeled) msg).setTextAlignment(TextAlignment.RIGHT);
 						((Labeled) msg).setAlignment(Pos.CENTER_RIGHT);
 					}
-					msg.setStyle(envoi);
+					msg.setStyle(CSS_ENVOI);
 				} else {
-					String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
-					msg.setStyle(recep);
+					msg.setStyle(CSS_RECEPTION);
 				}
 				String denvoi = "-fx-font-size: 10";
 				Label date = (Label) noeud.getChildren().get(0);
@@ -270,6 +274,19 @@ public class ControleurSession implements Initializable {
 				@Override
 				public void run() {
 					Node aff = msg.affichage();
+					messages.getChildren().add(aff);
+				}
+			});
+		}
+	}
+
+	public void erreurEnvoi() {
+		MessageAffiche msg = this.modele.envoiTermine();
+		if (msg != null) {
+			AfficheErreur erreur = new AfficheErreur(getIdentifiantLocal(), msg);
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Node aff = erreur.affichage();
 					messages.getChildren().add(aff);
 				}
 			});
