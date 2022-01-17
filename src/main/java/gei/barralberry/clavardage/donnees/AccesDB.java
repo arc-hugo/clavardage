@@ -123,7 +123,6 @@ public class AccesDB {
 			PreparedStatement ps = AccesDB.conn.prepareStatement(ADD_MESSAGE);
 			ps.setString(1, msg.description());
 			ps.setTimestamp(2, new Timestamp(msg.getDate().getTime()));
-			// TODO image
 			ps.setBoolean(3, msg instanceof Fichier);
 			ps.setBoolean(4, msg.getAuteur().equals(this.destinataire));
 			ps.setObject(5, this.destinataire);

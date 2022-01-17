@@ -209,7 +209,6 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void fermetureDistante() {
-		// TODO passage en mode fin de session
 		Platform.runLater(new Runnable() {
 			public void run() {
 				Alerte ferme = Alerte.fermetureSession(modele.getDestinataire().getPseudo());
