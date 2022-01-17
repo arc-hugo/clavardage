@@ -24,11 +24,9 @@ public class AccesUDP {
 		try {
 			DatagramSocket testUDP = new DatagramSocket(Configuration.TCP_PORT_RECEPTION);
 			testUDP.close();
-			
 		} catch (IOException e) {
 			return true;
 		}
-		
 		return false;
 	}
 	

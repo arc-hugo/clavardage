@@ -226,10 +226,9 @@ public class ControleurUtilisateurs implements Initializable {
 				return true;
 			} else {
 				return false;
-				
 			}
 		} else {
-			// TODO if util == null -> demande TCP de renvoi utilisateur
+			udp.broadcastValidation(getIdentifiantLocal(), getPseudoLocal());
 		}
 		return false;
 	}
