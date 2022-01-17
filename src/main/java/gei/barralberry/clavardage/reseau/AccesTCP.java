@@ -68,7 +68,18 @@ public class AccesTCP {
 	}
 
 	public void connexionAccepte(Socket sock) {
-		this.ctrlUtilisateurs.lancementAccepte(sock);
+		if (!this.ctrlUtilisateurs.lancementAccepte(sock)) {
+			try {
+				sock.close();
+			} catch (IOException e) {
+				Platform.runLater(new Runnable() {
+					public void run() {
+						Alerte ex = Alerte.exceptionLevee(e);
+						ex.show();
+					}
+				});
+			}
+		}
 	}
 
 	public void connexionRefuse(Socket sock) {
