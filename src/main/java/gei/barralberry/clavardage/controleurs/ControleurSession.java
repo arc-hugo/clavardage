@@ -234,13 +234,19 @@ public class ControleurSession implements Initializable {
 	}
 
 	public void receptionMessage(MessageAffiche msg) {
-		Node noeud = msg.affichage();
+		VBox noeud = msg.affichage();
 		if (noeud != null) {
 			try {
 				modele.enregistrerReception(msg);
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
+						Node message = noeud.getChildren().get(1);
+						String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
+						message.setStyle(recep);
+						String denvoi = "-fx-font-size: 10";
+						Label date = (Label) noeud.getChildren().get(0);
+						date.setStyle(denvoi);
 						messages.getChildren().add(noeud);
 					}
 				
@@ -270,7 +276,14 @@ public class ControleurSession implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					Node aff = msg.affichage();
+					VBox aff = msg.affichage();
+					Node message = aff.getChildren().get(1);
+					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
+					if (message instanceof Labeled) {
+						((Labeled) message).setTextAlignment(TextAlignment.RIGHT);
+						((Labeled) message).setAlignment(Pos.CENTER_RIGHT);
+					}
+					message.setStyle(envoi);
 					messages.getChildren().add(aff);
 				}
 			});
