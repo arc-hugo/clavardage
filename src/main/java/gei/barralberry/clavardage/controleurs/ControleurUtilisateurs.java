@@ -41,22 +41,14 @@ import javafx.stage.StageStyle;
 
 public class ControleurUtilisateurs implements Initializable {
 
-	@FXML
-	private TabPane tabs;
-	@FXML
-	private ListView<Utilisateur> list;
-	@FXML
-	private MenuItem deconnexion;
-	@FXML
-	private MenuItem changerPseudo;
-	@FXML
-	private ButtonBar buttonbar;
-	@FXML
-	private MenuButton name;
-	@FXML
-	private VBox vb;
-	@FXML
-	private BorderPane pane;
+	@FXML private TabPane tabs;
+	@FXML private ListView<Utilisateur> list;
+	@FXML private MenuItem deconnexion;
+	@FXML private MenuItem changerPseudo;
+	@FXML private ButtonBar buttonbar;
+	@FXML private MenuButton name;
+	@FXML private VBox vb;
+	@FXML private BorderPane pane;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
@@ -64,9 +56,6 @@ public class ControleurUtilisateurs implements Initializable {
 
 	private int x = 0;
 	private int y = 0;
-	private Boolean resizebottom = false;
-	private double dx;
-	private double dy;
 
 	public ControleurUtilisateurs() {
 		this.modele = new ModeleUtilisateurs();
@@ -75,11 +64,11 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	public UUID getIdentifiantLocal() {
-		return modele.getUtilisateurLocal().getIdentifiant();
+		return this.modele.getUtilisateurLocal().getIdentifiant();
 	}
 
 	public String getPseudoLocal() {
-		return modele.getUtilisateurLocal().getPseudo();
+		return this.modele.getUtilisateurLocal().getPseudo();
 	}
 
 	public void saisiePseudo() {
@@ -103,8 +92,12 @@ public class ControleurUtilisateurs implements Initializable {
 				udp.broadcastValidation(getIdentifiantLocal(), login);
 				modele.setPseudoLocal(login);
 			} catch (IOException e) {
-				Alerte alert = Alerte.exceptionLevee(e);
-				alert.show();
+				Platform.runLater(new Runnable() {
+					public void run() {
+						Alerte alert = Alerte.exceptionLevee(e);
+						alert.show();
+					}
+				});
 			}
 		}
 	}
@@ -142,32 +135,32 @@ public class ControleurUtilisateurs implements Initializable {
 	}
 
 	private void afficherHistorique(Utilisateur util) throws IOException, ClassNotFoundException, SQLException {
-		if (util.getEtat() != EtatUtilisateur.EN_SESSION) {
+		Tab tab = chercherSession(util.getIdentifiant());
+		if (util.getEtat() != EtatUtilisateur.EN_SESSION && tab == null) {
 			ControleurSession historique = new ControleurSession(this.modele.getUtilisateurLocal(), util);
 			FXMLLoader loader = new FXMLLoader(App.class.getResource("session.fxml"));
 			loader.setController(historique);
 
-			Tab tab = new Tab(util.getPseudo(), loader.load());
-			tab.textProperty().bind(util.getPseudoPropery());
-			tab.setUserData(historique);
-			this.tabs.getTabs().add(tab);
+			Tab ntab = new Tab(util.getPseudo(), loader.load());
+			ntab.textProperty().bind(util.getPseudoPropery());
+			ntab.setUserData(historique);
+			this.tabs.getTabs().add(ntab);
 		} else {
-			String pseudo = util.getPseudo();
-			for (Tab tab : this.tabs.getTabs()) {
-				if (tab.getText().equals(pseudo)) {
-					this.tabs.getSelectionModel().select(tab);
-				}
-			}
+			this.tabs.getSelectionModel().select(tab);
 		}
 	}
 
 	public void lancementSession(Utilisateur destinataire) {
 		if (destinataire.getEtat() == EtatUtilisateur.CONNECTE) {
 			destinataire.setEtat(EtatUtilisateur.EN_ATTENTE);
-			tcp.demandeConnexion(destinataire);
+			this.tcp.demandeConnexion(destinataire);
 		} else if (destinataire.getEtat() == EtatUtilisateur.DECONNECTE) {
-			Alerte deco = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
-			deco.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte deco = Alerte.utilisateurDeconnecte(destinataire.getPseudo());
+					deco.show();
+				}
+			});
 		}
 	}
 
@@ -180,16 +173,24 @@ public class ControleurUtilisateurs implements Initializable {
 				sock.close();
 			}
 		} catch (IOException | SQLException | ClassNotFoundException e) {
-			Alerte ex = Alerte.exceptionLevee(e);
-			ex.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte ex = Alerte.exceptionLevee(e);
+					ex.show();
+				}
+			});
 		}
 	}
 
 	public void lancementRefuse(InetAddress adresse) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(adresse);
 		if (util != null) {
-			Alerte refus = Alerte.refusConnexion(util.getPseudo());
-			refus.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte refus = Alerte.refusConnexion(util.getPseudo());
+					refus.show();
+				}
+			});
 			modele.setEtat(util.getIdentifiant(), EtatUtilisateur.CONNECTE);
 		}
 	}
@@ -215,8 +216,12 @@ public class ControleurUtilisateurs implements Initializable {
 				try {
 					creationSession(util, sock);
 				} catch (ClassNotFoundException | IOException | SQLException e) {
-					Alerte alert = Alerte.exceptionLevee(e);
-					alert.show();
+					Platform.runLater(new Runnable() {
+						public void run() {
+							Alerte alert = Alerte.exceptionLevee(e);
+							alert.show();
+						}
+					});
 				}
 				return true;
 			} else {
@@ -277,15 +282,12 @@ public class ControleurUtilisateurs implements Initializable {
 
 	@FXML
 	private void diminue() {
-		Stage st;
-		st = (Stage) this.tabs.getScene().getWindow();
-		st.setIconified(true);
+		((Stage) this.tabs.getScene().getWindow()).setIconified(true);
 	}
 
 	@FXML
 	private void change() {
-		Stage st;
-		st = (Stage) this.tabs.getScene().getWindow();
+		Stage st = (Stage) this.tabs.getScene().getWindow();
 		if (st.isFullScreen()) {
 			st.setFullScreen(false);
 		} else {
@@ -329,7 +331,7 @@ public class ControleurUtilisateurs implements Initializable {
 	private void dragged1(MouseEvent event) {
 	    Stage stage = (Stage) buttonbar.getScene().getWindow();
         stage.setX(event.getScreenX() - x);
-        stage.setY(event.getScreenY() - y);  
+        stage.setY(event.getScreenY() - y); 
 	}     
 	/*
 	@FXML 
@@ -364,6 +366,7 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 	*/
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -432,7 +435,6 @@ public class ControleurUtilisateurs implements Initializable {
 		
 		//Redimensionner la fenêtre 
 		Scene scene = this.pane.getScene();
-		//Stage stage = (Stage) this.pane.getScene().getWindow();
 		scene.setOnMouseMoved(event -> {
 			if (event.getX() > scene.getWidth() - 15
 					&& event.getX() < scene.getWidth() + 15 ) {

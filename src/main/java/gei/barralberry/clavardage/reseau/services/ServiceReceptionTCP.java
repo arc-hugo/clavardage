@@ -1,12 +1,16 @@
 package gei.barralberry.clavardage.reseau.services;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.controleurs.ControleurSession;
+import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.Message;
 import gei.barralberry.clavardage.reseau.messages.MessageOK;
 import gei.barralberry.clavardage.reseau.messages.Texte;
@@ -28,6 +32,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 		this.sock = sock;
 		this.reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		this.executeur = ExecuteurSession.getInstance();
+		
 	}
 
 	@Override
@@ -36,8 +41,12 @@ public class ServiceReceptionTCP extends Service<Void> {
 		try {
 			this.sock.close();
 		} catch (IOException e) {
-			Alerte ex = Alerte.exceptionLevee(e);
-			ex.show();
+			Platform.runLater(new Runnable() {
+				public void run() {
+					Alerte ex = Alerte.exceptionLevee(e);
+					ex.show();
+				}
+			});
 		}
 	}
 
@@ -62,6 +71,67 @@ public class ServiceReceptionTCP extends Service<Void> {
 				executeur.ajoutTache(new TacheEnvoiTCP(sock, new MessageOK(session.getIdentifiantLocal())));
 			}
 
+			private void fichier() throws IOException {
+				// Récupère le nom et crée le fichier approprié
+				String nom = "";
+				char cha = (char) reader.read();
+				while (cha != Message.END_MSG) {
+					nom += cha;
+					cha = (char) reader.read();
+				}
+				
+				// Récupération de l'extension du fichier
+				int extPos = nom.lastIndexOf('.');
+				String extension;
+				if (extPos != -1) {
+					extension = nom.substring(extPos);
+					nom = nom.substring(0,extPos);
+				} else {
+					extension = "";
+				}
+				
+				// Création du fichier de réception
+				File fichier = new File(session.getDossierSession() + "/" + nom + extension);
+				int i = 1;
+				while (fichier.exists()) {
+					fichier = new File(session.getDossierSession() + "/" + String.format("%s(%d)", nom, i) + extension);
+					i++;
+				}
+				fichier.createNewFile();
+				
+				// Récupération de la taille du fichier
+				String taille = "";
+				cha = (char) reader.read();
+				while (cha != ' ') {
+					taille += cha;
+					cha = (char) reader.read();
+				}
+				long max = Long.parseLong(taille);
+				
+				FileOutputStream ecriture = new FileOutputStream(fichier);
+				InputStream in = sock.getInputStream();
+				long total = 0;
+				cha = (char) in.read();
+				while (cha != -1 && total < max) {
+					ecriture.write(cha);
+					cha = (char) in.read();
+					total++;
+				}
+				System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
+				ecriture.flush();
+				ecriture.close();
+				
+				// Enregistrement du message et envoi du OK
+				Fichier msg = new Fichier(session.getDestinataire().getIdentifiant(), fichier);
+				executeur.ajoutTache(new Runnable() {
+					@Override
+					public void run() {
+						session.receptionMessage(msg);
+					}
+				});
+				executeur.ajoutTache(new TacheEnvoiTCP(sock, new MessageOK(session.getIdentifiantLocal())));
+			}
+			
 			private void messageok() {
 				session.envoiRecu();
 			}
@@ -74,7 +144,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-
+			
 			private void finok() {
 				executeur.ajoutTache(new Runnable() {
 					@Override
@@ -83,13 +153,13 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-
+			
 			@Override
 			protected Void call() throws IOException {
 				while (true) {
 					String type = "";
 					char cha = (char) reader.read();
-					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != '\t') {
+					while (cha >= 0 && cha != ' ' && cha != '\n' && cha != Message.END_MSG) {
 						type += cha;
 						cha = (char) reader.read();
 					}
@@ -102,6 +172,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 							messageok();
 							break;
 						case "FICHIER":
+							fichier();
 							break;
 						case "FIN":
 							fin();

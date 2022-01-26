@@ -7,7 +7,6 @@ import gei.barralberry.clavardage.App;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextArea;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class Alerte extends Alert {
@@ -22,6 +21,7 @@ public class Alerte extends Alert {
 		DialogPane dialogPane = this.getDialogPane();
 		dialogPane.getStylesheets().add(CSS);
 		dialogPane.getStyleClass().add(CLASS);
+		
 	/*}
 	private void customisation(DialogPane dialogPane) {
 		ButtonBar buttonbar = new ButtonBar();
@@ -39,10 +39,7 @@ public class Alerte extends Alert {
 		buttons.setSpacing( 10 );
 		buttons.getChildren().addAll(r,o,v);*/
 		
-		Stage stage = new Stage();
-		stage.initStyle(StageStyle.UNDECORATED);
-		stage.show();
-		
+		this.initStyle(StageStyle.UNDECORATED);
 		
 	}
 	public static Alerte confirmationDeconnexion() {
@@ -83,7 +80,7 @@ public class Alerte extends Alert {
 		Alerte alert = new Alerte(AlertType.INFORMATION);
 		alert.setTitle("Fin de discussion");
 		alert.setHeaderText(null);
-		alert.setContentText("L'utilisateur "+ pseudo +" vient de fermer la discussion.");
+		alert.setContentText("Disscussion avec "+ pseudo +" fermée.");
 		return alert;
 	}
 	
