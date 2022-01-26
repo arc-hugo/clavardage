@@ -10,6 +10,7 @@ import java.net.Socket;
 
 import gei.barralberry.clavardage.concurrent.ExecuteurSession;
 import gei.barralberry.clavardage.controleurs.ControleurSession;
+import gei.barralberry.clavardage.reseau.messages.Erreur;
 import gei.barralberry.clavardage.reseau.messages.Fichier;
 import gei.barralberry.clavardage.reseau.messages.Message;
 import gei.barralberry.clavardage.reseau.messages.MessageOK;
@@ -117,23 +118,31 @@ public class ServiceReceptionTCP extends Service<Void> {
 					cha = (char) in.read();
 					total++;
 				}
-				System.out.println("Pourcentage du fichier reçu : "+(int)((total/max)*100)+"%");
 				ecriture.flush();
 				ecriture.close();
 				
-				// Enregistrement du message et envoi du OK
-				Fichier msg = new Fichier(session.getDestinataire().getIdentifiant(), fichier);
-				executeur.ajoutTache(new Runnable() {
-					@Override
-					public void run() {
-						session.receptionMessage(msg);
-					}
-				});
-				executeur.ajoutTache(new TacheEnvoiTCP(sock, new MessageOK(session.getIdentifiantLocal())));
+				if ((int)((total/max)*100) == 100) {
+					// Enregistrement du message et envoi du OK
+					Fichier msg = new Fichier(session.getDestinataire().getIdentifiant(), fichier);
+					executeur.ajoutTache(new Runnable() {
+						@Override
+						public void run() {
+							session.receptionMessage(msg);
+						}
+					});
+					executeur.ajoutTache(new TacheEnvoiTCP(sock, new MessageOK(session.getIdentifiantLocal())));
+				} else {
+					fichier.delete();
+					executeur.ajoutTache(new TacheEnvoiTCP(sock, new Erreur(session.getIdentifiantLocal())));
+				}
 			}
 			
 			private void messageok() {
 				session.envoiRecu();
+			}
+			
+			private void erreur() {
+				session.erreurEnvoi();
 			}
 
 			private void fin() {
@@ -170,6 +179,9 @@ public class ServiceReceptionTCP extends Service<Void> {
 							break;
 						case "MSGOK":
 							messageok();
+							break;
+						case "ERREUR":
+							erreur();
 							break;
 						case "FICHIER":
 							fichier();

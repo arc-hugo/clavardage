@@ -164,15 +164,14 @@ public class ControleurUtilisateurs implements Initializable {
 		}
 	}
 
-	public void lancementAccepte(Socket sock) {
+	public boolean lancementAccepte(Socket sock) {
 		Utilisateur util = this.modele.getUtilisateurWithAdresse(sock.getInetAddress());
 		try {
 			if (util != null) {
 				creationSession(util, sock);
-			} else {
-				sock.close();
+				return true;
 			}
-		} catch (IOException | SQLException | ClassNotFoundException e) {
+		} catch (SQLException | ClassNotFoundException | IOException e) {
 			Platform.runLater(new Runnable() {
 				public void run() {
 					Alerte ex = Alerte.exceptionLevee(e);
@@ -180,6 +179,7 @@ public class ControleurUtilisateurs implements Initializable {
 				}
 			});
 		}
+		return false;
 	}
 
 	public void lancementRefuse(InetAddress adresse) {
@@ -226,10 +226,9 @@ public class ControleurUtilisateurs implements Initializable {
 				return true;
 			} else {
 				return false;
-				
 			}
 		} else {
-			// TODO if util == null -> demande TCP de renvoi utilisateur
+			udp.broadcastValidation(getIdentifiantLocal(), getPseudoLocal());
 		}
 		return false;
 	}

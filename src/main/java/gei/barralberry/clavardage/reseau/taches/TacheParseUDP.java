@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.UUID;
 
-import gei.barralberry.clavardage.concurrent.ExecuteurFond;
+import gei.barralberry.clavardage.concurrent.ExecuteurReseau;
 import gei.barralberry.clavardage.reseau.AccesUDP;
 import javafx.concurrent.Task;
 
@@ -15,11 +15,11 @@ public class TacheParseUDP extends Task<Void> {
 	private UUID uuid;
 	private String pseudo;
 	private InetAddress adresse;
-	private ExecuteurFond executeur;
+	private ExecuteurReseau executeur;
 
 	public TacheParseUDP(AccesUDP udp, String message, InetAddress adresse) {
 		this.udp = udp;
-		this.executeur = ExecuteurFond.getInstance();
+		this.executeur = ExecuteurReseau.getInstance();
 
 		String[] split = message.split(" ");
 		this.type = split[0];
