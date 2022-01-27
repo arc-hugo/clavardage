@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Scene fill="#ffffff00" stylesheets="@menu.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <root>
+      <VBox fx:id="vb" alignment="CENTER" style="-fx-background-color: #f9f9f9; -fx-background-radius: 20; -fx-border-radius: 20;" styleClass="menu">
+         <children>
+            <ButtonBar fx:id="buttonbar" buttonMinWidth="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="2.0" minWidth="5.0" onMouseDragged="#dragged" onMousePressed="#pressed" prefHeight="30.0" prefWidth="250.0" style="-fx-background-radius: 20; -fx-background-color: #f9f9f9; -fx-border-radius: 20;">
+              <buttons>
+                  <Button minWidth="40.0" mnemonicParsing="false" onMouseClicked="#change" prefHeight="26.0" stylesheets="@bouton.css" text="O" textFill="#fc4444">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <styleClass>
+                        <String fx:value="bouton" />
+                        <String fx:value="boutonO" />
+                     </styleClass>
+                  </Button>
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="40.0" mnemonicParsing="false" onMouseClicked="#ferme" onMouseDragged="#dragged" onMousePressed="#pressed" prefWidth="40.0" style="-fx-background-color: red;" styleClass="bouton" stylesheets="@bouton.css" text="X" textFill="#d42a2a">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+              </buttons>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </ButtonBar>
+            <SplitPane prefHeight="14.0" style="-fx-background-color: #f9f9f9;" />
+            <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Veuillez entrer un pseudo : " textFill="RED">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="15.0" />
+               </VBox.margin>
+            </Label>
+            <TextField fx:id="pseudo" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="229.0" styleClass="text_field" />
+            <Button fx:id="validate_button" alignment="CENTER" depthTest="DISABLE" mnemonicParsing="false" onAction="#new_pseudo" prefHeight="26.0" prefWidth="90.0" style="-fx-background-color: #bbbbbb; -fx-background-radius: 10; -fx-border-color: red; -fx-border-radius: 10;" text="Valider" textAlignment="CENTER" textFill="RED" textOverrun="LEADING_ELLIPSIS" wrapText="true">
+               <font>
+                  <Font name="Calibri Bold" size="16.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets bottom="7.0" top="15.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </root>
+</Scene>

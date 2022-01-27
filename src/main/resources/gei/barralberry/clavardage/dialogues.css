@@ -1,0 +1,24 @@
+.dialogues {
+    -fx-background-color: #f9f9f9;
+}
+
+.dialogues .button {
+    -fx-background-color:  #cccccc;
+    -fx-text-fill: red;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: red;
+}
+
+.dialogues:header .header-panel {
+    -fx-background-color:#f9f9f9;
+}
+
+
+.dialogues .label {
+    -fx-text-fill: red;
+    font: 16 calibri;
+    -fx-font: 16 calibri;
+    font-style: normal bold;
+    -fx-font-style: normal bold;
+}

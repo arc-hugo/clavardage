@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f9f9f9;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <bottom>
+            <AnchorPane maxHeight="100.0" minHeight="-Infinity" prefHeight="75.0" style="-fx-background-color: red;" BorderPane.alignment="CENTER">
+               <children>
+                  <TextField fx:id="texte" layoutX="24.0" layoutY="14.0" prefHeight="20.0" style="-fx-background-radius: 10; -fx-background-color: #f9f9f9;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="20.0" />
+                  <Button fx:id="envoyer" layoutX="502.0" layoutY="11.0" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="30.0" prefWidth="75.0" style="-fx-background-color: #bbbbbb; -fx-background-radius: 10;" text="Envoyer" textFill="RED" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="20.0">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="fichier" layoutX="502.0" layoutY="11.0" maxHeight="1.7976931348623157E308" mnemonicParsing="false" prefHeight="30.0" prefWidth="65.0" style="-fx-background-color: #bbbbbb; -fx-background-radius: 10;" text="Fichier" textFill="RED" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </AnchorPane>
+         </bottom>
+         <top>
+	 <!--
+            <HBox alignment="CENTER_LEFT" style="-fx-background-color: #f9f9f9;">
+               <children>
+                  <VBox alignment="CENTER" style="-fx-background-color: #f9f9f9;">
+                     <children>
+                        <Label fx:id="name" contentDisplay="TOP" style="-fx-background-color: #666666;" textFill="RED">
+                           <font>
+                              <Font name="System Bold" size="24.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="50.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </VBox>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </HBox>
+	 -->
+         </top>
+         <center>
+            <ScrollPane fx:id="scroll" style="-fx-background-color: #f9f9f9;" BorderPane.alignment="CENTER">
+               <content>
+                  <VBox fx:id="messages" alignment="CENTER" style="-fx-background-color: #f9f9f9;" />
+               </content>
+            </ScrollPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

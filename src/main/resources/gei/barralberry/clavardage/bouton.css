@@ -1,0 +1,24 @@
+.bouton {
+    -fx-background-radius: 1.5em;
+    -fx-min-width: 1.5em; 
+    -fx-min-height: 1.5em;
+    -fx-max-width: 1.5em;
+    -fx-max-height: 1.5em;
+}
+
+.boutonR {
+    -fx-background-color: red;
+}
+
+.boutonV {
+    -fx-background-color: green;
+}
+
+.boutonO {
+    -fx-background-color: orange;
+}
+
+.bouton.label {
+    -fx-font: 5 calibri;
+    -fx-font-style: normal bold;
+}

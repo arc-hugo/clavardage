@@ -29,3 +29,6 @@ target/
 .project
 .idea
 .metadata/
+.mvn/
+mvnw*
+dependency-reduced-pom.xml

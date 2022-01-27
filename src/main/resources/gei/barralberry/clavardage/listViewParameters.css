@@ -1,0 +1,17 @@
+.list-cell:session{
+    -fx-text-fill: red;
+    background-color: #bbbbbb;
+    -fx-background-color: #bbbbbb;
+
+}
+.list-cell{
+    -fx-text-fill: white; 
+    background-color: #bbbbbb;   
+    -fx-background-color: #bbbbbb;
+}
+
+.list-cell:inactive{
+    -fx-text-fill: black; 
+    background-color: #bbbbbb;   
+    -fx-background-color: #bbbbbb;
+}
