@@ -4,7 +4,7 @@ name: Maven CI/CD
 on:
   # d'un push sur la branche main
   push:
-    branches: [ master ]
+    branches: [ main ]
 
   # permet de lancer ce workflow depuis l'onglet Actions
   workflow_dispatch:
@@ -40,11 +40,12 @@ jobs:
       # Build du projet avec Maven
       - run: mvn -B package --file pom.xml -DskipTests
       
-      # Exporte le build pour le publier en tant que paquet
-      - run: mkdir staging && cp target/clavardage*.jar staging
-      
-      # Téléverse l'artéfacte généré par le workflow
-      - uses: actions/upload-artifact@v2
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: Package
-          path: staging
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: |
+            LICENSE
+            target/clavardage*.jar
