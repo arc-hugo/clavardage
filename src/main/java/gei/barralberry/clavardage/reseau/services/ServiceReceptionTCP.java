@@ -33,7 +33,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 		this.sock = sock;
 		this.reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		this.executeur = ExecuteurSession.getInstance();
-		
+
 	}
 
 	@Override
@@ -80,17 +80,17 @@ public class ServiceReceptionTCP extends Service<Void> {
 					nom += cha;
 					cha = (char) reader.read();
 				}
-				
+
 				// Récupération de l'extension du fichier
 				int extPos = nom.lastIndexOf('.');
 				String extension;
 				if (extPos != -1) {
 					extension = nom.substring(extPos);
-					nom = nom.substring(0,extPos);
+					nom = nom.substring(0, extPos);
 				} else {
 					extension = "";
 				}
-				
+
 				// Création du fichier de réception
 				File fichier = new File(session.getDossierSession() + "/" + nom + extension);
 				int i = 1;
@@ -99,7 +99,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					i++;
 				}
 				fichier.createNewFile();
-				
+
 				// Récupération de la taille du fichier
 				String taille = "";
 				cha = (char) reader.read();
@@ -108,7 +108,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					cha = (char) reader.read();
 				}
 				long max = Long.parseLong(taille);
-				
+
 				FileOutputStream ecriture = new FileOutputStream(fichier);
 				InputStream in = sock.getInputStream();
 				long total = 0;
@@ -120,8 +120,8 @@ public class ServiceReceptionTCP extends Service<Void> {
 				}
 				ecriture.flush();
 				ecriture.close();
-				
-				if ((int)((total/max)*100) == 100) {
+
+				if ((int) ((total / max) * 100) == 100) {
 					// Enregistrement du message et envoi du OK
 					Fichier msg = new Fichier(session.getDestinataire().getIdentifiant(), fichier);
 					executeur.ajoutTache(new Runnable() {
@@ -136,11 +136,11 @@ public class ServiceReceptionTCP extends Service<Void> {
 					executeur.ajoutTache(new TacheEnvoiTCP(sock, new Erreur(session.getIdentifiantLocal())));
 				}
 			}
-			
+
 			private void messageok() {
 				session.envoiRecu();
 			}
-			
+
 			private void erreur() {
 				session.erreurEnvoi();
 			}
@@ -153,7 +153,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-			
+
 			private void finok() {
 				executeur.ajoutTache(new Runnable() {
 					@Override
@@ -162,7 +162,7 @@ public class ServiceReceptionTCP extends Service<Void> {
 					}
 				});
 			}
-			
+
 			@Override
 			protected Void call() throws IOException {
 				while (true) {

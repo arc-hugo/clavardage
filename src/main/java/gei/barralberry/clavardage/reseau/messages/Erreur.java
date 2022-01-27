@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.util.UUID;
 
 public class Erreur extends Message {
-	
+
 	public Erreur(UUID author) {
 		super(author);
 	}

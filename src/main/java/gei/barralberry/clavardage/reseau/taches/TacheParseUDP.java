@@ -29,8 +29,6 @@ public class TacheParseUDP extends Task<Void> {
 			this.pseudo = this.pseudo + " " + split[i];
 		}
 		this.adresse = adresse;
-
-		System.out.println(this.type + " " + this.uuid + " " + this.pseudo + " " + this.adresse);
 	}
 
 	private void deconnexion() {

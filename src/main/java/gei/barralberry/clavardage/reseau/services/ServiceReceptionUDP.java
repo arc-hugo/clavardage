@@ -12,7 +12,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ServiceReceptionUDP extends Service<Void> {
-	
+
 	private AccesUDP udp;
 	private ExecuteurReseau executeur;
 

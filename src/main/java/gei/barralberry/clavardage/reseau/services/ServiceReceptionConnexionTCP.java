@@ -11,15 +11,15 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 public class ServiceReceptionConnexionTCP extends Service<Void> {
-	
+
 	private AccesTCP tcp;
 	private ExecuteurReseau executeur;
-	
+
 	public ServiceReceptionConnexionTCP(AccesTCP tcp) {
 		this.tcp = tcp;
 		this.executeur = ExecuteurReseau.getInstance();
 	}
-	
+
 	@Override
 	protected Task<Void> createTask() {
 		return new Task<Void>() {
