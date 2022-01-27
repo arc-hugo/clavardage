@@ -74,10 +74,8 @@ public class Fichier extends MessageAffiche {
 	public VBox affichage() {
 		try {
 			Node msg;
-			if (this.extension.toLowerCase().equals(".jpg")  ||
-				this.extension.toLowerCase().equals(".jpeg")  ||
-				this.extension.toLowerCase().equals(".png")  ||
-				this.extension.toLowerCase().equals(".gif")) {
+			if (this.extension.toLowerCase().equals(".jpg") || this.extension.toLowerCase().equals(".jpeg")
+					|| this.extension.toLowerCase().equals(".png") || this.extension.toLowerCase().equals(".gif")) {
 				Image image = new Image(new FileInputStream(fichier));
 				msg = new ImageView(image);
 				if (image.getWidth() > 506) {

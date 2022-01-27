@@ -8,17 +8,17 @@ import javafx.scene.layout.HBox;
 
 public class Decoration extends HBox {
 
-    public Decoration() {
-        Button closeBtn = new Button("X");
+	public Decoration() {
+		Button closeBtn = new Button("X");
 
-        closeBtn.setOnAction(new EventHandler<ActionEvent>() {
+		closeBtn.setOnAction(new EventHandler<ActionEvent>() {
 
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Platform.exit();
-            }
-        });
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				Platform.exit();
+			}
+		});
 
-        this.getChildren().add(closeBtn);
-    }
+		this.getChildren().add(closeBtn);
+	}
 }

@@ -17,7 +17,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 public class ModeleSession {
 
-
 	private BooleanProperty connecte;
 	private Utilisateur utilisateurLocal;
 	private Utilisateur destinataire;
@@ -25,15 +24,17 @@ public class ModeleSession {
 	private Queue<MessageAffiche> queueEnvoi;
 	private AccesDB accesDB;
 	private ExecuteurDB ecriture;
-	
-	public ModeleSession(Utilisateur local, Utilisateur destinataire) throws ClassNotFoundException, SQLException, IOException {
+
+	public ModeleSession(Utilisateur local, Utilisateur destinataire)
+			throws ClassNotFoundException, SQLException, IOException {
 		this.utilisateurLocal = local;
 		this.destinataire = destinataire;
 		this.connecte = new SimpleBooleanProperty(false);
 		this.accesDB = new AccesDB(local.getIdentifiant(), destinataire.getIdentifiant());
 	}
-	
-	public ModeleSession(Utilisateur local, Utilisateur destinataire, Socket sock) throws ClassNotFoundException, SQLException, IOException {
+
+	public ModeleSession(Utilisateur local, Utilisateur destinataire, Socket sock)
+			throws ClassNotFoundException, SQLException, IOException {
 		this(local, destinataire);
 		if (sock != null) {
 			this.sock = sock;
@@ -42,27 +43,27 @@ public class ModeleSession {
 			this.ecriture = ExecuteurDB.getInstance();
 		}
 	}
-	
+
 	public UUID getIdentifiantLocal() {
 		return this.utilisateurLocal.getIdentifiant();
 	}
-	
+
 	public Utilisateur getDestinataire() {
 		return this.destinataire;
 	}
-	
+
 	public Socket getSocket() {
 		return this.sock;
 	}
-	
+
 	public BooleanProperty getConnecteProperty() {
 		return this.connecte;
 	}
-	
+
 	public boolean estConnecte() {
 		return this.connecte.get();
 	}
-	
+
 	public List<MessageAffiche> getDerniersMessages() throws SQLException {
 		return this.accesDB.getDerniersMessages();
 	}
@@ -70,7 +71,7 @@ public class ModeleSession {
 	public synchronized void ajoutEnvoi(MessageAffiche msg) {
 		this.queueEnvoi.add(msg);
 	}
-	
+
 	public synchronized MessageAffiche envoiTermine() {
 		MessageAffiche msg = this.queueEnvoi.remove();
 		this.ecriture.ajoutTache(new Runnable() {
@@ -81,11 +82,11 @@ public class ModeleSession {
 		});
 		return msg;
 	}
-	
+
 	public synchronized MessageAffiche erreurEnvoi() {
 		return this.queueEnvoi.remove();
 	}
-	
+
 	public void enregistrerReception(MessageAffiche msg) throws SQLException {
 		this.ecriture.ajoutTache(new Runnable() {
 			@Override
@@ -94,7 +95,7 @@ public class ModeleSession {
 			}
 		});
 	}
-	
+
 	public void fermetureDB() throws SQLException {
 		this.accesDB.close();
 	}
@@ -102,5 +103,5 @@ public class ModeleSession {
 	public void fermetureDistante() {
 		this.connecte.set(false);
 	}
-	
+
 }

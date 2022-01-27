@@ -20,7 +20,6 @@ public class ControleurPseudo implements Initializable {
 	private Button validate_button;
 	@FXML
 	private ButtonBar buttonbar;
-	
 
 	private Preferences pref;
 
@@ -88,18 +87,18 @@ public class ControleurPseudo implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		String pseudo = pref.get("pseudo", null);
-		
+
 		if (pseudo != null) {
 			this.pseudo.setText(pseudo);
 			this.pseudo.positionCaret(pseudo.length());
 		}
-		
+
 		this.pseudo.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.ENTER) {
 				new_pseudo();
 			}
 		});
-		
+
 		this.pseudo.requestFocus();
 	}
 }
