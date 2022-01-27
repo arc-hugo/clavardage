@@ -36,7 +36,12 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      
+
+      # Extraction de la version du projet
+      - name: Version
+        run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        id: project
+
       # Build du projet avec Maven
       - run: mvn -B package --file pom.xml -DskipTests
       
@@ -45,7 +50,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: false
-          title: "Development Build"
+          title: "clavardage ${{ steps.project.outputs.version }}"
           files: |
             LICENSE
             target/clavardage*.jar
