@@ -6,9 +6,12 @@ Le projet s'appuie sur le langage Java et la librairie JavaFX ainsi que sur la b
 La gestion du projet s'est effectuée grâce aux outils Maven, Git, Jira et Github Actions.
 ## Prérequis
 Afin de lancer le .jar, vous devait installer Java 11 sur votre machine.  
-Pour lancer l'application avec le dépôt, vous devez également avoir installer Maven et lancer la commande ``mvn clean javafx:run`` depuis la racine.
+vous devez ensuite ouvrir un terminal dans le dossier de votre .jar et lancer la commande :  
+``java --jar clavardage-<VERSION>.jar``  
+Pour lancer l'application avec le clone du dépôt, vous devez également avoir installé Maven et lancer la commande :  
+``mvn clean javafx:run``
 ## Utilisation
-Les details de l'utilisation sont décrits dans le rapport joint au dépôt.
+Les details de l'utilisation sont décrits dans le rapport.
 ## Membres du projet
 [Hugo Barral](https://github.com/arc-hugo)  
 [Oriane Berry](https://github.com/Enario4)
