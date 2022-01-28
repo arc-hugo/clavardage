@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 public class AfficheErreur extends MessageAffiche {
-	
+
 	private MessageAffiche msg;
 
 	public AfficheErreur(UUID author, MessageAffiche msg) {
@@ -23,7 +23,7 @@ public class AfficheErreur extends MessageAffiche {
 
 	@Override
 	public VBox affichage() {
-		Label msg = new Label("Erreur d'envoi de "+this.msg.description());
+		Label msg = new Label("Erreur d'envoi de " + this.msg.description());
 		Label date = new Label(Message.DATE_FORMAT.format(getDate()));
 		VBox vb = new VBox(date, msg);
 		return vb;
@@ -31,7 +31,7 @@ public class AfficheErreur extends MessageAffiche {
 
 	@Override
 	public String description() {
-		return "ERREUR : "+this.msg.description();
+		return "ERREUR : " + this.msg.description();
 	}
 
 }

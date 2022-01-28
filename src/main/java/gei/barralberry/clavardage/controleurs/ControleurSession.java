@@ -34,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -45,9 +46,8 @@ public class ControleurSession implements Initializable {
 	private static final String CSS_ENVOI = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
 	private static final String CSS_RECEPTION = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
 	private static final String CSS_ERREUR = CSS_ENVOI + "; -fx-font-weight: bold";
-	
-	
-	//@FXML private Label name;
+
+	// @FXML private Label name;
 	@FXML private Button envoyer;
 	@FXML private Button fichier;
 	@FXML private TextField texte;
@@ -59,7 +59,8 @@ public class ControleurSession implements Initializable {
 	private ExecuteurSession executeur;
 	private File dossierSession;
 
-	public ControleurSession(Utilisateur local, Utilisateur destinataire) throws ClassNotFoundException, SQLException, IOException {
+	public ControleurSession(Utilisateur local, Utilisateur destinataire)
+			throws ClassNotFoundException, SQLException, IOException {
 		this.modele = new ModeleSession(local, destinataire);
 	}
 
@@ -68,15 +69,15 @@ public class ControleurSession implements Initializable {
 		this.modele = new ModeleSession(local, destinataire, sock);
 		this.executeur = ExecuteurSession.getInstance();
 		this.reception = new ServiceReceptionTCP(this, sock);
-		this.dossierSession = new File(Configuration.DOSSIER_CACHE+"/"+destinataire.getIdentifiant().toString());
+		this.dossierSession = new File(Configuration.DOSSIER_CACHE + "/" + destinataire.getIdentifiant().toString());
 		this.dossierSession.mkdirs();
 		this.reception.start();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//this.name.textProperty().bind(this.modele.getDestinataire().getPseudoPropery());
-
+		this.scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+		
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
 		});
@@ -88,7 +89,7 @@ public class ControleurSession implements Initializable {
 				envoiTexte();
 			}
 		});
-		
+
 		this.fichier.setOnAction(e -> {
 			FileChooser choix = new FileChooser();
 			choix.setTitle("Séléction d'un fichier à envoyer");
@@ -107,7 +108,7 @@ public class ControleurSession implements Initializable {
 		this.fichier.disableProperty().bind(this.modele.getConnecteProperty().not());
 
 		this.texte.requestFocus();
-		
+
 		if (this.modele.estConnecte()) {
 			this.executeur.ajoutTache(new TacheEnvoiTCP(this.modele.getSocket(), new OK(getIdentifiantLocal())));
 		}
@@ -131,13 +132,14 @@ public class ControleurSession implements Initializable {
 				date.setStyle(denvoi);
 				this.messages.getChildren().add(noeud);
 				noeud.prefWidthProperty().bind(scroll.widthProperty());
-				//noeud.prefHeightProperty().bind(scroll.heightProperty());
+				// noeud.prefHeightProperty().bind(scroll.heightProperty());
 				date.setAlignment(Pos.CENTER);
 			}
 		} catch (SQLException e1) {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
 		}
+		this.scroll.setVvalue(scroll.getVmax());
 	}
 
 	private void envoiTexte() {
@@ -147,25 +149,26 @@ public class ControleurSession implements Initializable {
 			texte.clear();
 		}
 	}
-	
+
 	private void envoiFichier(File fichier) {
 		try {
 			String nom = fichier.getName();
-			
+
 			// Récupération de l'extension du fichier
 			int extPos = nom.lastIndexOf('.');
 			String extension;
 			if (extPos != -1) {
 				extension = nom.substring(extPos);
-				nom = nom.substring(0,extPos);
+				nom = nom.substring(0, extPos);
 			} else {
 				extension = "";
 			}
-			
+
 			File cache = new File(this.dossierSession.getAbsolutePath() + "/" + nom + extension);
 			int i = 1;
 			while (cache.exists()) {
-				cache = new File(this.dossierSession.getAbsolutePath() + "/" + String.format("%s(%d)", nom, i) + extension);
+				cache = new File(
+						this.dossierSession.getAbsolutePath() + "/" + String.format("%s(%d)", nom, i) + extension);
 				i++;
 			}
 			Files.copy(new FileInputStream(fichier), cache.toPath());
@@ -222,9 +225,8 @@ public class ControleurSession implements Initializable {
 				}
 			}
 		});
-		this.modele.fermetureDistante();
 		try {
-			this.modele.fermetureDB();
+			this.modele.fermetureDistante();
 		} catch (SQLException e1) {
 			Platform.runLater(new Runnable() {
 				public void run() {
@@ -245,14 +247,13 @@ public class ControleurSession implements Initializable {
 					@Override
 					public void run() {
 						Node message = noeud.getChildren().get(1);
-						String recep = "-fx-background-color: #f9f9f9; -fx-border-color: #bbbbbb; -fx-text-fill: red; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7;";
-						message.setStyle(recep);
+						message.setStyle(CSS_RECEPTION);
 						String denvoi = "-fx-font-size: 10";
 						Label date = (Label) noeud.getChildren().get(0);
 						date.setStyle(denvoi);
 						messages.getChildren().add(noeud);
 					}
-				
+
 				});
 			} catch (SQLException e) {
 				Alerte ex = Alerte.exceptionLevee(e);
@@ -268,7 +269,7 @@ public class ControleurSession implements Initializable {
 	public Utilisateur getDestinataire() {
 		return this.modele.getDestinataire();
 	}
-	
+
 	public File getDossierSession() {
 		return this.dossierSession;
 	}
@@ -281,26 +282,37 @@ public class ControleurSession implements Initializable {
 				public void run() {
 					VBox aff = msg.affichage();
 					Node message = aff.getChildren().get(1);
-					String envoi = "-fx-background-color: red; -fx-text-fill: #f9f9f9; -fx-background-radius: 10; -fx-border-radius: 10; -fx-padding: 2 7; -fx-alignment: CENTER-RIGHT";
 					if (message instanceof Labeled) {
 						((Labeled) message).setTextAlignment(TextAlignment.RIGHT);
 						((Labeled) message).setAlignment(Pos.CENTER_RIGHT);
 					}
-					message.setStyle(envoi);
+					message.setStyle(CSS_ENVOI);
 					messages.getChildren().add(aff);
+					messages.layout();
+					scroll.layout();
+					scroll.setVvalue(scroll.getVmax());
 				}
 			});
 		}
 	}
 
 	public void erreurEnvoi() {
-		MessageAffiche msg = this.modele.envoiTermine();
+		MessageAffiche msg = this.modele.erreurEnvoi();
 		if (msg != null) {
 			AfficheErreur erreur = new AfficheErreur(getIdentifiantLocal(), msg);
 			Platform.runLater(new Runnable() {
 				public void run() {
-					Node aff = erreur.affichage();
+					VBox aff = erreur.affichage();
+					Node message = aff.getChildren().get(1);
+					if (message instanceof Labeled) {
+						((Labeled) message).setTextAlignment(TextAlignment.RIGHT);
+						((Labeled) message).setAlignment(Pos.CENTER_RIGHT);
+					}
+					message.setStyle(CSS_ERREUR);
 					messages.getChildren().add(aff);
+					messages.layout();
+					scroll.layout();
+					scroll.setVvalue(scroll.getVmax());
 				}
 			});
 		}

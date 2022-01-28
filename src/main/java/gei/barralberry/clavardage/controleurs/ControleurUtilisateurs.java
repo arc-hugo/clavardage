@@ -41,14 +41,22 @@ import javafx.stage.StageStyle;
 
 public class ControleurUtilisateurs implements Initializable {
 
-	@FXML private TabPane tabs;
-	@FXML private ListView<Utilisateur> list;
-	@FXML private MenuItem deconnexion;
-	@FXML private MenuItem changerPseudo;
-	@FXML private ButtonBar buttonbar;
-	@FXML private MenuButton name;
-	@FXML private VBox vb;
-	@FXML private BorderPane pane;
+	@FXML
+	private TabPane tabs;
+	@FXML
+	private ListView<Utilisateur> list;
+	@FXML
+	private MenuItem deconnexion;
+	@FXML
+	private MenuItem changerPseudo;
+	@FXML
+	private ButtonBar buttonbar;
+	@FXML
+	private MenuButton name;
+	@FXML
+	private VBox vb;
+	@FXML
+	private BorderPane pane;
 
 	private ModeleUtilisateurs modele;
 	private AccesUDP udp;
@@ -240,7 +248,7 @@ public class ControleurUtilisateurs implements Initializable {
 			}
 		});
 	}
-	
+
 	public void deconnexionDistante(UUID identifiant) {
 		if (this.modele.getEtat(identifiant) == EtatUtilisateur.EN_SESSION) {
 			Tab tab = chercherSession(identifiant);
@@ -293,80 +301,20 @@ public class ControleurUtilisateurs implements Initializable {
 			st.setFullScreen(true);
 		}
 	}
-	/*@FXML 
-	private void moved(MouseEvent event) {
-		Scene scene = this.pane.getScene();
-		Stage stage = (Stage) this.pane.getScene().getWindow();
-		if (event.getX() > stage.getWidth() - 50
-		 && event.getX() < stage.getWidth() + 5 ) {
-      scene.setCursor(Cursor.E_RESIZE);
-		} else {
-			scene.setCursor(Cursor.DEFAULT);
-		}
 
 	@FXML
-	private void enter(MouseEvent event) {
-		Scene scene = pane.getScene();
-		Stage stage = (Stage) pane.getScene().getWindow();
-		if (event.getX() > stage.getWidth() - 50 && event.getX() < stage.getWidth() + 5) {
-			scene.setCursor(Cursor.E_RESIZE);
-		} else {
-			scene.setCursor(Cursor.DEFAULT);
-		}
-   
-	}*/
-  
-	/*@FXML 
-	private void exit(MouseEvent event) {
-		Scene scene = pane.getScene();
-		Stage stage = (Stage) pane.getScene().getWindow();
-		if (!(event.getX() > stage.getWidth() - 5
-		 && event.getX() < stage.getWidth() + 5 )) {
-			scene.setCursor(Cursor.DEFAULT);
-		}
-	}*/
-	
-	@FXML
 	private void dragged1(MouseEvent event) {
-	    Stage stage = (Stage) buttonbar.getScene().getWindow();
-        stage.setX(event.getScreenX() - x);
-        stage.setY(event.getScreenY() - y); 
-	}     
-	/*
-	@FXML 
-	private void dragged2 (MouseEvent event) {
-	    Stage stage = (Stage) pane.getScene().getWindow();
-	    if (resizebottom == true) {
-            stage.setWidth(event.getX() + dx);
-            stage.setHeight(event.getY() + dy);
-        }
-	}*/
+		Stage stage = (Stage) buttonbar.getScene().getWindow();
+		stage.setX(event.getScreenX() - x);
+		stage.setY(event.getScreenY() - y);
+	}
 
 	@FXML
 	private void pressed1(MouseEvent event) {
 		x = (int) event.getSceneX();
 		y = (int) event.getSceneY();
 	}
-  
-	/*
-	@FXML
-	private void pressed2(MouseEvent event) {
-		Stage stage = (Stage) pane.getScene().getWindow();
-		Scene scene = pane.getScene();
-		if (event.getX() > stage.getWidth() - 50 && event.getX() < stage.getWidth() + 50) {
-			resizebottom = true;
-			dx = stage.getWidth() - event.getX();
-			scene.setCursor(Cursor.E_RESIZE);
 
-		} else if (event.getY() > stage.getHeight() - 50 && event.getY() < stage.getHeight() + 50) {
-			resizebottom = true;
-			dy = stage.getHeight() - event.getY();
-			scene.setCursor(Cursor.N_RESIZE);
-		}
-	}
-	*/
-	
-	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Lie la vue de la liste à la liste d'utilisateurs du modèle
@@ -431,18 +379,17 @@ public class ControleurUtilisateurs implements Initializable {
 			});
 			return cell;
 		});
-		
-		//Redimensionner la fenêtre 
+
+		// Redimensionner la fenêtre
 		Scene scene = this.pane.getScene();
 		scene.setOnMouseMoved(event -> {
-			if (event.getX() > scene.getWidth() - 15
-					&& event.getX() < scene.getWidth() + 15 ) {
+			if (event.getX() > scene.getWidth() - 15 && event.getX() < scene.getWidth() + 15) {
 				scene.setCursor(Cursor.E_RESIZE);
 			} else {
 				scene.setCursor(Cursor.DEFAULT);
 			}
 		});
-		
+
 		// Fermeture possible de l'onglet selectionné
 		this.tabs.setTabClosingPolicy(TabClosingPolicy.SELECTED_TAB);
 

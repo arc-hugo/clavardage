@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>gei.barralberry</groupId>
 	<artifactId>clavardage</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<properties>
 		<app.name>clavardage</app.name>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -55,12 +55,6 @@
     		<version>${javafx.version}</version>
     		<classifier>mac</classifier>
   		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.github.jai-imageio/jai-imageio-core -->
-		<dependency>
-			<groupId>com.github.jai-imageio</groupId>
-			<artifactId>jai-imageio-core</artifactId>
-			<version>1.4.0</version>
-		</dependency>
 		<dependency>
     		<groupId>junit</groupId>
     		<artifactId>junit</artifactId>
