@@ -76,7 +76,7 @@ public class ControleurSession implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		this.scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
+		this.scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
 		
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
@@ -287,7 +287,7 @@ public class ControleurSession implements Initializable {
 					}
 					message.setStyle(CSS_ENVOI);
 					messages.getChildren().add(aff);
-					scroll.setVvalue(0);
+					scroll.setVvalue(1);
 				}
 			});
 		}
