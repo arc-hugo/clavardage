@@ -288,6 +288,7 @@ public class ControleurSession implements Initializable {
 					}
 					message.setStyle(CSS_ENVOI);
 					messages.getChildren().add(aff);
+					messages.layout();
 					scroll.layout();
 					scroll.setVvalue(scroll.getVmax());
 				}
@@ -309,6 +310,7 @@ public class ControleurSession implements Initializable {
 					}
 					message.setStyle(CSS_ERREUR);
 					messages.getChildren().add(aff);
+					messages.layout();
 					scroll.layout();
 					scroll.setVvalue(scroll.getVmax());
 				}
