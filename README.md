@@ -11,7 +11,7 @@ vous devez ensuite ouvrir un terminal dans le dossier de votre .jar et lancer la
 Pour lancer l'application avec le clone du dépôt, vous devez également avoir installé Maven et lancer la commande :  
 ``mvn clean javafx:run``
 ## Utilisation
-Les details de l'utilisation sont décrits dans le rapport.
+Les details de l'utilisation sont décrits dans le [rapport](Rapport.pdf).
 ## Membres du projet
 [Hugo Barral](https://github.com/arc-hugo)  
 [Oriane Berry](https://github.com/Enario4)
