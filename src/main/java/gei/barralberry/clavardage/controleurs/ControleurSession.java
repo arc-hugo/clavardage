@@ -139,6 +139,7 @@ public class ControleurSession implements Initializable {
 			Alerte ex = Alerte.exceptionLevee(e1);
 			ex.showAndWait();
 		}
+		this.scroll.setVvalue(scroll.getVmax());
 	}
 
 	private void envoiTexte() {
@@ -287,7 +288,7 @@ public class ControleurSession implements Initializable {
 					}
 					message.setStyle(CSS_ENVOI);
 					messages.getChildren().add(aff);
-					scroll.setVvalue(1);
+					scroll.setVvalue(scroll.getVmax());
 				}
 			});
 		}
@@ -307,6 +308,7 @@ public class ControleurSession implements Initializable {
 					}
 					message.setStyle(CSS_ERREUR);
 					messages.getChildren().add(aff);
+					scroll.setVvalue(scroll.getVmax());
 				}
 			});
 		}
