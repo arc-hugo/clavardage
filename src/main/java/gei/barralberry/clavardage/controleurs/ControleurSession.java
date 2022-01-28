@@ -34,6 +34,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
@@ -47,16 +48,11 @@ public class ControleurSession implements Initializable {
 	private static final String CSS_ERREUR = CSS_ENVOI + "; -fx-font-weight: bold";
 
 	// @FXML private Label name;
-	@FXML
-	private Button envoyer;
-	@FXML
-	private Button fichier;
-	@FXML
-	private TextField texte;
-	@FXML
-	private VBox messages;
-	@FXML
-	private ScrollPane scroll;
+	@FXML private Button envoyer;
+	@FXML private Button fichier;
+	@FXML private TextField texte;
+	@FXML private VBox messages;
+	@FXML private ScrollPane scroll;
 
 	private ModeleSession modele;
 	private ServiceReceptionTCP reception;
@@ -80,6 +76,8 @@ public class ControleurSession implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
+		
 		this.envoyer.setOnAction(e -> {
 			envoiTexte();
 		});
@@ -226,9 +224,8 @@ public class ControleurSession implements Initializable {
 				}
 			}
 		});
-		this.modele.fermetureDistante();
 		try {
-			this.modele.fermetureDB();
+			this.modele.fermetureDistante();
 		} catch (SQLException e1) {
 			Platform.runLater(new Runnable() {
 				public void run() {
@@ -290,13 +287,14 @@ public class ControleurSession implements Initializable {
 					}
 					message.setStyle(CSS_ENVOI);
 					messages.getChildren().add(aff);
+					scroll.setVvalue(0);
 				}
 			});
 		}
 	}
 
 	public void erreurEnvoi() {
-		MessageAffiche msg = this.modele.envoiTermine();
+		MessageAffiche msg = this.modele.erreurEnvoi();
 		if (msg != null) {
 			AfficheErreur erreur = new AfficheErreur(getIdentifiantLocal(), msg);
 			Platform.runLater(new Runnable() {

@@ -100,8 +100,9 @@ public class ModeleSession {
 		this.accesDB.close();
 	}
 
-	public void fermetureDistante() {
+	public void fermetureDistante() throws SQLException {
 		this.connecte.set(false);
+		fermetureDB();
 	}
 
 }
